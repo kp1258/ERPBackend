@@ -1,4 +1,4 @@
-namespace ERPBackend.Entities
+namespace ERPBackend.Entities.Models
 {
     public class CustomOrderDetail
     {

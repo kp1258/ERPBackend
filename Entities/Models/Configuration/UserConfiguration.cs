@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ERPBackend.Entities;
 
-namespace ERPBackend.Entities.Configuration
+namespace ERPBackend.Entities.Models.Configuration
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {

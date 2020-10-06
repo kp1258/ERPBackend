@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ERPBackend.Entities
+namespace ERPBackend.Entities.Models
 {
     public class StandardProductItem
     {

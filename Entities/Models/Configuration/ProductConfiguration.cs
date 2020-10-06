@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ERPBackend.Entities;
 using System.Collections.Generic;
 
-namespace ERPBackend.Entities.Configuration
+namespace ERPBackend.Entities.Models.Configuration
 {
     public class ProductConfiguration : IEntityTypeConfiguration<StandardProduct>
     {

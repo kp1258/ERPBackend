@@ -1,3 +1,5 @@
+using ERPBackend.Contracts;
+using ERPBackend.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +28,11 @@ namespace ERPBackend.Extensions
             {
 
             });
+        }
+
+        public static void ConfigureRepositoryWrapper(this IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
     }
 }

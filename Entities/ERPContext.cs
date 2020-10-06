@@ -1,5 +1,6 @@
 using System;
-using ERPBackend.Entities.Configuration;
+using ERPBackend.Entities.Models.Configuration;
+using ERPBackend.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERPBackend.Entities

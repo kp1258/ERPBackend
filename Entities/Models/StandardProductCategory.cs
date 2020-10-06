@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ERPBackend.Entities
+namespace ERPBackend.Entities.Models
 {
     public class StandardProductCategory
     {
