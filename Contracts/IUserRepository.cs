@@ -7,6 +7,6 @@ namespace ERPBackend.Contracts
     public interface IUserRepository : IRepositoryBase<User>
     {
         IEnumerable<User> GetAllUsers();
-        IQueryable GetUserById(int userId);
+        User GetUserById(int userId);
     }
 }

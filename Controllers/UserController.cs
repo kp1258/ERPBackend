@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using AutoMapper;
 using ERPBackend.Contracts;
+using ERPBackend.Entities.Dtos.UserDtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,11 +14,13 @@ namespace ERPBackend.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private IRepositoryWrapper _repositoryWrapper;
+        private IMapper _mapper;
 
-        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper)
+        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _logger = logger;
             _repositoryWrapper = repositoryWrapper;
+            _mapper = mapper;
         }
 
         //GET api/user
@@ -26,7 +31,9 @@ namespace ERPBackend.Controllers
             {
                 var users = _repositoryWrapper.User.GetAllUsers();
                 _logger.LogInformation($"Returned all users");
-                return Ok(users);
+
+                var usersResult = _mapper.Map<IEnumerable<UserReadDto>>(users);
+                return Ok(usersResult);
             }
             catch (Exception ex)
             {
@@ -36,13 +43,22 @@ namespace ERPBackend.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserById(int userId)
+        public IActionResult GetUserById(int id)
         {
             try
             {
-                var user = _repositoryWrapper.User.GetUserById(userId);
-                _logger.LogInformation($"Returned user with specified id");
-                return Ok(user);
+                var user = _repositoryWrapper.User.GetUserById(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInformation($"Returned user with specified id");
+                    var userResult = _mapper.Map<UserReadDto>(user);
+                    return Ok(userResult);
+                }
+
             }
             catch (Exception ex)
             {

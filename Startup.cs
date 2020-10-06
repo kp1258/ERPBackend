@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ERPBackend.Entities;
 using ERPBackend.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -38,7 +39,7 @@ namespace ERPBackend
             services.ConfigureRepositoryWrapper();
 
             services.AddControllers();
-
+            services.AddAutoMapper(typeof(Startup));
 
         }
 

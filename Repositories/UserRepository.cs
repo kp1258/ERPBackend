@@ -19,9 +19,9 @@ namespace ERPBackend.Repositories
                 .ToList();
         }
 
-        public IQueryable GetUserById(int userId)
+        public User GetUserById(int userId)
         {
-            return FindByCondition(user => user.UserId == userId);
+            return FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefault();
         }
     }
 }
