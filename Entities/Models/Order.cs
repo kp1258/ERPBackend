@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ERPBackend.Entities.Models
 {
@@ -29,16 +32,23 @@ namespace ERPBackend.Entities.Models
         public ICollection<StandardOrderDetail> StandardOrderDetails { get; set; }
 
     }
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderStatus
     {
+        [EnumMember(Value = "placed")]
         Placed,
+        [EnumMember(Value = "inProgress")]
         InProgress,
+        [EnumMember(Value = "completed")]
         Completed
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderType
     {
+        [EnumMember(Value = "standard")]
         Standard,
+        [EnumMember(Value = "custom")]
         Custom
     }
 }

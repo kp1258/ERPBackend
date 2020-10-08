@@ -25,7 +25,7 @@ namespace ERPBackend.Entities.Models
         public UserRole Role { get; set; }
 
         [Required]
-        public Status Status { get; set; }
+        public UserStatus Status { get; set; }
 
         public ICollection<Client> Clients { get; set; }
         [InverseProperty("Salesman")]
@@ -52,7 +52,7 @@ namespace ERPBackend.Entities.Models
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum Status
+    public enum UserStatus
     {
         [EnumMember(Value = "active")]
         Active,

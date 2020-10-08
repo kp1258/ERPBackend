@@ -8,6 +8,7 @@ namespace ERPBackend.Repositories
         private ERPContext _erpContext;
         private IUserRepository _user;
         private IClientRepository _client;
+        private IOrderRepository _order;
 
         public IUserRepository User
         {
@@ -30,6 +31,18 @@ namespace ERPBackend.Repositories
                     _client = new ClientRepository(_erpContext);
                 }
                 return _client;
+            }
+        }
+
+        public IOrderRepository Order
+        {
+            get
+            {
+                if (_order == null)
+                {
+                    _order = new OrderRepository(_erpContext);
+                }
+                return _order;
             }
         }
 

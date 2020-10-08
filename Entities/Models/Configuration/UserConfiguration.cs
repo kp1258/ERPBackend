@@ -17,7 +17,7 @@ namespace ERPBackend.Entities.Models.Configuration
                     FirstName = "Jan",
                     LastName = "Kowalski",
                     Role = UserRole.Administrator,
-                    Status = Status.Active
+                    Status = UserStatus.Active
                 }
             );
         }
