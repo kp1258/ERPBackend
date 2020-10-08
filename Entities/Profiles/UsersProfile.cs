@@ -9,6 +9,8 @@ namespace ERPBackend.Entities.Profiles
         public UsersProfile()
         {
             CreateMap<User, UserReadDto>();
+            CreateMap<UserCreateDto, User>();
+            CreateMap<UserUpdateDto, User>();
         }
     }
 }

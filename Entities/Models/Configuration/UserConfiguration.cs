@@ -16,7 +16,8 @@ namespace ERPBackend.Entities.Models.Configuration
                     Password = "password",
                     FirstName = "Jan",
                     LastName = "Kowalski",
-                    Role = UserRole.Administrator
+                    Role = UserRole.Administrator,
+                    Status = Status.Active
                 }
             );
         }

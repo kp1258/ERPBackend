@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ERPBackend.Entities.Models
 {
@@ -21,6 +24,9 @@ namespace ERPBackend.Entities.Models
         [Required]
         public UserRole Role { get; set; }
 
+        [Required]
+        public Status Status { get; set; }
+
         public ICollection<Client> Clients { get; set; }
         [InverseProperty("Salesman")]
         public ICollection<Order> Salesmen { get; set; }
@@ -30,13 +36,29 @@ namespace ERPBackend.Entities.Models
 
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum UserRole
     {
+        [EnumMember(Value = "administrator")]
         Administrator,
+        [EnumMember(Value = "warehouseman")]
         Warehouseman,
+        [EnumMember(Value = "productionManager")]
         ProductionManager,
+        [EnumMember(Value = "technologist")]
         Technologist,
+        [EnumMember(Value = "salesman")]
         Salesman
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum Status
+    {
+        [EnumMember(Value = "active")]
+        Active,
+
+        [EnumMember(Value = "inactive")]
+        Inactive
     }
 
 }

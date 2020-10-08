@@ -23,5 +23,20 @@ namespace ERPBackend.Repositories
         {
             return FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefault();
         }
+
+        public void CreateUser(User user)
+        {
+            Create(user);
+        }
+
+        public void UpdateUser(User user)
+        {
+            Update(user);
+        }
+
+        public void DeleteUser(User user)
+        {
+            Delete(user);
+        }
     }
 }

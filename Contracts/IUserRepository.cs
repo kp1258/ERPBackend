@@ -8,5 +8,8 @@ namespace ERPBackend.Contracts
     {
         IEnumerable<User> GetAllUsers();
         User GetUserById(int userId);
+        void CreateUser(User user);
+        void UpdateUser(User user);
+        void DeleteUser(User user);
     }
 }
