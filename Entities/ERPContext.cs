@@ -16,8 +16,8 @@ namespace ERPBackend.Entities
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialItem> MaterialWarehouse { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<StandardOrderDetail> StandardOrderDetails { get; set; }
-        public DbSet<CustomOrderDetail> CustomOrderDetails { get; set; }
+        public DbSet<StandardOrderItem> StandardOrderDetails { get; set; }
+        public DbSet<CustomOrderItem> CustomOrderDetails { get; set; }
         public DbSet<StandardProduct> StandardProducts { get; set; }
         public DbSet<CustomProduct> CustomProducts { get; set; }
         public DbSet<StandardProductCategory> StandardProductCategories { get; set; }
