@@ -10,14 +10,11 @@ namespace ERPBackend.Entities.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [Required]
-        public string Street { get; set; }
-        [Required]
-        public string PostalCode { get; set; }
-        [Required]
-        public string City { get; set; }
-        [Required]
         public string PhoneNumber { get; set; }
         public string EMail { get; set; }
+
+        public int AddressId { get; set; }
+        public Address Address { get; set; }
 
         public int SalesmanId { get; set; }
         public User Salesman { get; set; }

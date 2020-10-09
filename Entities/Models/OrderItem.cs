@@ -1,6 +1,6 @@
 namespace ERPBackend.Entities.Models
 {
-    public class CustomOrderDetail
+    public class CustomOrderItem
     {
         public int CustomOrderDetailId { get; set; }
         public int OrderId { get; set; }
@@ -11,7 +11,7 @@ namespace ERPBackend.Entities.Models
         public int Quantity { get; set; }
     }
 
-    public class StandardOrderDetail
+    public class StandardOrderItem
     {
         public int StandardOrderDetailId { get; set; }
         public int OrderId { get; set; }

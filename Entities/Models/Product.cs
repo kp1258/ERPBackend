@@ -14,7 +14,7 @@ namespace ERPBackend.Entities.Models
         public int StandardProductCategoryId { get; set; }
         public StandardProductCategory StandardProductCategory { get; set; }
 
-        public ICollection<StandardOrderDetail> StandardOrderDetails { get; set; }
+        public ICollection<StandardOrderItem> StandardOrderItem { get; set; }
         public StandardProductItem ProductItem { get; set; }
 
     }
@@ -30,6 +30,6 @@ namespace ERPBackend.Entities.Models
         public int TechnologistId { get; set; }
         public User Technologist { get; set; }
 
-        public ICollection<CustomOrderDetail> CustomOrderDetails { get; set; }
+        public ICollection<CustomOrderItem> CustomOrderItems { get; set; }
     }
 }

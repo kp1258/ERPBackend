@@ -11,6 +11,7 @@ namespace ERPBackend.Entities
         {
 
         }
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialItem> MaterialWarehouse { get; set; }
