@@ -11,5 +11,6 @@ namespace ERPBackend.Contracts
         void CreateUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);
+        void ChangeStatus(int userId);
     }
 }

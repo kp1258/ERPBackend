@@ -38,5 +38,21 @@ namespace ERPBackend.Repositories
         {
             Delete(user);
         }
+
+        public void ChangeStatus(int userId)
+        {
+            var user = FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefault();
+            if (user != null)
+            {
+                if (user.Status == UserStatus.Active)
+                {
+                    user.Status = UserStatus.Inactive;
+                }
+                else
+                {
+                    user.Status = UserStatus.Active;
+                }
+            }
+        }
     }
 }

@@ -26,17 +26,17 @@ namespace ERPBackend.Repositories
         }
         public void CreateClient(Client client)
         {
-            throw new System.NotImplementedException();
+            Create(client);
         }
 
         public void UpdateClient(Client client)
         {
-            throw new System.NotImplementedException();
+            Update(client);
         }
 
-        public void DeleteClient(int id)
+        public void DeleteClient(Client client)
         {
-            throw new System.NotImplementedException();
+            Delete(client);
         }
 
         public IEnumerable<Client> ClientsBySalesman(int id)

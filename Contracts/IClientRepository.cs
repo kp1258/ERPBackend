@@ -6,10 +6,10 @@ namespace ERPBackend.Contracts
     public interface IClientRepository
     {
         IEnumerable<Client> GetAllClients();
-        Client GetClientById(int id);
+        Client GetClientById(int clietId);
         void CreateClient(Client client);
         void UpdateClient(Client client);
-        void DeleteClient(int id);
-        IEnumerable<Client> ClientsBySalesman(int id);
+        void DeleteClient(Client client);
+        IEnumerable<Client> ClientsBySalesman(int salesmanId);
     }
 }

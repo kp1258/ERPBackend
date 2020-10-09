@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
@@ -13,36 +14,36 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 
     public void CreateOrder(Order order)
     {
-        throw new System.NotImplementedException();
+        Create(order);
     }
 
     public void DeleteOrder(Order order)
     {
-        throw new System.NotImplementedException();
+        Delete(order);
     }
 
     public IEnumerable<Order> GetAllOrders()
     {
-        throw new System.NotImplementedException();
+        return FindAll().OrderBy(order => order.PlacingDate).ToList();
     }
 
-    public Order GetOrderById(int id)
+    public Order GetOrderById(int clientId)
     {
-        throw new System.NotImplementedException();
+        return FindByCondition(client => client.ClientId.Equals(clientId)).FirstOrDefault();
     }
 
-    public void GetOrdersBySalesman(int id)
+    public IEnumerable<Order> GetOrdersBySalesman(int salesmanId)
     {
-        throw new System.NotImplementedException();
+        return FindByCondition(order => order.SalesmanId.Equals(salesmanId)).ToList();
     }
 
-    public void GetOrdersByStatus(OrderStatus status)
+    public IEnumerable<Order> GetOrdersByStatus(OrderStatus status)
     {
-        throw new System.NotImplementedException();
+        return FindByCondition(order => order.Status.Equals(status)).ToList();
     }
 
     public void UpdateOrder(Order order)
     {
-        throw new System.NotImplementedException();
+        Update(order);
     }
 }

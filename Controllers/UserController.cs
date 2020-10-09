@@ -21,13 +21,13 @@ namespace ERPBackend.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private IRepositoryWrapper _repositoryWrapper;
+        private IRepositoryWrapper _repository;
         private IMapper _mapper;
 
         public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _logger = logger;
-            _repositoryWrapper = repositoryWrapper;
+            _repository = repositoryWrapper;
             _mapper = mapper;
         }
 
@@ -69,7 +69,11 @@ namespace ERPBackend.Controllers
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            var users = _repositoryWrapper.User.GetAllUsers();
+            var users = _repository.User.GetAllUsers();
+            if (users == null)
+            {
+                return NoContent();
+            }
             _logger.LogInformation($"Returned all users");
 
             var usersResult = _mapper.Map<IEnumerable<UserReadDto>>(users);
@@ -79,7 +83,7 @@ namespace ERPBackend.Controllers
         [HttpGet("{id}", Name = "UserById")]
         public IActionResult GetUserById(int id)
         {
-            var user = _repositoryWrapper.User.GetUserById(id);
+            var user = _repository.User.GetUserById(id);
             if (user == null)
             {
                 return NotFound();
@@ -101,15 +105,15 @@ namespace ERPBackend.Controllers
                 return BadRequest("User object is null");
             }
 
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid user object sent from client");
-                return BadRequest("Invalid model object");
-            }
+            // if (!ModelState.IsValid)
+            // {
+            //     _logger.LogError("Invalid user object sent from client");
+            //     return BadRequest("Invalid model object");
+            // }
             var userEntity = _mapper.Map<User>(user);
 
-            _repositoryWrapper.User.CreateUser(userEntity);
-            _repositoryWrapper.Save();
+            _repository.User.CreateUser(userEntity);
+            _repository.Save();
 
             var createdUser = _mapper.Map<UserReadDto>(userEntity);
             return CreatedAtRoute("UserById", new { id = createdUser.UserId }, createdUser);
@@ -122,12 +126,12 @@ namespace ERPBackend.Controllers
                 _logger.LogError("User object sent from client is null");
                 return BadRequest("User object is null");
             }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid user object sent from client");
-                return BadRequest("Invalid model object");
-            }
-            var userEntity = _repositoryWrapper.User.GetUserById(id);
+            // if (!ModelState.IsValid)
+            // {
+            //     _logger.LogError("Invalid user object sent from client");
+            //     return BadRequest("Invalid model object");
+            // }
+            var userEntity = _repository.User.GetUserById(id);
             if (userEntity == null)
             {
                 _logger.LogError($"User with id: {id}, does not exist");
@@ -135,39 +139,41 @@ namespace ERPBackend.Controllers
             }
             _mapper.Map(user, userEntity);
 
-            _repositoryWrapper.User.UpdateUser(userEntity);
-            _repositoryWrapper.Save();
+            _repository.User.UpdateUser(userEntity);
+            _repository.Save();
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteOwner(int id)
+        public IActionResult DeleteUser(int id)
         {
-            var user = _repositoryWrapper.User.GetUserById(id);
+            var user = _repository.User.GetUserById(id);
             if (user == null)
             {
                 _logger.LogError($"User with id: {id} does not exist");
                 return NotFound();
             }
-            if (_repositoryWrapper.Client.ClientsBySalesman(id).Any())
+            if (_repository.Client.ClientsBySalesman(id).Any())
             {
                 _logger.LogError($"Cannot delete user with id: {id}. It has related clients.");
                 return BadRequest("Cannot delete user. It has related clients. Delete those first");
             }
-            _repositoryWrapper.User.DeleteUser(user);
-            _repositoryWrapper.Save();
+            _repository.User.DeleteUser(user);
+            _repository.Save();
             return NoContent();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult BlockUser()
+        [HttpPut("status/{id}")]
+        public IActionResult ChangeUserStatus(int id)
         {
-            return NoContent();
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UnblockUser()
-        {
+            var user = _repository.User.GetUserById(id);
+            if (user == null)
+            {
+                _logger.LogError($"User with id {id} does not exist");
+                return NotFound();
+            }
+            _repository.User.ChangeStatus(id);
+            _repository.Save();
             return NoContent();
         }
 
