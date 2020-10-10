@@ -48,5 +48,20 @@ namespace ERPBackend.Controllers
             }
         }
 
+        [HttpGet("orderdetails/{id}")]
+        public IActionResult GetOrderDetailsById(int id)
+        {
+            var order = _repository.Order.GetOrderById(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _logger.LogInformation($"Returned order details with specified id");
+                var orderResult = _mapper.Map<OrderInfoDto>(order);
+                return Ok(orderResult);
+            }
+        }
     }
 }

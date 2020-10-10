@@ -32,6 +32,8 @@ namespace ERPBackend.Entities
             modelBuilder.ApplyConfiguration(new StandardProductConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new StandardProductCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new AddressConfiguration());
+            modelBuilder.ApplyConfiguration(new ClientConfiguration());
 
             modelBuilder
                 .Entity<User>()

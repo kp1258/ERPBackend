@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Entities;
 using ERPBackend.Extensions;
+using ERPBackend.Filters;
 using ERPBackend.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -41,31 +42,32 @@ namespace ERPBackend
             options.UseMySQL(Configuration.GetConnectionString("ERPConnection")));
 
             services.ConfigureRepositoryWrapper();
+            services.AddScoped<ValidationInputFilter>();
             ///
             //services.ConfigureJwtAuthentication();
-            var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
-            services.AddSingleton(jwtTokenConfig);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = true;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtTokenConfig.Issuer,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
-                    ValidAudience = jwtTokenConfig.Audience,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromMinutes(1)
-                };
-            });
-            ///
+            // var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
+            // services.AddSingleton(jwtTokenConfig);
+            // services.AddAuthentication(x =>
+            // {
+            //     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            // }).AddJwtBearer(x =>
+            // {
+            //     x.RequireHttpsMetadata = true;
+            //     x.SaveToken = true;
+            //     x.TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         ValidateIssuer = true,
+            //         ValidIssuer = jwtTokenConfig.Issuer,
+            //         ValidateIssuerSigningKey = true,
+            //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
+            //         ValidAudience = jwtTokenConfig.Audience,
+            //         ValidateAudience = true,
+            //         ValidateLifetime = true,
+            //         ClockSkew = TimeSpan.FromMinutes(1)
+            //     };
+            // });
+            // ///
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddAutoMapper(typeof(Startup));

@@ -28,8 +28,8 @@ namespace ERPBackend.Entities.Models
         [ForeignKey("WarehousemanId")]
         public User Warehouseman { get; set; }
 
-        public ICollection<CustomOrderItem> CustomOrderDetails { get; set; }
-        public ICollection<StandardOrderItem> StandardOrderDetails { get; set; }
+        public ICollection<CustomOrderItem> CustomOrderItems { get; set; }
+        public ICollection<StandardOrderItem> StandardOrderItems { get; set; }
 
     }
     [JsonConverter(typeof(StringEnumConverter))]

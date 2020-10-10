@@ -9,6 +9,7 @@ namespace ERPBackend.Profiles
         public OrderProfile()
         {
             CreateMap<Order, OrderReadDto>();
+            CreateMap<Order, OrderInfoDto>();
         }
     }
 }
