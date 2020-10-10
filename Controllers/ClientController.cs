@@ -37,6 +37,8 @@ namespace ERPBackend.Controllers
             var clientsResult = _mapper.Map<IEnumerable<ClientReadDto>>(clients);
             return Ok(clientsResult);
         }
+
+        //GET api/client/{id}
         [HttpGet("{id}", Name = "ClientById")]
         public IActionResult GetClientById(int id)
         {
@@ -52,6 +54,8 @@ namespace ERPBackend.Controllers
                 return Ok(clientResult);
             }
         }
+
+        //POST api/client
         [HttpPost]
         public IActionResult CreateClient([FromBody] ClientCreateDto client)
         {
@@ -60,11 +64,11 @@ namespace ERPBackend.Controllers
                 _logger.LogError("Client object sent from client is null");
                 return BadRequest("Client object is null");
             }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid client object sent from client");
-                return BadRequest("Invalid client object");
-            }
+            // if (!ModelState.IsValid)
+            // {
+            //     _logger.LogError("Invalid client object sent from client");
+            //     return BadRequest("Invalid client object");
+            // }
             var clientEntity = _mapper.Map<Client>(client);
             _repository.Client.CreateClient(clientEntity);
             _repository.Save();

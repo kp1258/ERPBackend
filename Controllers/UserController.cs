@@ -65,6 +65,7 @@ namespace ERPBackend.Controllers
                 return Unauthorized();
             }
         }
+
         //GET api/user
         [HttpGet]
         public IActionResult GetAllUsers()
@@ -80,6 +81,7 @@ namespace ERPBackend.Controllers
             return Ok(usersResult);
         }
 
+        //GET api/user/{id}
         [HttpGet("{id}", Name = "UserById")]
         public IActionResult GetUserById(int id)
         {
@@ -96,6 +98,7 @@ namespace ERPBackend.Controllers
             }
         }
 
+        //POST api/user
         [HttpPost]
         public IActionResult CreateUser([FromBody] UserCreateDto user)
         {
@@ -104,12 +107,6 @@ namespace ERPBackend.Controllers
                 _logger.LogError("User object sent from client is null");
                 return BadRequest("User object is null");
             }
-
-            // if (!ModelState.IsValid)
-            // {
-            //     _logger.LogError("Invalid user object sent from client");
-            //     return BadRequest("Invalid model object");
-            // }
             var userEntity = _mapper.Map<User>(user);
 
             _repository.User.CreateUser(userEntity);
@@ -118,6 +115,8 @@ namespace ERPBackend.Controllers
             var createdUser = _mapper.Map<UserReadDto>(userEntity);
             return CreatedAtRoute("UserById", new { id = createdUser.UserId }, createdUser);
         }
+
+        //PUT api/user/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
@@ -126,11 +125,6 @@ namespace ERPBackend.Controllers
                 _logger.LogError("User object sent from client is null");
                 return BadRequest("User object is null");
             }
-            // if (!ModelState.IsValid)
-            // {
-            //     _logger.LogError("Invalid user object sent from client");
-            //     return BadRequest("Invalid model object");
-            // }
             var userEntity = _repository.User.GetUserById(id);
             if (userEntity == null)
             {
@@ -144,6 +138,7 @@ namespace ERPBackend.Controllers
             return NoContent();
         }
 
+        //DELETE api/user/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
         {
@@ -163,6 +158,7 @@ namespace ERPBackend.Controllers
             return NoContent();
         }
 
+        //PUT api/user/{id}
         [HttpPut("status/{id}")]
         public IActionResult ChangeUserStatus(int id)
         {
@@ -176,6 +172,7 @@ namespace ERPBackend.Controllers
             _repository.Save();
             return NoContent();
         }
+
 
     }
 }
