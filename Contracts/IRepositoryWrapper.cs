@@ -8,6 +8,7 @@ namespace ERPBackend.Contracts
         IStandardProductRepository StandardProduct { get; }
         ICustomProductRepository CustomProduct { get; }
         IStandardProductCategoryRepository StandardProductCategory { get; }
+        IMaterialRepository Material { get; }
         void Save();
     }
 }

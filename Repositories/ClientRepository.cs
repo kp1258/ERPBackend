@@ -20,9 +20,9 @@ namespace ERPBackend.Repositories
                 .ToList();
         }
 
-        public Client GetClientById(int id)
+        public Client GetClientById(int clientId)
         {
-            return FindByCondition(client => client.ClientId.Equals(id)).FirstOrDefault();
+            return FindByCondition(client => client.ClientId.Equals(clientId)).FirstOrDefault();
         }
         public void CreateClient(Client client)
         {
