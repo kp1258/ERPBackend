@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBackend.Migrations
 {
     [DbContext(typeof(ERPContext))]
-    [Migration("20201005212536_FirstModelMigration")]
-    partial class FirstModelMigration
+    [Migration("20201010183200_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,15 +19,37 @@ namespace ERPBackend.Migrations
                 .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("ERPBackend.Entities.Client", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.Address", b =>
                 {
-                    b.Property<int>("ClientId")
+                    b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("AddressId");
+
+                    b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("ERPBackend.Entities.Models.Client", b =>
+                {
+                    b.Property<int>("ClientId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
@@ -46,27 +68,21 @@ namespace ERPBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("SalesmanId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("ClientId");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("SalesmanId");
 
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.CustomOrderDetail", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.CustomOrderItem", b =>
                 {
-                    b.Property<int>("CustomOrderDetailId")
+                    b.Property<int>("CustomOrderItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -79,7 +95,7 @@ namespace ERPBackend.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("CustomOrderDetailId");
+                    b.HasKey("CustomOrderItemId");
 
                     b.HasIndex("CustomProductId");
 
@@ -88,7 +104,7 @@ namespace ERPBackend.Migrations
                     b.ToTable("CustomOrderDetails");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.CustomProduct", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.CustomProduct", b =>
                 {
                     b.Property<int>("CustomProductId")
                         .ValueGeneratedOnAdd()
@@ -112,7 +128,7 @@ namespace ERPBackend.Migrations
                     b.ToTable("CustomProducts");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.Material", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.Material", b =>
                 {
                     b.Property<int>("MaterialId")
                         .ValueGeneratedOnAdd()
@@ -128,9 +144,13 @@ namespace ERPBackend.Migrations
                     b.ToTable("Materials");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.MaterialItem", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.MaterialItem", b =>
                 {
                     b.Property<int>("MaterialItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -138,10 +158,13 @@ namespace ERPBackend.Migrations
 
                     b.HasKey("MaterialItemId");
 
+                    b.HasIndex("MaterialId")
+                        .IsUnique();
+
                     b.ToTable("MaterialWarehouse");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.Order", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.Order", b =>
                 {
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
@@ -181,9 +204,9 @@ namespace ERPBackend.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.StandardOrderDetail", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.StandardOrderItem", b =>
                 {
-                    b.Property<int>("StandardOrderDetailId")
+                    b.Property<int>("StandardOrderItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -196,7 +219,7 @@ namespace ERPBackend.Migrations
                     b.Property<int>("StandardProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("StandardOrderDetailId");
+                    b.HasKey("StandardOrderItemId");
 
                     b.HasIndex("OrderId");
 
@@ -205,7 +228,7 @@ namespace ERPBackend.Migrations
                     b.ToTable("StandardOrderDetails");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.StandardProduct", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.StandardProduct", b =>
                 {
                     b.Property<int>("StandardProductId")
                         .ValueGeneratedOnAdd()
@@ -232,12 +255,13 @@ namespace ERPBackend.Migrations
                         new
                         {
                             StandardProductId = 1,
+                            Dimensions = "100x100",
                             Name = "Produkt",
-                            StandardProductCategoryId = 0
+                            StandardProductCategoryId = 1
                         });
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.StandardProductCategory", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.StandardProductCategory", b =>
                 {
                     b.Property<int>("StandardProductCategoryId")
                         .ValueGeneratedOnAdd()
@@ -251,22 +275,46 @@ namespace ERPBackend.Migrations
                     b.HasKey("StandardProductCategoryId");
 
                     b.ToTable("StandardProductCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            StandardProductCategoryId = 1,
+                            CategoryName = "Nóż"
+                        },
+                        new
+                        {
+                            StandardProductCategoryId = 2,
+                            CategoryName = "Sito"
+                        },
+                        new
+                        {
+                            StandardProductCategoryId = 3,
+                            CategoryName = "Szarpak"
+                        });
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.StandardProductItem", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.StandardProductItem", b =>
                 {
                     b.Property<int>("StandardProductItemId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("StandardProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("StandardProductItemId");
+
+                    b.HasIndex("StandardProductId")
+                        .IsUnique();
 
                     b.ToTable("StandardProductWarehouse");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.User", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -294,6 +342,10 @@ namespace ERPBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
@@ -304,104 +356,151 @@ namespace ERPBackend.Migrations
                             UserId = 1,
                             FirstName = "Jan",
                             LastName = "Kowalski",
-                            Login = "login",
+                            Login = "jan_k",
                             Password = "password",
-                            Role = "Administrator"
+                            Role = "Administrator",
+                            Status = "Active"
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            FirstName = "Anna",
+                            LastName = "Nowak",
+                            Login = "anna_n",
+                            Password = "password",
+                            Role = "Salesman",
+                            Status = "Active"
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            FirstName = "Andrzej",
+                            LastName = "Malinowski",
+                            Login = "andrzej_m",
+                            Password = "password",
+                            Role = "ProductionManager",
+                            Status = "Active"
+                        },
+                        new
+                        {
+                            UserId = 4,
+                            FirstName = "Agata",
+                            LastName = "Krzeszowska",
+                            Login = "agata_k",
+                            Password = "password",
+                            Role = "Technologist",
+                            Status = "Active"
+                        },
+                        new
+                        {
+                            UserId = 5,
+                            FirstName = "Edward",
+                            LastName = "Rak",
+                            Login = "edward_r",
+                            Password = "password",
+                            Role = "Warehouseman",
+                            Status = "Active"
                         });
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.Client", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.Client", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.User", "Salesman")
+                    b.HasOne("ERPBackend.Entities.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ERPBackend.Entities.Models.User", "Salesman")
                         .WithMany("Clients")
                         .HasForeignKey("SalesmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.CustomOrderDetail", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.CustomOrderItem", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.CustomProduct", "CustomProduct")
-                        .WithMany("CustomOrderDetails")
+                    b.HasOne("ERPBackend.Entities.Models.CustomProduct", "CustomProduct")
+                        .WithMany("CustomOrderItems")
                         .HasForeignKey("CustomProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERPBackend.Entities.Order", "Order")
+                    b.HasOne("ERPBackend.Entities.Models.Order", "Order")
                         .WithMany("CustomOrderDetails")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.CustomProduct", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.CustomProduct", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.User", "Technologist")
+                    b.HasOne("ERPBackend.Entities.Models.User", "Technologist")
                         .WithMany("CustomProducts")
                         .HasForeignKey("TechnologistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.MaterialItem", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.MaterialItem", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.Material", "Material")
+                    b.HasOne("ERPBackend.Entities.Models.Material", "Material")
                         .WithOne("MaterialItem")
-                        .HasForeignKey("ERPBackend.Entities.MaterialItem", "MaterialItemId")
+                        .HasForeignKey("ERPBackend.Entities.Models.MaterialItem", "MaterialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.Order", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.Order", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.Client", "Client")
+                    b.HasOne("ERPBackend.Entities.Models.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERPBackend.Entities.User", "Salesman")
+                    b.HasOne("ERPBackend.Entities.Models.User", "Salesman")
                         .WithMany("Salesmen")
                         .HasForeignKey("SalesmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERPBackend.Entities.User", "Warehouseman")
+                    b.HasOne("ERPBackend.Entities.Models.User", "Warehouseman")
                         .WithMany("Warehousemen")
                         .HasForeignKey("WarehousemanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.StandardOrderDetail", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.StandardOrderItem", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.Order", "Order")
+                    b.HasOne("ERPBackend.Entities.Models.Order", "Order")
                         .WithMany("StandardOrderDetails")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERPBackend.Entities.StandardProduct", "StandardProduct")
-                        .WithMany("StandardOrderDetails")
+                    b.HasOne("ERPBackend.Entities.Models.StandardProduct", "StandardProduct")
+                        .WithMany("StandardOrderItem")
                         .HasForeignKey("StandardProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.StandardProduct", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.StandardProduct", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.StandardProductCategory", "StandardProductCategory")
+                    b.HasOne("ERPBackend.Entities.Models.StandardProductCategory", "StandardProductCategory")
                         .WithMany("StandardProducts")
                         .HasForeignKey("StandardProductCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.StandardProductItem", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.StandardProductItem", b =>
                 {
-                    b.HasOne("ERPBackend.Entities.StandardProduct", "StandardProduct")
+                    b.HasOne("ERPBackend.Entities.Models.StandardProduct", "StandardProduct")
                         .WithOne("ProductItem")
-                        .HasForeignKey("ERPBackend.Entities.StandardProductItem", "StandardProductItemId")
+                        .HasForeignKey("ERPBackend.Entities.Models.StandardProductItem", "StandardProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -64,17 +64,34 @@ namespace ERPBackend.Controllers
                 _logger.LogError("Client object sent from client is null");
                 return BadRequest("Client object is null");
             }
-            // if (!ModelState.IsValid)
-            // {
-            //     _logger.LogError("Invalid client object sent from client");
-            //     return BadRequest("Invalid client object");
-            // }
             var clientEntity = _mapper.Map<Client>(client);
             _repository.Client.CreateClient(clientEntity);
             _repository.Save();
 
             var createdClient = _mapper.Map<ClientReadDto>(clientEntity);
             return CreatedAtRoute("ClientById", new { id = createdClient.ClientId }, createdClient);
+        }
+
+        //PUT api/client/{id}
+        [HttpPut("{id}")]
+        public IActionResult UpdateClient(int id, [FromBody] ClientUpdateDto client)
+        {
+            if (client == null)
+            {
+                _logger.LogError("Client object sent from client is null");
+                return BadRequest("Client object is null");
+            }
+            var clientEntity = _repository.Client.GetClientById(id);
+            if (clientEntity == null)
+            {
+                _logger.LogError($"Client with id {id} does not exist");
+                return NotFound();
+            }
+            _mapper.Map(client, clientEntity);
+
+            _repository.Client.UpdateClient(clientEntity);
+            _repository.Save();
+            return NoContent();
         }
     }
 }

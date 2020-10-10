@@ -8,7 +8,7 @@ namespace ERPBackend.Entities.Models
         public int StandardProductCategoryId { get; set; }
         [Required]
         [MaxLength(20)]
-        public string CategoryName { get; set; }
+        public string Name { get; set; }
         public ICollection<StandardProduct> StandardProducts { get; set; }
     }
 }

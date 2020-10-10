@@ -2,7 +2,7 @@ namespace ERPBackend.Entities.Models
 {
     public class CustomOrderItem
     {
-        public int CustomOrderDetailId { get; set; }
+        public int CustomOrderItemId { get; set; }
         public int OrderId { get; set; }
         public Order Order { get; set; }
         public int CustomProductId { get; set; }
@@ -13,7 +13,7 @@ namespace ERPBackend.Entities.Models
 
     public class StandardOrderItem
     {
-        public int StandardOrderDetailId { get; set; }
+        public int StandardOrderItemId { get; set; }
         public int OrderId { get; set; }
         public Order Order { get; set; }
         public int StandardProductId { get; set; }

@@ -4,12 +4,109 @@ using MySql.Data.EntityFrameworkCore.Metadata;
 
 namespace ERPBackend.Migrations
 {
-    public partial class FirstModelMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Products");
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    AddressId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Street = table.Column<string>(nullable: false),
+                    PostalCode = table.Column<string>(nullable: false),
+                    City = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Materials",
+                columns: table => new
+                {
+                    MaterialId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 40, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Materials", x => x.MaterialId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StandardProductCategories",
+                columns: table => new
+                {
+                    StandardProductCategoryId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    CategoryName = table.Column<string>(maxLength: 20, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StandardProductCategories", x => x.StandardProductCategoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Login = table.Column<string>(maxLength: 20, nullable: false),
+                    Password = table.Column<string>(maxLength: 20, nullable: false),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    Role = table.Column<string>(nullable: false),
+                    Status = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MaterialWarehouse",
+                columns: table => new
+                {
+                    MaterialItemId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Quantity = table.Column<int>(nullable: false),
+                    MaterialId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MaterialWarehouse", x => x.MaterialItemId);
+                    table.ForeignKey(
+                        name: "FK_MaterialWarehouse_Materials_MaterialId",
+                        column: x => x.MaterialId,
+                        principalTable: "Materials",
+                        principalColumn: "MaterialId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StandardProducts",
+                columns: table => new
+                {
+                    StandardProductId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 40, nullable: false),
+                    Dimensions = table.Column<string>(nullable: true),
+                    StandardProductCategoryId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StandardProducts", x => x.StandardProductId);
+                    table.ForeignKey(
+                        name: "FK_StandardProducts_StandardProductCategories_StandardProductCa~",
+                        column: x => x.StandardProductCategoryId,
+                        principalTable: "StandardProductCategories",
+                        principalColumn: "StandardProductCategoryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Clients",
@@ -20,16 +117,20 @@ namespace ERPBackend.Migrations
                     CompanyName = table.Column<string>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    Street = table.Column<string>(nullable: false),
-                    PostalCode = table.Column<string>(nullable: false),
-                    City = table.Column<string>(nullable: false),
                     PhoneNumber = table.Column<string>(nullable: false),
                     EMail = table.Column<string>(nullable: true),
+                    AddressId = table.Column<int>(nullable: false),
                     SalesmanId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clients", x => x.ClientId);
+                    table.ForeignKey(
+                        name: "FK_Clients_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "AddressId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Clients_Users_SalesmanId",
                         column: x => x.SalesmanId,
@@ -60,34 +161,23 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MaterialWarehouse",
+                name: "StandardProductWarehouse",
                 columns: table => new
                 {
-                    MaterialItemId = table.Column<int>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MaterialWarehouse", x => x.MaterialItemId);
-                    table.ForeignKey(
-                        name: "FK_MaterialWarehouse_Materials_MaterialItemId",
-                        column: x => x.MaterialItemId,
-                        principalTable: "Materials",
-                        principalColumn: "MaterialId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StandardProductCategories",
-                columns: table => new
-                {
-                    StandardProductCategoryId = table.Column<int>(nullable: false)
+                    StandardProductItemId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    CategoryName = table.Column<string>(maxLength: 20, nullable: false)
+                    Quantity = table.Column<int>(nullable: false),
+                    StandardProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StandardProductCategories", x => x.StandardProductCategoryId);
+                    table.PrimaryKey("PK_StandardProductWarehouse", x => x.StandardProductItemId);
+                    table.ForeignKey(
+                        name: "FK_StandardProductWarehouse_StandardProducts_StandardProductId",
+                        column: x => x.StandardProductId,
+                        principalTable: "StandardProducts",
+                        principalColumn: "StandardProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,31 +218,10 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StandardProducts",
-                columns: table => new
-                {
-                    StandardProductId = table.Column<int>(nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 40, nullable: false),
-                    Dimensions = table.Column<string>(nullable: true),
-                    StandardProductCategoryId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StandardProducts", x => x.StandardProductId);
-                    table.ForeignKey(
-                        name: "FK_StandardProducts_StandardProductCategories_StandardProductCa~",
-                        column: x => x.StandardProductCategoryId,
-                        principalTable: "StandardProductCategories",
-                        principalColumn: "StandardProductCategoryId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CustomOrderDetails",
                 columns: table => new
                 {
-                    CustomOrderDetailId = table.Column<int>(nullable: false)
+                    CustomOrderItemId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     OrderId = table.Column<int>(nullable: false),
                     CustomProductId = table.Column<int>(nullable: false),
@@ -160,7 +229,7 @@ namespace ERPBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomOrderDetails", x => x.CustomOrderDetailId);
+                    table.PrimaryKey("PK_CustomOrderDetails", x => x.CustomOrderItemId);
                     table.ForeignKey(
                         name: "FK_CustomOrderDetails_CustomProducts_CustomProductId",
                         column: x => x.CustomProductId,
@@ -179,7 +248,7 @@ namespace ERPBackend.Migrations
                 name: "StandardOrderDetails",
                 columns: table => new
                 {
-                    StandardOrderDetailId = table.Column<int>(nullable: false)
+                    StandardOrderItemId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     OrderId = table.Column<int>(nullable: false),
                     StandardProductId = table.Column<int>(nullable: false),
@@ -187,7 +256,7 @@ namespace ERPBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StandardOrderDetails", x => x.StandardOrderDetailId);
+                    table.PrimaryKey("PK_StandardOrderDetails", x => x.StandardOrderItemId);
                     table.ForeignKey(
                         name: "FK_StandardOrderDetails_Orders_OrderId",
                         column: x => x.OrderId,
@@ -202,28 +271,37 @@ namespace ERPBackend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "StandardProductWarehouse",
-                columns: table => new
+            migrationBuilder.InsertData(
+                table: "StandardProductCategories",
+                columns: new[] { "StandardProductCategoryId", "CategoryName" },
+                values: new object[,]
                 {
-                    StandardProductItemId = table.Column<int>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
+                    { 1, "Nóż" },
+                    { 2, "Sito" },
+                    { 3, "Szarpak" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "FirstName", "LastName", "Login", "Password", "Role", "Status" },
+                values: new object[,]
                 {
-                    table.PrimaryKey("PK_StandardProductWarehouse", x => x.StandardProductItemId);
-                    table.ForeignKey(
-                        name: "FK_StandardProductWarehouse_StandardProducts_StandardProductIte~",
-                        column: x => x.StandardProductItemId,
-                        principalTable: "StandardProducts",
-                        principalColumn: "StandardProductId",
-                        onDelete: ReferentialAction.Cascade);
+                    { 1, "Jan", "Kowalski", "jan_k", "password", "Administrator", "Active" },
+                    { 2, "Anna", "Nowak", "anna_n", "password", "Salesman", "Active" },
+                    { 3, "Andrzej", "Malinowski", "andrzej_m", "password", "ProductionManager", "Active" },
+                    { 4, "Agata", "Krzeszowska", "agata_k", "password", "Technologist", "Active" },
+                    { 5, "Edward", "Rak", "edward_r", "password", "Warehouseman", "Active" }
                 });
 
             migrationBuilder.InsertData(
                 table: "StandardProducts",
                 columns: new[] { "StandardProductId", "Dimensions", "Name", "StandardProductCategoryId" },
-                values: new object[] { 1, null, "Produkt", 0 });
+                values: new object[] { 1, "100x100", "Produkt", 1 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_AddressId",
+                table: "Clients",
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_SalesmanId",
@@ -244,6 +322,12 @@ namespace ERPBackend.Migrations
                 name: "IX_CustomProducts_TechnologistId",
                 table: "CustomProducts",
                 column: "TechnologistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MaterialWarehouse_MaterialId",
+                table: "MaterialWarehouse",
+                column: "MaterialId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ClientId",
@@ -274,6 +358,12 @@ namespace ERPBackend.Migrations
                 name: "IX_StandardProducts_StandardProductCategoryId",
                 table: "StandardProducts",
                 column: "StandardProductCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StandardProductWarehouse_StandardProductId",
+                table: "StandardProductWarehouse",
+                column: "StandardProductId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -294,6 +384,9 @@ namespace ERPBackend.Migrations
                 name: "CustomProducts");
 
             migrationBuilder.DropTable(
+                name: "Materials");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
@@ -305,23 +398,11 @@ namespace ERPBackend.Migrations
             migrationBuilder.DropTable(
                 name: "StandardProductCategories");
 
-            migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    ProductId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.ProductId);
-                });
+            migrationBuilder.DropTable(
+                name: "Addresses");
 
-            migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "ProductId", "Name" },
-                values: new object[] { 1, "Produkt" });
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

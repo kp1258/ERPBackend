@@ -29,8 +29,9 @@ namespace ERPBackend.Entities
         //fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardProductConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardProductCategoryConfiguration());
 
             modelBuilder
                 .Entity<User>()
@@ -38,6 +39,13 @@ namespace ERPBackend.Entities
                 .HasConversion(
                     v => v.ToString(),
                     v => (UserRole)Enum.Parse(typeof(UserRole), v)
+                );
+            modelBuilder
+                .Entity<User>()
+                .Property(e => e.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (UserStatus)Enum.Parse(typeof(UserStatus), v)
                 );
             modelBuilder
                 .Entity<Order>()

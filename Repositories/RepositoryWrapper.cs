@@ -11,6 +11,7 @@ namespace ERPBackend.Repositories
         private IOrderRepository _order;
         private IStandardProductRepository _standardProduct;
         private ICustomProductRepository _customProduct;
+        private IStandardProductCategoryRepository _standardProductCategory;
 
         public IUserRepository User
         {
@@ -68,6 +69,18 @@ namespace ERPBackend.Repositories
                     _customProduct = new CustomProductRepository(_erpContext);
                 }
                 return _customProduct;
+            }
+        }
+
+        public IStandardProductCategoryRepository StandardProductCategory
+        {
+            get
+            {
+                if (_standardProductCategory == null)
+                {
+                    _standardProductCategory = new StandardProductCategoryRepository(_erpContext);
+                }
+                return _standardProductCategory;
             }
         }
 
