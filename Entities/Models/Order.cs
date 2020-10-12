@@ -13,18 +13,19 @@ namespace ERPBackend.Entities.Models
         public int OrderId { get; set; }
         [Required]
         public DateTime PlacingDate { get; set; }
-        public DateTime FulfillmentDate { get; set; }
+        public DateTime? FulfillmentDate { get; set; }
         [Required]
         public OrderStatus Status { get; set; }
         [Required]
         public OrderType Type { get; set; }
-
+        [Required]
         public int ClientId { get; set; }
         public Client Client { get; set; }
+        [Required]
         public int SalesmanId { get; set; }
         [ForeignKey("SalesmanId")]
         public User Salesman { get; set; }
-        public int WarehousemanId { get; set; }
+        public int? WarehousemanId { get; set; }
         [ForeignKey("WarehousemanId")]
         public User Warehouseman { get; set; }
 

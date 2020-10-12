@@ -8,8 +8,8 @@ namespace ERPBackend.Profiles
     {
         public AddressProfile()
         {
-            CreateMap<Address, AddressInfoDto>();
-            CreateMap<AddressInfoDto, Address>();
+            CreateMap<Address, AddressInfoDto>().ReverseMap();
+            //CreateMap<AddressInfoDto, Address>().ReverseMap();
         }
     }
 }

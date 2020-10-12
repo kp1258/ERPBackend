@@ -9,6 +9,7 @@ namespace ERPBackend.Entities.Models
         [Required]
         public int Quantity { get; set; }
 
+        [Required]
         public int MaterialId { get; set; }
         public Material Material { get; set; }
     }

@@ -10,7 +10,7 @@ namespace ERPBackend.Entities.Models
         [StringLength(40)]
         public string Name { get; set; }
         public string Dimensions { get; set; }
-
+        [Required]
         public int StandardProductCategoryId { get; set; }
         public StandardProductCategory StandardProductCategory { get; set; }
 
@@ -27,7 +27,7 @@ namespace ERPBackend.Entities.Models
         [Required]
         public string Description { get; set; }
 
-        public int TechnologistId { get; set; }
+        public int? TechnologistId { get; set; }
         public User Technologist { get; set; }
 
         public ICollection<CustomOrderItem> CustomOrderItems { get; set; }

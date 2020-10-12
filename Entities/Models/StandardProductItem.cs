@@ -8,7 +8,7 @@ namespace ERPBackend.Entities.Models
         public int StandardProductItemId { get; set; }
         [Required]
         public int Quantity { get; set; }
-
+        [Required]
         public int StandardProductId { get; set; }
         public StandardProduct StandardProduct { get; set; }
     }

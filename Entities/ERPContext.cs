@@ -9,31 +9,45 @@ namespace ERPBackend.Entities
     {
         public ERPContext(DbContextOptions options) : base(options)
         {
-
+            //this.ChangeTracker.LazyLoadingEnabled = false;
         }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialItem> MaterialWarehouse { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<StandardOrderItem> StandardOrderDetails { get; set; }
-        public DbSet<CustomOrderItem> CustomOrderDetails { get; set; }
+        public DbSet<StandardOrderItem> StandardOrderItems { get; set; }
+        public DbSet<CustomOrderItem> CustomOrderItems { get; set; }
         public DbSet<StandardProduct> StandardProducts { get; set; }
         public DbSet<CustomProduct> CustomProducts { get; set; }
         public DbSet<StandardProductCategory> StandardProductCategories { get; set; }
         public DbSet<StandardProductItem> StandardProductWarehouse { get; set; }
         public DbSet<User> Users { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
+        {
 
-
+        }
         //fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new StandardProductConfiguration());
+
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new StandardProductCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
             modelBuilder.ApplyConfiguration(new ClientConfiguration());
+
+            modelBuilder.ApplyConfiguration(new CustomOrderItemConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomProductConfiguration());
+
+            modelBuilder.ApplyConfiguration(new MaterialConfiguration());
+            modelBuilder.ApplyConfiguration(new MaterialItemConfiguration());
+
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
+
+            modelBuilder.ApplyConfiguration(new StandardProductConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardProductCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardOrderItemConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardProductItemConfiguration());
 
             modelBuilder
                 .Entity<User>()

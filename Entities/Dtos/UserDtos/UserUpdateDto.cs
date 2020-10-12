@@ -1,3 +1,5 @@
+using ERPBackend.Entities.Models;
+
 namespace ERPBackend.Entities.Dtos.UserDtos
 {
     public class UserUpdateDto
@@ -6,6 +8,6 @@ namespace ERPBackend.Entities.Dtos.UserDtos
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Role { get; set; }
+        public UserRole Role { get; set; }
     }
 }

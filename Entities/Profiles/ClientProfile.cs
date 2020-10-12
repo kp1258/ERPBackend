@@ -1,4 +1,5 @@
 using AutoMapper;
+using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.ClientDtos;
 using ERPBackend.Entities.Models;
 
@@ -11,6 +12,7 @@ namespace ERPBackend.Profiles
             CreateMap<Client, ClientReadDto>();
             CreateMap<ClientCreateDto, Client>();
             CreateMap<ClientUpdateDto, Client>();
+            CreateMap<Client, ClientInfoDto>();
         }
     }
 }
