@@ -4,6 +4,7 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
 using ERPBackend.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 {
@@ -27,9 +28,25 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
         return FindAll().OrderBy(order => order.PlacingDate).ToList();
     }
 
-    public Order GetOrderById(int clientId)
+    public Order GetOrderDetailsById(int orderId)
     {
-        return FindByCondition(client => client.ClientId.Equals(clientId)).FirstOrDefault();
+        return FindByCondition(order => order.OrderId.Equals(orderId))
+                .OrderBy(order => order.PlacingDate)
+                .Include(o => o.Client)
+                    .ThenInclude(c => c.Address)
+                .Include(o => o.Salesman)
+                .Include(o => o.Warehouseman)
+                .Include(o => o.CustomOrderItems)
+                    .ThenInclude(o => o.CustomProduct)
+                .Include(o => o.StandardOrderItems)
+                    .ThenInclude(o => o.StandardProduct)
+                        .ThenInclude(o => o.StandardProductCategory)
+                .FirstOrDefault();
+    }
+
+    public Order GetOrderById(int orderId)
+    {
+        return FindByCondition(order => order.OrderId.Equals(orderId)).FirstOrDefault();
     }
 
     public IEnumerable<Order> GetOrdersBySalesman(int salesmanId)

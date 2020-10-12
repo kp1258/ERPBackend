@@ -7,6 +7,7 @@ namespace ERPBackend.Contracts
     {
         IEnumerable<Order> GetAllOrders();
         Order GetOrderById(int orderId);
+        Order GetOrderDetailsById(int id);
         IEnumerable<Order> GetOrdersBySalesman(int salesmanId);
         IEnumerable<Order> GetOrdersByStatus(OrderStatus status);
         void CreateOrder(Order order);

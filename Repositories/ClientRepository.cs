@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
@@ -16,13 +18,16 @@ namespace ERPBackend.Repositories
         public IEnumerable<Client> GetAllClients()
         {
             return FindAll()
+                .Include(c => c.Address)
                 .OrderBy(client => client.CompanyName)
                 .ToList();
         }
 
         public Client GetClientById(int clientId)
         {
-            return FindByCondition(client => client.ClientId.Equals(clientId)).FirstOrDefault();
+            return FindByCondition(client => client.ClientId.Equals(clientId))
+                    .Include(c => c.Address)
+                    .FirstOrDefault();
         }
         public void CreateClient(Client client)
         {

@@ -3,6 +3,7 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERPBackend.Repositories
 {
@@ -14,12 +15,17 @@ namespace ERPBackend.Repositories
         }
         public IEnumerable<CustomProduct> GetAllProducts()
         {
-            return FindAll().OrderBy(products => products.Name).ToList();
+            return FindAll()
+                    .OrderBy(products => products.Name)
+                    .Include(p => p.Technologist)
+                    .ToList();
         }
 
         public CustomProduct GetProductById(int productId)
         {
-            return FindByCondition(product => product.CustomProductId.Equals(productId)).FirstOrDefault();
+            return FindByCondition(product => product.CustomProductId.Equals(productId))
+                    .Include(p => p.Technologist)
+                    .FirstOrDefault();
         }
 
         public void CreateProduct(CustomProduct product)

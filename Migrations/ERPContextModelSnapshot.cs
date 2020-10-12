@@ -38,6 +38,29 @@ namespace ERPBackend.Migrations
                     b.HasKey("AddressId");
 
                     b.ToTable("Addresses");
+
+                    b.HasData(
+                        new
+                        {
+                            AddressId = 1,
+                            City = "Słubice",
+                            PostalCode = "69-100",
+                            Street = "ul.Witosa 10"
+                        },
+                        new
+                        {
+                            AddressId = 2,
+                            City = "Poznań",
+                            PostalCode = "61-222",
+                            Street = "ul.Nowodworska 80"
+                        },
+                        new
+                        {
+                            AddressId = 3,
+                            City = "Gorzów Wielkopolski",
+                            PostalCode = "66-400",
+                            Street = "al. Wojska Polskiego 33"
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.Client", b =>
@@ -76,6 +99,41 @@ namespace ERPBackend.Migrations
                     b.HasIndex("SalesmanId");
 
                     b.ToTable("Clients");
+
+                    b.HasData(
+                        new
+                        {
+                            ClientId = 1,
+                            AddressId = 1,
+                            CompanyName = "Zakłady mięsne Stokłosa",
+                            EMail = "zm_stokolosa@mail.com",
+                            FirstName = "Adam",
+                            LastName = "Markowski",
+                            PhoneNumber = "678234765",
+                            SalesmanId = 2
+                        },
+                        new
+                        {
+                            ClientId = 2,
+                            AddressId = 2,
+                            CompanyName = "Zakłady mięsne Solańscy",
+                            EMail = "zm_solanscy@mail.com",
+                            FirstName = "Edward",
+                            LastName = "Solański",
+                            PhoneNumber = "978456723",
+                            SalesmanId = 2
+                        },
+                        new
+                        {
+                            ClientId = 3,
+                            AddressId = 3,
+                            CompanyName = "ZM Turowski",
+                            EMail = "zm_turowski@mail.com",
+                            FirstName = "Piotr",
+                            LastName = "Turowski",
+                            PhoneNumber = "867544765",
+                            SalesmanId = 2
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.CustomOrderItem", b =>
@@ -100,6 +158,36 @@ namespace ERPBackend.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("CustomOrderDetails");
+
+                    b.HasData(
+                        new
+                        {
+                            CustomOrderItemId = 1,
+                            CustomProductId = 4,
+                            OrderId = 3,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            CustomOrderItemId = 2,
+                            CustomProductId = 1,
+                            OrderId = 4,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            CustomOrderItemId = 3,
+                            CustomProductId = 2,
+                            OrderId = 4,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            CustomOrderItemId = 4,
+                            CustomProductId = 3,
+                            OrderId = 4,
+                            Quantity = 9
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.CustomProduct", b =>
@@ -116,7 +204,7 @@ namespace ERPBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("TechnologistId")
+                    b.Property<int?>("TechnologistId")
                         .HasColumnType("int");
 
                     b.HasKey("CustomProductId");
@@ -124,6 +212,35 @@ namespace ERPBackend.Migrations
                     b.HasIndex("TechnologistId");
 
                     b.ToTable("CustomProducts");
+
+                    b.HasData(
+                        new
+                        {
+                            CustomProductId = 1,
+                            Description = "Opis",
+                            Name = "Produkt specjalny 1",
+                            TechnologistId = 4
+                        },
+                        new
+                        {
+                            CustomProductId = 2,
+                            Description = "Opis",
+                            Name = "Produkt specjalny 2",
+                            TechnologistId = 4
+                        },
+                        new
+                        {
+                            CustomProductId = 3,
+                            Description = "Opis",
+                            Name = "Produkt specjalny 3",
+                            TechnologistId = 4
+                        },
+                        new
+                        {
+                            CustomProductId = 4,
+                            Description = "Opis",
+                            Name = "Produkt specjalny 4"
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.Material", b =>
@@ -140,6 +257,28 @@ namespace ERPBackend.Migrations
                     b.HasKey("MaterialId");
 
                     b.ToTable("Materials");
+
+                    b.HasData(
+                        new
+                        {
+                            MaterialId = 1,
+                            Name = "Materiał 1"
+                        },
+                        new
+                        {
+                            MaterialId = 2,
+                            Name = "Materiał 2"
+                        },
+                        new
+                        {
+                            MaterialId = 3,
+                            Name = "Materiał 3"
+                        },
+                        new
+                        {
+                            MaterialId = 4,
+                            Name = "Materiał 4"
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.MaterialItem", b =>
@@ -160,6 +299,32 @@ namespace ERPBackend.Migrations
                         .IsUnique();
 
                     b.ToTable("MaterialWarehouse");
+
+                    b.HasData(
+                        new
+                        {
+                            MaterialItemId = 1,
+                            MaterialId = 1,
+                            Quantity = 30
+                        },
+                        new
+                        {
+                            MaterialItemId = 2,
+                            MaterialId = 2,
+                            Quantity = 50
+                        },
+                        new
+                        {
+                            MaterialItemId = 3,
+                            MaterialId = 3,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            MaterialItemId = 4,
+                            MaterialId = 4,
+                            Quantity = 30
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.Order", b =>
@@ -171,7 +336,7 @@ namespace ERPBackend.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FulfillmentDate")
+                    b.Property<DateTime?>("FulfillmentDate")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime>("PlacingDate")
@@ -188,7 +353,7 @@ namespace ERPBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("WarehousemanId")
+                    b.Property<int?>("WarehousemanId")
                         .HasColumnType("int");
 
                     b.HasKey("OrderId");
@@ -200,6 +365,58 @@ namespace ERPBackend.Migrations
                     b.HasIndex("WarehousemanId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = 1,
+                            ClientId = 1,
+                            FulfillmentDate = new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PlacingDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SalesmanId = 2,
+                            Status = "Completed",
+                            Type = "Standard",
+                            WarehousemanId = 5
+                        },
+                        new
+                        {
+                            OrderId = 2,
+                            ClientId = 2,
+                            PlacingDate = new DateTime(2020, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SalesmanId = 2,
+                            Status = "Placed",
+                            Type = "Standard"
+                        },
+                        new
+                        {
+                            OrderId = 3,
+                            ClientId = 3,
+                            PlacingDate = new DateTime(2020, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SalesmanId = 2,
+                            Status = "Placed",
+                            Type = "Custom"
+                        },
+                        new
+                        {
+                            OrderId = 4,
+                            ClientId = 1,
+                            FulfillmentDate = new DateTime(2020, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PlacingDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SalesmanId = 2,
+                            Status = "Completed",
+                            Type = "Custom",
+                            WarehousemanId = 5
+                        },
+                        new
+                        {
+                            OrderId = 5,
+                            ClientId = 2,
+                            PlacingDate = new DateTime(2020, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SalesmanId = 2,
+                            Status = "InProgress",
+                            Type = "Standard",
+                            WarehousemanId = 5
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.StandardOrderItem", b =>
@@ -224,6 +441,57 @@ namespace ERPBackend.Migrations
                     b.HasIndex("StandardProductId");
 
                     b.ToTable("StandardOrderDetails");
+
+                    b.HasData(
+                        new
+                        {
+                            StandardOrderItemId = 1,
+                            OrderId = 1,
+                            Quantity = 10,
+                            StandardProductId = 1
+                        },
+                        new
+                        {
+                            StandardOrderItemId = 2,
+                            OrderId = 1,
+                            Quantity = 10,
+                            StandardProductId = 2
+                        },
+                        new
+                        {
+                            StandardOrderItemId = 3,
+                            OrderId = 1,
+                            Quantity = 10,
+                            StandardProductId = 3
+                        },
+                        new
+                        {
+                            StandardOrderItemId = 4,
+                            OrderId = 2,
+                            Quantity = 10,
+                            StandardProductId = 3
+                        },
+                        new
+                        {
+                            StandardOrderItemId = 5,
+                            OrderId = 2,
+                            Quantity = 10,
+                            StandardProductId = 4
+                        },
+                        new
+                        {
+                            StandardOrderItemId = 6,
+                            OrderId = 5,
+                            Quantity = 10,
+                            StandardProductId = 1
+                        },
+                        new
+                        {
+                            StandardOrderItemId = 7,
+                            OrderId = 5,
+                            Quantity = 10,
+                            StandardProductId = 2
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.StandardProduct", b =>
@@ -254,8 +522,29 @@ namespace ERPBackend.Migrations
                         {
                             StandardProductId = 1,
                             Dimensions = "100x100",
-                            Name = "Produkt",
+                            Name = "Produkt 1",
                             StandardProductCategoryId = 1
+                        },
+                        new
+                        {
+                            StandardProductId = 2,
+                            Dimensions = "100x100",
+                            Name = "Produkt 2",
+                            StandardProductCategoryId = 2
+                        },
+                        new
+                        {
+                            StandardProductId = 3,
+                            Dimensions = "100x100",
+                            Name = "Produkt 3",
+                            StandardProductCategoryId = 3
+                        },
+                        new
+                        {
+                            StandardProductId = 4,
+                            Dimensions = "100x100",
+                            Name = "Produkt 4",
+                            StandardProductCategoryId = 4
                         });
                 });
 
@@ -265,7 +554,7 @@ namespace ERPBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("CategoryName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(20)")
                         .HasMaxLength(20);
@@ -278,17 +567,22 @@ namespace ERPBackend.Migrations
                         new
                         {
                             StandardProductCategoryId = 1,
-                            CategoryName = "Nóż"
+                            Name = "Nóż"
                         },
                         new
                         {
                             StandardProductCategoryId = 2,
-                            CategoryName = "Sito"
+                            Name = "Sito"
                         },
                         new
                         {
                             StandardProductCategoryId = 3,
-                            CategoryName = "Szarpak"
+                            Name = "Szarpak"
+                        },
+                        new
+                        {
+                            StandardProductCategoryId = 4,
+                            Name = "Inne"
                         });
                 });
 
@@ -310,6 +604,32 @@ namespace ERPBackend.Migrations
                         .IsUnique();
 
                     b.ToTable("StandardProductWarehouse");
+
+                    b.HasData(
+                        new
+                        {
+                            StandardProductItemId = 1,
+                            Quantity = 40,
+                            StandardProductId = 1
+                        },
+                        new
+                        {
+                            StandardProductItemId = 2,
+                            Quantity = 50,
+                            StandardProductId = 2
+                        },
+                        new
+                        {
+                            StandardProductItemId = 3,
+                            Quantity = 10,
+                            StandardProductId = 3
+                        },
+                        new
+                        {
+                            StandardProductItemId = 4,
+                            Quantity = 25,
+                            StandardProductId = 4
+                        });
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.User", b =>
@@ -425,7 +745,7 @@ namespace ERPBackend.Migrations
                         .IsRequired();
 
                     b.HasOne("ERPBackend.Entities.Models.Order", "Order")
-                        .WithMany("CustomOrderDetails")
+                        .WithMany("CustomOrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -435,9 +755,7 @@ namespace ERPBackend.Migrations
                 {
                     b.HasOne("ERPBackend.Entities.Models.User", "Technologist")
                         .WithMany("CustomProducts")
-                        .HasForeignKey("TechnologistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TechnologistId");
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.MaterialItem", b =>
@@ -465,15 +783,13 @@ namespace ERPBackend.Migrations
 
                     b.HasOne("ERPBackend.Entities.Models.User", "Warehouseman")
                         .WithMany("Warehousemen")
-                        .HasForeignKey("WarehousemanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WarehousemanId");
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.StandardOrderItem", b =>
                 {
                     b.HasOne("ERPBackend.Entities.Models.Order", "Order")
-                        .WithMany("StandardOrderDetails")
+                        .WithMany("StandardOrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
