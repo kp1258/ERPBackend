@@ -9,6 +9,6 @@ namespace ERPBackend.Entities.Models
         [StringLength(40)]
         public string Name { get; set; }
 
-        public MaterialItem MaterialItem { get; set; }
+        public MaterialWarehouseItem MaterialItem { get; set; }
     }
 }

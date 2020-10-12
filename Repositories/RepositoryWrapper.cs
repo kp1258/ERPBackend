@@ -13,6 +13,8 @@ namespace ERPBackend.Repositories
         private ICustomProductRepository _customProduct;
         private IStandardProductCategoryRepository _standardProductCategory;
         private IMaterialRepository _material;
+        private IMaterialWarehouseItemRepository _materialWarehouseItem;
+        private IProductWarehouseItemRepository _productWarehouseItem;
         public IUserRepository User
         {
             get
@@ -93,6 +95,30 @@ namespace ERPBackend.Repositories
                     _material = new MaterialRepository(_erpContext);
                 }
                 return _material;
+            }
+        }
+
+        public IMaterialWarehouseItemRepository MaterialWarehouseItem
+        {
+            get
+            {
+                if (_materialWarehouseItem == null)
+                {
+                    _materialWarehouseItem = new MaterialWarehouseItemRepository(_erpContext);
+                }
+                return _materialWarehouseItem;
+            }
+        }
+
+        public IProductWarehouseItemRepository ProductWarehouseItem
+        {
+            get
+            {
+                if (_productWarehouseItem == null)
+                {
+                    _productWarehouseItem = new ProductWarehouseItemRepository(_erpContext);
+                }
+                return _productWarehouseItem;
             }
         }
 

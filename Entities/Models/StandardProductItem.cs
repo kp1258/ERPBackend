@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPBackend.Entities.Models
 {
-    public class StandardProductItem
+    public class ProductWarehouseItem
     {
-        public int StandardProductItemId { get; set; }
+        public int ProductWarehouseItemId { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]

@@ -14,14 +14,14 @@ namespace ERPBackend.Entities
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Material> Materials { get; set; }
-        public DbSet<MaterialItem> MaterialWarehouse { get; set; }
+        public DbSet<MaterialWarehouseItem> MaterialWarehouse { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<StandardOrderItem> StandardOrderItems { get; set; }
         public DbSet<CustomOrderItem> CustomOrderItems { get; set; }
         public DbSet<StandardProduct> StandardProducts { get; set; }
         public DbSet<CustomProduct> CustomProducts { get; set; }
         public DbSet<StandardProductCategory> StandardProductCategories { get; set; }
-        public DbSet<StandardProductItem> StandardProductWarehouse { get; set; }
+        public DbSet<ProductWarehouseItem> ProductWarehouse { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)

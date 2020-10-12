@@ -15,7 +15,7 @@ namespace ERPBackend.Entities.Models
         public StandardProductCategory StandardProductCategory { get; set; }
 
         public ICollection<StandardOrderItem> StandardOrderItem { get; set; }
-        public StandardProductItem ProductItem { get; set; }
+        public ProductWarehouseItem ProductItem { get; set; }
 
     }
 
