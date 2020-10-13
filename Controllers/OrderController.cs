@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("api/order")]
+    [Route("order")]
     public class OrderController : ControllerBase
     {
         private readonly ILogger<OrderController> _logger;

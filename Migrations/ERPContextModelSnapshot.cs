@@ -80,9 +80,11 @@ namespace ERPBackend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
@@ -157,7 +159,7 @@ namespace ERPBackend.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("CustomOrderDetails");
+                    b.ToTable("CustomOrderItems");
 
                     b.HasData(
                         new
@@ -281,9 +283,9 @@ namespace ERPBackend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.Models.MaterialItem", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.MaterialWarehouseItem", b =>
                 {
-                    b.Property<int>("MaterialItemId")
+                    b.Property<int>("MaterialWarehouseItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -293,7 +295,7 @@ namespace ERPBackend.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("MaterialItemId");
+                    b.HasKey("MaterialWarehouseItemId");
 
                     b.HasIndex("MaterialId")
                         .IsUnique();
@@ -303,25 +305,25 @@ namespace ERPBackend.Migrations
                     b.HasData(
                         new
                         {
-                            MaterialItemId = 1,
+                            MaterialWarehouseItemId = 1,
                             MaterialId = 1,
                             Quantity = 30
                         },
                         new
                         {
-                            MaterialItemId = 2,
+                            MaterialWarehouseItemId = 2,
                             MaterialId = 2,
                             Quantity = 50
                         },
                         new
                         {
-                            MaterialItemId = 3,
+                            MaterialWarehouseItemId = 3,
                             MaterialId = 3,
                             Quantity = 10
                         },
                         new
                         {
-                            MaterialItemId = 4,
+                            MaterialWarehouseItemId = 4,
                             MaterialId = 4,
                             Quantity = 30
                         });
@@ -419,6 +421,52 @@ namespace ERPBackend.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ERPBackend.Entities.Models.ProductWarehouseItem", b =>
+                {
+                    b.Property<int>("ProductWarehouseItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StandardProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductWarehouseItemId");
+
+                    b.HasIndex("StandardProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductWarehouse");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductWarehouseItemId = 1,
+                            Quantity = 40,
+                            StandardProductId = 1
+                        },
+                        new
+                        {
+                            ProductWarehouseItemId = 2,
+                            Quantity = 50,
+                            StandardProductId = 2
+                        },
+                        new
+                        {
+                            ProductWarehouseItemId = 3,
+                            Quantity = 10,
+                            StandardProductId = 3
+                        },
+                        new
+                        {
+                            ProductWarehouseItemId = 4,
+                            Quantity = 25,
+                            StandardProductId = 4
+                        });
+                });
+
             modelBuilder.Entity("ERPBackend.Entities.Models.StandardOrderItem", b =>
                 {
                     b.Property<int>("StandardOrderItemId")
@@ -440,7 +488,7 @@ namespace ERPBackend.Migrations
 
                     b.HasIndex("StandardProductId");
 
-                    b.ToTable("StandardOrderDetails");
+                    b.ToTable("StandardOrderItems");
 
                     b.HasData(
                         new
@@ -586,52 +634,6 @@ namespace ERPBackend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.Models.StandardProductItem", b =>
-                {
-                    b.Property<int>("StandardProductItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StandardProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("StandardProductItemId");
-
-                    b.HasIndex("StandardProductId")
-                        .IsUnique();
-
-                    b.ToTable("StandardProductWarehouse");
-
-                    b.HasData(
-                        new
-                        {
-                            StandardProductItemId = 1,
-                            Quantity = 40,
-                            StandardProductId = 1
-                        },
-                        new
-                        {
-                            StandardProductItemId = 2,
-                            Quantity = 50,
-                            StandardProductId = 2
-                        },
-                        new
-                        {
-                            StandardProductItemId = 3,
-                            Quantity = 10,
-                            StandardProductId = 3
-                        },
-                        new
-                        {
-                            StandardProductItemId = 4,
-                            Quantity = 25,
-                            StandardProductId = 4
-                        });
-                });
-
             modelBuilder.Entity("ERPBackend.Entities.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -758,11 +760,11 @@ namespace ERPBackend.Migrations
                         .HasForeignKey("TechnologistId");
                 });
 
-            modelBuilder.Entity("ERPBackend.Entities.Models.MaterialItem", b =>
+            modelBuilder.Entity("ERPBackend.Entities.Models.MaterialWarehouseItem", b =>
                 {
                     b.HasOne("ERPBackend.Entities.Models.Material", "Material")
                         .WithOne("MaterialItem")
-                        .HasForeignKey("ERPBackend.Entities.Models.MaterialItem", "MaterialId")
+                        .HasForeignKey("ERPBackend.Entities.Models.MaterialWarehouseItem", "MaterialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -786,6 +788,15 @@ namespace ERPBackend.Migrations
                         .HasForeignKey("WarehousemanId");
                 });
 
+            modelBuilder.Entity("ERPBackend.Entities.Models.ProductWarehouseItem", b =>
+                {
+                    b.HasOne("ERPBackend.Entities.Models.StandardProduct", "StandardProduct")
+                        .WithOne("ProductItem")
+                        .HasForeignKey("ERPBackend.Entities.Models.ProductWarehouseItem", "StandardProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ERPBackend.Entities.Models.StandardOrderItem", b =>
                 {
                     b.HasOne("ERPBackend.Entities.Models.Order", "Order")
@@ -806,15 +817,6 @@ namespace ERPBackend.Migrations
                     b.HasOne("ERPBackend.Entities.Models.StandardProductCategory", "StandardProductCategory")
                         .WithMany("StandardProducts")
                         .HasForeignKey("StandardProductCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ERPBackend.Entities.Models.StandardProductItem", b =>
-                {
-                    b.HasOne("ERPBackend.Entities.Models.StandardProduct", "StandardProduct")
-                        .WithOne("ProductItem")
-                        .HasForeignKey("ERPBackend.Entities.Models.StandardProductItem", "StandardProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

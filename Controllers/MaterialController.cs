@@ -3,13 +3,14 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.MaterialDtos;
 using ERPBackend.Entities.Models;
+using ERPBackend.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("api/material")]
+    [Route("material")]
     public class MaterialController : ControllerBase
     {
         private readonly ILogger<MaterialController> _logger;
@@ -73,7 +74,7 @@ namespace ERPBackend.Controllers
         }
 
         //PUT api/material/{id}
-        [HttpPut]
+        [HttpPut("{id}")]
         public IActionResult UpdateMaterial(int id, [FromBody] MaterialUpdateDto material)
         {
             if (material == null)

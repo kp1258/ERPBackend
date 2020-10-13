@@ -71,14 +71,14 @@ namespace ERPBackend.Migrations
                 name: "MaterialWarehouse",
                 columns: table => new
                 {
-                    MaterialItemId = table.Column<int>(nullable: false)
+                    MaterialWarehouseItemId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Quantity = table.Column<int>(nullable: false),
                     MaterialId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MaterialWarehouse", x => x.MaterialItemId);
+                    table.PrimaryKey("PK_MaterialWarehouse", x => x.MaterialWarehouseItemId);
                     table.ForeignKey(
                         name: "FK_MaterialWarehouse_Materials_MaterialId",
                         column: x => x.MaterialId,
@@ -115,8 +115,8 @@ namespace ERPBackend.Migrations
                     ClientId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     CompanyName = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
                     PhoneNumber = table.Column<string>(nullable: false),
                     EMail = table.Column<string>(nullable: true),
                     AddressId = table.Column<int>(nullable: false),
@@ -161,19 +161,19 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StandardProductWarehouse",
+                name: "ProductWarehouse",
                 columns: table => new
                 {
-                    StandardProductItemId = table.Column<int>(nullable: false)
+                    ProductWarehouseItemId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Quantity = table.Column<int>(nullable: false),
                     StandardProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StandardProductWarehouse", x => x.StandardProductItemId);
+                    table.PrimaryKey("PK_ProductWarehouse", x => x.ProductWarehouseItemId);
                     table.ForeignKey(
-                        name: "FK_StandardProductWarehouse_StandardProducts_StandardProductId",
+                        name: "FK_ProductWarehouse_StandardProducts_StandardProductId",
                         column: x => x.StandardProductId,
                         principalTable: "StandardProducts",
                         principalColumn: "StandardProductId",
@@ -218,7 +218,7 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomOrderDetails",
+                name: "CustomOrderItems",
                 columns: table => new
                 {
                     CustomOrderItemId = table.Column<int>(nullable: false)
@@ -229,15 +229,15 @@ namespace ERPBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomOrderDetails", x => x.CustomOrderItemId);
+                    table.PrimaryKey("PK_CustomOrderItems", x => x.CustomOrderItemId);
                     table.ForeignKey(
-                        name: "FK_CustomOrderDetails_CustomProducts_CustomProductId",
+                        name: "FK_CustomOrderItems_CustomProducts_CustomProductId",
                         column: x => x.CustomProductId,
                         principalTable: "CustomProducts",
                         principalColumn: "CustomProductId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CustomOrderDetails_Orders_OrderId",
+                        name: "FK_CustomOrderItems_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
@@ -245,7 +245,7 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StandardOrderDetails",
+                name: "StandardOrderItems",
                 columns: table => new
                 {
                     StandardOrderItemId = table.Column<int>(nullable: false)
@@ -256,15 +256,15 @@ namespace ERPBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StandardOrderDetails", x => x.StandardOrderItemId);
+                    table.PrimaryKey("PK_StandardOrderItems", x => x.StandardOrderItemId);
                     table.ForeignKey(
-                        name: "FK_StandardOrderDetails_Orders_OrderId",
+                        name: "FK_StandardOrderItems_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StandardOrderDetails_StandardProducts_StandardProductId",
+                        name: "FK_StandardOrderItems_StandardProducts_StandardProductId",
                         column: x => x.StandardProductId,
                         principalTable: "StandardProducts",
                         principalColumn: "StandardProductId",
@@ -342,7 +342,7 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "MaterialWarehouse",
-                columns: new[] { "MaterialItemId", "MaterialId", "Quantity" },
+                columns: new[] { "MaterialWarehouseItemId", "MaterialId", "Quantity" },
                 values: new object[,]
                 {
                     { 1, 1, 30 },
@@ -375,8 +375,8 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "StandardProductWarehouse",
-                columns: new[] { "StandardProductItemId", "Quantity", "StandardProductId" },
+                table: "ProductWarehouse",
+                columns: new[] { "ProductWarehouseItemId", "Quantity", "StandardProductId" },
                 values: new object[,]
                 {
                     { 1, 40, 1 },
@@ -386,7 +386,7 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "CustomOrderDetails",
+                table: "CustomOrderItems",
                 columns: new[] { "CustomOrderItemId", "CustomProductId", "OrderId", "Quantity" },
                 values: new object[,]
                 {
@@ -397,7 +397,7 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "StandardOrderDetails",
+                table: "StandardOrderItems",
                 columns: new[] { "StandardOrderItemId", "OrderId", "Quantity", "StandardProductId" },
                 values: new object[,]
                 {
@@ -421,13 +421,13 @@ namespace ERPBackend.Migrations
                 column: "SalesmanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomOrderDetails_CustomProductId",
-                table: "CustomOrderDetails",
+                name: "IX_CustomOrderItems_CustomProductId",
+                table: "CustomOrderItems",
                 column: "CustomProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomOrderDetails_OrderId",
-                table: "CustomOrderDetails",
+                name: "IX_CustomOrderItems_OrderId",
+                table: "CustomOrderItems",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
@@ -457,40 +457,40 @@ namespace ERPBackend.Migrations
                 column: "WarehousemanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StandardOrderDetails_OrderId",
-                table: "StandardOrderDetails",
+                name: "IX_ProductWarehouse_StandardProductId",
+                table: "ProductWarehouse",
+                column: "StandardProductId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StandardOrderItems_OrderId",
+                table: "StandardOrderItems",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StandardOrderDetails_StandardProductId",
-                table: "StandardOrderDetails",
+                name: "IX_StandardOrderItems_StandardProductId",
+                table: "StandardOrderItems",
                 column: "StandardProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StandardProducts_StandardProductCategoryId",
                 table: "StandardProducts",
                 column: "StandardProductCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StandardProductWarehouse_StandardProductId",
-                table: "StandardProductWarehouse",
-                column: "StandardProductId",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CustomOrderDetails");
+                name: "CustomOrderItems");
 
             migrationBuilder.DropTable(
                 name: "MaterialWarehouse");
 
             migrationBuilder.DropTable(
-                name: "StandardOrderDetails");
+                name: "ProductWarehouse");
 
             migrationBuilder.DropTable(
-                name: "StandardProductWarehouse");
+                name: "StandardOrderItems");
 
             migrationBuilder.DropTable(
                 name: "CustomProducts");

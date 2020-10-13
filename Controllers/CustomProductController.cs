@@ -9,7 +9,7 @@ using ERPBackend.Entities.Models;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("api/customproduct")]
+    [Route("customproduct")]
     public class CustomProductController : ControllerBase
     {
         private readonly ILogger<CustomProductController> _logger;

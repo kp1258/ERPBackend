@@ -29,6 +29,7 @@ namespace ERPBackend.Repositories
             return FindAll()
                     .OrderBy(item => item.StandardProduct.Name)
                     .Include(i => i.StandardProduct)
+                        .ThenInclude(i => i.StandardProductCategory)
                     .ToList();
         }
 

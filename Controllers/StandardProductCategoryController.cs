@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("api/standardproductcategory")]
+    [Route("standardproductcategory")]
     public class StandardProductCategoryController : ControllerBase
     {
         private readonly ILogger<StandardProductCategoryController> _logger;
