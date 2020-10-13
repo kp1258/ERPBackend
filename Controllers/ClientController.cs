@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ClientDtos;
@@ -23,11 +24,11 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET api/client
+        //GET /client
         [HttpGet]
-        public IActionResult GetAllClients()
+        public async Task<IActionResult> GetAllClients()
         {
-            var clients = _repository.Client.GetAllClients();
+            var clients = await _repository.Client.GetAllClientsAsync();
             if (clients == null)
             {
                 return NoContent();
@@ -38,11 +39,11 @@ namespace ERPBackend.Controllers
             return Ok(clientsResult);
         }
 
-        //GET api/client/{id}
+        //GET /client/{id}
         [HttpGet("{id}", Name = "ClientById")]
-        public IActionResult GetClientById(int id)
+        public async Task<IActionResult> GetClientById(int id)
         {
-            var client = _repository.Client.GetClientById(id);
+            var client = await _repository.Client.GetClientByIdAsync(id);
             if (client == null)
             {
                 return NotFound();
@@ -55,9 +56,9 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST api/client
+        //POST /client
         [HttpPost]
-        public IActionResult CreateClient([FromBody] ClientCreateDto client)
+        public async Task<IActionResult> CreateClient([FromBody] ClientCreateDto client)
         {
             if (client == null)
             {
@@ -66,22 +67,22 @@ namespace ERPBackend.Controllers
             }
             var clientEntity = _mapper.Map<Client>(client);
             _repository.Client.CreateClient(clientEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var createdClient = _mapper.Map<ClientReadDto>(clientEntity);
             return CreatedAtRoute("ClientById", new { id = createdClient.ClientId }, createdClient);
         }
 
-        //PUT api/client/{id}
+        //PUT /client/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateClient(int id, [FromBody] ClientUpdateDto client)
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientUpdateDto client)
         {
             if (client == null)
             {
                 _logger.LogError("Client object sent from client is null");
                 return BadRequest("Client object is null");
             }
-            var clientEntity = _repository.Client.GetClientById(id);
+            var clientEntity = await _repository.Client.GetClientByIdAsync(id);
             if (clientEntity == null)
             {
                 _logger.LogError($"Client with id {id} does not exist");
@@ -90,7 +91,7 @@ namespace ERPBackend.Controllers
             _mapper.Map(client, clientEntity);
 
             _repository.Client.UpdateClient(clientEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }

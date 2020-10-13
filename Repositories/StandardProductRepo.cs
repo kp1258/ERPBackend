@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
@@ -13,18 +14,18 @@ namespace ERPBackend.Repositories
         {
 
         }
-        public IEnumerable<StandardProduct> GetAllProducts()
+        public async Task<IEnumerable<StandardProduct>> GetAllProductsAsync()
         {
-            return FindAll()
-                    .Include(p => p.StandardProductCategory)
-                    .OrderBy(product => product.Name)
-                    .ToList();
+            return await FindAll()
+                            .Include(p => p.StandardProductCategory)
+                            .OrderBy(product => product.Name)
+                            .ToListAsync();
         }
-        public StandardProduct GetProductById(int productId)
+        public async Task<StandardProduct> GetProductByIdAsync(int productId)
         {
-            return FindByCondition(product => product.StandardProductId.Equals(productId))
-                    .Include(p => p.StandardProductCategory)
-                    .FirstOrDefault();
+            return await FindByCondition(product => product.StandardProductId.Equals(productId))
+                            .Include(p => p.StandardProductCategory)
+                            .FirstOrDefaultAsync();
         }
 
         public void CreateProduct(StandardProduct product)

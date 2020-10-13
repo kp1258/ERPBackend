@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
+using System.Threading.Tasks;
 
 namespace ERPBackend.Repositories
 {
@@ -15,19 +16,19 @@ namespace ERPBackend.Repositories
 
         }
 
-        public IEnumerable<Client> GetAllClients()
+        public async Task<IEnumerable<Client>> GetAllClientsAsync()
         {
-            return FindAll()
-                .Include(c => c.Address)
-                .OrderBy(client => client.CompanyName)
-                .ToList();
+            return await FindAll()
+                            .Include(c => c.Address)
+                            .OrderBy(client => client.CompanyName)
+                            .ToListAsync();
         }
 
-        public Client GetClientById(int clientId)
+        public async Task<Client> GetClientByIdAsync(int clientId)
         {
-            return FindByCondition(client => client.ClientId.Equals(clientId))
-                    .Include(c => c.Address)
-                    .FirstOrDefault();
+            return await FindByCondition(client => client.ClientId.Equals(clientId))
+                            .Include(c => c.Address)
+                            .FirstOrDefaultAsync();
         }
         public void CreateClient(Client client)
         {
@@ -44,9 +45,10 @@ namespace ERPBackend.Repositories
             Delete(client);
         }
 
-        public IEnumerable<Client> ClientsBySalesman(int id)
+        public async Task<IEnumerable<Client>> ClientsBySalesmanAsync(int id)
         {
-            return FindByCondition(a => a.SalesmanId.Equals(id)).ToList();
+            return await FindByCondition(a => a.SalesmanId.Equals(id))
+                            .ToListAsync();
         }
     }
 }

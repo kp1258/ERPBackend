@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ProductDtos;
@@ -23,11 +24,11 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET api/standardproduct
+        //GET /standardproduct
         [HttpGet]
-        public IActionResult GetAllStandardProducts()
+        public async Task<IActionResult> GetAllStandardProducts()
         {
-            var products = _repository.StandardProduct.GetAllProducts();
+            var products = await _repository.StandardProduct.GetAllProductsAsync();
             if (products == null)
             {
                 return NoContent();
@@ -38,11 +39,11 @@ namespace ERPBackend.Controllers
             return Ok(productsResult);
         }
 
-        //GET api/standardproduct/{id}
+        //GET /standardproduct/{id}
         [HttpGet("{id}", Name = "StandardProductById")]
-        public IActionResult GetStandardProductById(int id)
+        public async Task<IActionResult> GetStandardProductById(int id)
         {
-            var product = _repository.StandardProduct.GetProductById(id);
+            var product = await _repository.StandardProduct.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -55,9 +56,9 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST api/standardproduct
+        //POST /standardproduct
         [HttpPost]
-        public IActionResult CreateStandardProduct([FromBody] StandardProductCreateDto product)
+        public async Task<IActionResult> CreateStandardProduct([FromBody] StandardProductCreateDto product)
         {
             if (product == null)
             {
@@ -66,22 +67,22 @@ namespace ERPBackend.Controllers
             }
             var productEntity = _mapper.Map<StandardProduct>(product);
             _repository.StandardProduct.CreateProduct(productEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var createdProduct = _mapper.Map<StandardProductReadDto>(productEntity);
             return CreatedAtRoute("StandardProductById", new { id = createdProduct.StandardProductId }, createdProduct);
         }
 
-        //PUT api/standardproduct/{id}
+        //PUT /standardproduct/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateStandardProduc(int id, [FromBody] StandardProductUpdateDto product)
+        public async Task<IActionResult> UpdateStandardProduc(int id, [FromBody] StandardProductUpdateDto product)
         {
             if (product == null)
             {
                 _logger.LogError("Standard product object sent from client is null");
                 return BadRequest("Standard product object is null");
             }
-            var productEntity = _repository.StandardProduct.GetProductById(id);
+            var productEntity = await _repository.StandardProduct.GetProductByIdAsync(id);
             if (productEntity == null)
             {
                 _logger.LogError($"Standard product with id: {id}, does not exist");
@@ -90,7 +91,7 @@ namespace ERPBackend.Controllers
             _mapper.Map(product, productEntity);
 
             _repository.StandardProduct.UpdateProduct(productEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 

@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace ERPBackend.Contracts
 {
     public interface IRepositoryWrapper
@@ -11,6 +13,6 @@ namespace ERPBackend.Contracts
         IMaterialRepository Material { get; }
         IMaterialWarehouseItemRepository MaterialWarehouseItem { get; }
         IProductWarehouseItemRepository ProductWarehouseItem { get; }
-        void Save();
+        Task SaveAsync();
     }
 }

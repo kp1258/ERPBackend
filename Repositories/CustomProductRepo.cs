@@ -4,6 +4,7 @@ using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace ERPBackend.Repositories
 {
@@ -13,19 +14,19 @@ namespace ERPBackend.Repositories
         {
 
         }
-        public IEnumerable<CustomProduct> GetAllProducts()
+        public async Task<IEnumerable<CustomProduct>> GetAllProductsAsync()
         {
-            return FindAll()
-                    .OrderBy(products => products.Name)
-                    .Include(p => p.Technologist)
-                    .ToList();
+            return await FindAll()
+                            .OrderBy(products => products.Name)
+                            .Include(p => p.Technologist)
+                            .ToListAsync();
         }
 
-        public CustomProduct GetProductById(int productId)
+        public async Task<CustomProduct> GetProductByIdAsync(int productId)
         {
-            return FindByCondition(product => product.CustomProductId.Equals(productId))
-                    .Include(p => p.Technologist)
-                    .FirstOrDefault();
+            return await FindByCondition(product => product.CustomProductId.Equals(productId))
+                            .Include(p => p.Technologist)
+                            .FirstOrDefaultAsync();
         }
 
         public void CreateProduct(CustomProduct product)

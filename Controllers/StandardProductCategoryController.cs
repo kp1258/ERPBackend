@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("standardproductcategory")]
+    [Route("standardproduct/category")]
     public class StandardProductCategoryController : ControllerBase
     {
         private readonly ILogger<StandardProductCategoryController> _logger;
@@ -23,11 +24,11 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET api/standardproductcategory
+        //GET /standardproduct/category
         [HttpGet]
-        public IActionResult GetAllStandardProductCategories()
+        public async Task<IActionResult> GetAllStandardProductCategories()
         {
-            var categories = _repository.StandardProductCategory.GetAllCategories();
+            var categories = await _repository.StandardProductCategory.GetAllCategoriesAsync();
             if (categories == null)
             {
                 return NoContent();
@@ -38,11 +39,11 @@ namespace ERPBackend.Controllers
             return Ok(categoriesResult);
         }
 
-        //GET api/standardproductcategory/{id}
+        //GET /standardproduct/category/{id}
         [HttpGet("{id}", Name = "CategoryById")]
-        public IActionResult GetStandardProductCategoryById(int id)
+        public async Task<IActionResult> GetStandardProductCategoryById(int id)
         {
-            var category = _repository.StandardProductCategory.GetCategoryById(id);
+            var category = await _repository.StandardProductCategory.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -55,9 +56,9 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST api/standardproductcategory
+        //POST /standardproduct/category
         [HttpPost]
-        public IActionResult CreateStandardProductCategory([FromBody] StandardProductCategoryDto category)
+        public async Task<IActionResult> CreateStandardProductCategory([FromBody] StandardProductCategoryDto category)
         {
             if (category == null)
             {
@@ -66,22 +67,22 @@ namespace ERPBackend.Controllers
             }
             var categoryEntity = _mapper.Map<StandardProductCategory>(category);
             _repository.StandardProductCategory.CreateCategory(categoryEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var createdCategory = _mapper.Map<StandardProductCategoryDto>(categoryEntity);
             return CreatedAtRoute("CategoryById", new { id = createdCategory.StandardProductCategoryId }, createdCategory);
         }
 
-        //PUT api/standardproductcategory/{id}
+        //PUT /standardproduct/category/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateClient(int id, [FromBody] StandardProductCategoryDto category)
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] StandardProductCategoryDto category)
         {
             if (category == null)
             {
                 _logger.LogError("Stanard product category object sent from client is null");
                 return BadRequest("Standard product category object is null");
             }
-            var categoryEntity = _repository.StandardProductCategory.GetCategoryById(id);
+            var categoryEntity = await _repository.StandardProductCategory.GetCategoryByIdAsync(id);
             if (categoryEntity == null)
             {
                 _logger.LogError($"Standard product category with id {id} does not exist");
@@ -90,7 +91,7 @@ namespace ERPBackend.Controllers
             _mapper.Map(category, categoryEntity);
 
             _repository.StandardProductCategory.UpdateCategory(categoryEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }

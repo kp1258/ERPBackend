@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ERPBackend.Entities.Models;
 
 namespace ERPBackend.Contracts
 {
     public interface ICustomProductRepository : IRepositoryBase<CustomProduct>
     {
-        IEnumerable<CustomProduct> GetAllProducts();
-        CustomProduct GetProductById(int productId);
+        Task<IEnumerable<CustomProduct>> GetAllProductsAsync();
+        Task<CustomProduct> GetProductByIdAsync(int productId);
         void CreateProduct(CustomProduct product);
         void UpdateProduct(CustomProduct product);
         void DeleteProduct(CustomProduct product);

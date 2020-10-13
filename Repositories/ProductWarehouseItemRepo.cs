@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
@@ -24,20 +25,20 @@ namespace ERPBackend.Repositories
             Delete(item);
         }
 
-        public IEnumerable<ProductWarehouseItem> GetAllItems()
+        public async Task<IEnumerable<ProductWarehouseItem>> GetAllItemsAsync()
         {
-            return FindAll()
-                    .OrderBy(item => item.StandardProduct.Name)
-                    .Include(i => i.StandardProduct)
-                        .ThenInclude(i => i.StandardProductCategory)
-                    .ToList();
+            return await FindAll()
+                            .OrderBy(item => item.StandardProduct.Name)
+                            .Include(i => i.StandardProduct)
+                                .ThenInclude(i => i.StandardProductCategory)
+                            .ToListAsync();
         }
 
-        public ProductWarehouseItem GetItemById(int itemId)
+        public async Task<ProductWarehouseItem> GetItemByIdAsync(int itemId)
         {
-            return FindByCondition(item => item.ProductWarehouseItemId.Equals(itemId))
-                    .Include(i => i.StandardProduct)
-                    .FirstOrDefault();
+            return await FindByCondition(item => item.ProductWarehouseItemId.Equals(itemId))
+                            .Include(i => i.StandardProduct)
+                            .FirstOrDefaultAsync();
         }
 
         public void UpdateItem(ProductWarehouseItem item)

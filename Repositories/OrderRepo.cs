@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
@@ -23,40 +24,44 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
         Delete(order);
     }
 
-    public IEnumerable<Order> GetAllOrders()
+    public async Task<IEnumerable<Order>> GetAllOrdersAsync()
     {
-        return FindAll().OrderBy(order => order.PlacingDate).ToList();
+        return await FindAll().OrderBy(order => order.PlacingDate)
+                        .ToListAsync();
     }
 
-    public Order GetOrderDetailsById(int orderId)
+    public async Task<Order> GetOrderDetailsByIdAsync(int orderId)
     {
-        return FindByCondition(order => order.OrderId.Equals(orderId))
-                .OrderBy(order => order.PlacingDate)
-                .Include(o => o.Client)
-                    .ThenInclude(c => c.Address)
-                .Include(o => o.Salesman)
-                .Include(o => o.Warehouseman)
-                .Include(o => o.CustomOrderItems)
-                    .ThenInclude(o => o.CustomProduct)
-                .Include(o => o.StandardOrderItems)
-                    .ThenInclude(o => o.StandardProduct)
-                        .ThenInclude(o => o.StandardProductCategory)
-                .FirstOrDefault();
+        return await FindByCondition(order => order.OrderId.Equals(orderId))
+                        .OrderBy(order => order.PlacingDate)
+                        .Include(o => o.Client)
+                            .ThenInclude(c => c.Address)
+                        .Include(o => o.Salesman)
+                        .Include(o => o.Warehouseman)
+                        .Include(o => o.CustomOrderItems)
+                            .ThenInclude(o => o.CustomProduct)
+                        .Include(o => o.StandardOrderItems)
+                            .ThenInclude(o => o.StandardProduct)
+                                .ThenInclude(o => o.StandardProductCategory)
+                        .FirstOrDefaultAsync();
     }
 
-    public Order GetOrderById(int orderId)
+    public async Task<Order> GetOrderByIdAsync(int orderId)
     {
-        return FindByCondition(order => order.OrderId.Equals(orderId)).FirstOrDefault();
+        return await FindByCondition(order => order.OrderId.Equals(orderId))
+                        .FirstOrDefaultAsync();
     }
 
-    public IEnumerable<Order> GetOrdersBySalesman(int salesmanId)
+    public async Task<IEnumerable<Order>> GetOrdersBySalesmanAsync(int salesmanId)
     {
-        return FindByCondition(order => order.SalesmanId.Equals(salesmanId)).ToList();
+        return await FindByCondition(order => order.SalesmanId.Equals(salesmanId))
+                        .ToListAsync();
     }
 
-    public IEnumerable<Order> GetOrdersByStatus(OrderStatus status)
+    public async Task<IEnumerable<Order>> GetOrdersByStatusAsync(OrderStatus status)
     {
-        return FindByCondition(order => order.Status.Equals(status)).ToList();
+        return await FindByCondition(order => order.Status.Equals(status))
+                        .ToListAsync();
     }
 
     public void UpdateOrder(Order order)

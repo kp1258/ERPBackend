@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.MaterialDtos;
@@ -23,11 +24,11 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET api/material
+        //GET /material
         [HttpGet]
-        public IActionResult GetAllMaterials()
+        public async Task<IActionResult> GetAllMaterials()
         {
-            var materials = _repository.Material.GetAllMaterials();
+            var materials = await _repository.Material.GetAllMaterialsAsync();
             if (materials == null)
             {
                 return NoContent();
@@ -38,11 +39,11 @@ namespace ERPBackend.Controllers
             return Ok(materialsResult);
         }
 
-        //GET api/material/{id}
+        //GET /material/{id}
         [HttpGet("{id}", Name = "MaterialById")]
-        public IActionResult GetMaterialById(int id)
+        public async Task<IActionResult> GetMaterialById(int id)
         {
-            var material = _repository.Material.GetMaterialById(id);
+            var material = await _repository.Material.GetMaterialByIdAsync(id);
             if (material == null)
             {
                 _logger.LogInformation($"Material with id {id} does not exist");
@@ -58,7 +59,7 @@ namespace ERPBackend.Controllers
 
         //POST api/material
         [HttpPost]
-        public IActionResult CreateMaterial([FromBody] MaterialCreateDto material)
+        public async Task<IActionResult> CreateMaterial([FromBody] MaterialCreateDto material)
         {
             if (material == null)
             {
@@ -67,22 +68,22 @@ namespace ERPBackend.Controllers
             }
             var materialEntity = _mapper.Map<Material>(material);
             _repository.Material.CreateMaterial(materialEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var createdMaterial = _mapper.Map<MaterialReadDto>(materialEntity);
             return CreatedAtRoute("MaterialById", new { id = createdMaterial.MaterialId }, createdMaterial);
         }
 
-        //PUT api/material/{id}
+        //PUT /material/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateMaterial(int id, [FromBody] MaterialUpdateDto material)
+        public async Task<IActionResult> UpdateMaterial(int id, [FromBody] MaterialUpdateDto material)
         {
             if (material == null)
             {
                 _logger.LogError("Material object sent from client is null");
                 return BadRequest("Material object is null");
             }
-            var materialEntity = _repository.Material.GetMaterialById(id);
+            var materialEntity = await _repository.Material.GetMaterialByIdAsync(id);
             if (materialEntity == null)
             {
                 _logger.LogError($"Material with id {id} does not exist");
@@ -91,7 +92,7 @@ namespace ERPBackend.Controllers
             _mapper.Map(material, materialEntity);
 
             _repository.Material.UpdateMaterial(materialEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }

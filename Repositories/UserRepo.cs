@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERPBackend.Repositories
 {
@@ -12,16 +14,17 @@ namespace ERPBackend.Repositories
         {
 
         }
-        public IEnumerable<User> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            return FindAll()
-                .OrderBy(user => user.LastName)
-                .ToList();
+            return await FindAll()
+                            .OrderBy(user => user.LastName)
+                            .ToListAsync();
         }
 
-        public User GetUserById(int userId)
+        public async Task<User> GetUserByIdAsync(int userId)
         {
-            return FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefault();
+            return await FindByCondition(user => user.UserId.Equals(userId))
+                            .FirstOrDefaultAsync();
         }
 
         public void CreateUser(User user)
@@ -39,9 +42,9 @@ namespace ERPBackend.Repositories
             Delete(user);
         }
 
-        public void ChangeStatus(int userId)
+        public async Task ChangeStatusAsync(int userId)
         {
-            var user = FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefault();
+            var user = await FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefaultAsync();
             if (user != null)
             {
                 if (user.Status == UserStatus.Active)

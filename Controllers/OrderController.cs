@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.OrderDtos;
@@ -24,20 +25,22 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
+        //GET /order
         [HttpGet]
-        public IActionResult GetAllOrders()
+        public async Task<IActionResult> GetAllOrders()
         {
-            var orders = _repository.Order.GetAllOrders();
+            var orders = await _repository.Order.GetAllOrdersAsync();
             _logger.LogInformation($"Returned all orders");
 
             var ordersResult = _mapper.Map<IEnumerable<OrderReadDto>>(orders);
             return Ok(ordersResult);
         }
 
+        //GET /order/{id}
         [HttpGet("{id}", Name = "OrderById")]
-        public IActionResult GetOrderById(int id)
+        public async Task<IActionResult> GetOrderById(int id)
         {
-            var order = _repository.Order.GetOrderById(id);
+            var order = await _repository.Order.GetOrderByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
@@ -50,10 +53,11 @@ namespace ERPBackend.Controllers
             }
         }
 
-        [HttpGet("orderdetails/{id}", Name = "OrderDetailsById")]
-        public IActionResult GetOrderDetailsById(int id)
+        //GET /order/details/{id}
+        [HttpGet("details/{id}", Name = "OrderDetailsById")]
+        public async Task<IActionResult> GetOrderDetailsById(int id)
         {
-            var order = _repository.Order.GetOrderDetailsById(id);
+            var order = await _repository.Order.GetOrderDetailsByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
@@ -66,9 +70,9 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST api/order
+        //POST /order
         [HttpPost]
-        public IActionResult CreateOrder([FromBody] OrderCreateDto order)
+        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto order)
         {
             if (order == null)
             {
@@ -80,7 +84,7 @@ namespace ERPBackend.Controllers
             orderEntity.PlacingDate = placingDate;
             orderEntity.Status = OrderStatus.Placed;
             _repository.Order.CreateOrder(orderEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var createdOrder = _mapper.Map<OrderInfoDto>(orderEntity);
             return CreatedAtRoute("OrderDetailsById", new { id = createdOrder.OrderId }, createdOrder);

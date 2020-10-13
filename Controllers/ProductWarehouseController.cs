@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.WarehouseDtos;
@@ -23,11 +24,11 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET api/productwarehouse
+        //GET /productwarehouse
         [HttpGet]
-        public IActionResult GetAllProductWarehouseItems()
+        public async Task<IActionResult> GetAllProductWarehouseItems()
         {
-            var items = _repository.ProductWarehouseItem.GetAllItems();
+            var items = await _repository.ProductWarehouseItem.GetAllItemsAsync();
             if (items == null)
             {
                 return NoContent();

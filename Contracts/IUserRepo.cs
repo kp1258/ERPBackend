@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ERPBackend.Entities.Models;
 
 namespace ERPBackend.Contracts
 {
     public interface IUserRepository : IRepositoryBase<User>
     {
-        IEnumerable<User> GetAllUsers();
-        User GetUserById(int userId);
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(int userId);
         void CreateUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);
-        void ChangeStatus(int userId);
+        Task ChangeStatusAsync(int userId);
     }
 }

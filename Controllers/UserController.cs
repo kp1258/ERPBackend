@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
@@ -66,11 +67,11 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //GET api/user
+        //GET /user
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            var users = _repository.User.GetAllUsers();
+            var users = await _repository.User.GetAllUsersAsync();
             if (users == null)
             {
                 return NoContent();
@@ -81,11 +82,11 @@ namespace ERPBackend.Controllers
             return Ok(usersResult);
         }
 
-        //GET api/user/{id}
+        //GET /user/{id}
         [HttpGet("{id}", Name = "UserById")]
-        public IActionResult GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            var user = _repository.User.GetUserById(id);
+            var user = await _repository.User.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -98,9 +99,9 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST api/user
+        //POST /user
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserCreateDto user)
+        public async Task<IActionResult> CreateUser([FromBody] UserCreateDto user)
         {
             if (user == null)
             {
@@ -110,22 +111,22 @@ namespace ERPBackend.Controllers
             var userEntity = _mapper.Map<User>(user);
 
             _repository.User.CreateUser(userEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var createdUser = _mapper.Map<UserReadDto>(userEntity);
             return CreatedAtRoute("UserById", new { id = createdUser.UserId }, createdUser);
         }
 
-        //PUT api/user/{id}
+        //PUT /user/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             if (user == null)
             {
                 _logger.LogError("User object sent from client is null");
                 return BadRequest("User object is null");
             }
-            var userEntity = _repository.User.GetUserById(id);
+            var userEntity = await _repository.User.GetUserByIdAsync(id);
             if (userEntity == null)
             {
                 _logger.LogError($"User with id: {id}, does not exist");
@@ -134,42 +135,43 @@ namespace ERPBackend.Controllers
             _mapper.Map(user, userEntity);
 
             _repository.User.UpdateUser(userEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 
-        //DELETE api/user/{id}
+        //DELETE /user/{id}
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = _repository.User.GetUserById(id);
+            var user = await _repository.User.GetUserByIdAsync(id);
             if (user == null)
             {
                 _logger.LogError($"User with id: {id} does not exist");
                 return NotFound();
             }
-            if (_repository.Client.ClientsBySalesman(id).Any())
+            var clients = await _repository.Client.ClientsBySalesmanAsync(id);
+            if (clients.Any())
             {
                 _logger.LogError($"Cannot delete user with id: {id}. It has related clients.");
                 return BadRequest("Cannot delete user. It has related clients. Delete those first");
             }
             _repository.User.DeleteUser(user);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 
-        //PUT api/user/{id}
+        //PUT /user/{id}
         [HttpPut("status/{id}")]
-        public IActionResult ChangeUserStatus(int id)
+        public async Task<IActionResult> ChangeUserStatus(int id)
         {
-            var user = _repository.User.GetUserById(id);
+            var user = await _repository.User.GetUserByIdAsync(id);
             if (user == null)
             {
                 _logger.LogError($"User with id {id} does not exist");
                 return NotFound();
             }
-            _repository.User.ChangeStatus(id);
-            _repository.Save();
+            await _repository.User.ChangeStatusAsync(id);
+            await _repository.SaveAsync();
             return NoContent();
         }
 

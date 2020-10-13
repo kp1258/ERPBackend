@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERPBackend.Repositories
 {
@@ -12,16 +14,17 @@ namespace ERPBackend.Repositories
         {
 
         }
-        public IEnumerable<StandardProductCategory> GetAllCategories()
+        public async Task<IEnumerable<StandardProductCategory>> GetAllCategoriesAsync()
         {
-            return FindAll()
-                .OrderBy(category => category.Name)
-                .ToList();
+            return await FindAll()
+                            .OrderBy(category => category.Name)
+                            .ToListAsync();
         }
 
-        public StandardProductCategory GetCategoryById(int categoryId)
+        public async Task<StandardProductCategory> GetCategoryByIdAsync(int categoryId)
         {
-            return FindByCondition(category => category.StandardProductCategoryId.Equals(categoryId)).FirstOrDefault();
+            return await FindByCondition(category => category.StandardProductCategoryId.Equals(categoryId))
+                            .FirstOrDefaultAsync();
         }
         public void CreateCategory(StandardProductCategory category)
         {

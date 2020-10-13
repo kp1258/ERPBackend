@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 
@@ -127,9 +128,9 @@ namespace ERPBackend.Repositories
             _erpContext = erpContext;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _erpContext.SaveChanges();
+            await _erpContext.SaveChangesAsync();
         }
     }
 }

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERPBackend.Repositories
 {
@@ -12,15 +14,16 @@ namespace ERPBackend.Repositories
         {
 
         }
-        public IEnumerable<Material> GetAllMaterials()
+        public async Task<IEnumerable<Material>> GetAllMaterialsAsync()
         {
-            return FindAll()
-                .OrderBy(material => material.Name)
-                .ToList();
+            return await FindAll()
+                            .OrderBy(material => material.Name)
+                            .ToListAsync();
         }
-        public Material GetMaterialById(int materialId)
+        public async Task<Material> GetMaterialByIdAsync(int materialId)
         {
-            return FindByCondition(material => material.MaterialId.Equals(materialId)).FirstOrDefault();
+            return await FindByCondition(material => material.MaterialId.Equals(materialId))
+                            .FirstOrDefaultAsync();
         }
 
         public void CreateMaterial(Material material)
