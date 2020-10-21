@@ -8,8 +8,8 @@ namespace ERPBackend.Entities.Profiles
     {
         public OrderItemProfile()
         {
-            CreateMap<CustomOrderItem, CustomOrderItemDto>().ReverseMap();
-            CreateMap<StandardOrderItem, StandardOrderItemDto>().ReverseMap();
+            CreateMap<CustomOrderItem, CustomOrderItemReadDto>().ReverseMap();
+            CreateMap<StandardOrderItem, StandardOrderItemReadDto>().ReverseMap();
 
             CreateMap<CustomOrderItemCreateDto, CustomOrderItem>();
             CreateMap<StandardOrderItemCreateDto, StandardOrderItem>();

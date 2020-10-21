@@ -15,28 +15,32 @@ namespace ERPBackend.Entities.Models.Configuration
                     StandardProductId = 1,
                     Name = "Produkt 1",
                     Dimensions="100x100",
-                    StandardProductCategoryId=1
+                    StandardProductCategoryId=1,
+                    Status=StandardProductStatus.InProduction
                 },
                 new StandardProduct
                 {
                     StandardProductId=2,
                     Name = "Produkt 2",
                     Dimensions="100x100",
-                    StandardProductCategoryId=2
+                    StandardProductCategoryId=2,
+                    Status=StandardProductStatus.InProduction
                 },
                 new StandardProduct
                 {
                     StandardProductId=3,
                     Name = "Produkt 3",
                     Dimensions="100x100",
-                    StandardProductCategoryId=3
+                    StandardProductCategoryId=3,
+                    Status=StandardProductStatus.InProduction
                 },
                 new StandardProduct
                 {
                     StandardProductId=4,
                     Name = "Produkt 4",
                     Dimensions="100x100",
-                    StandardProductCategoryId=4
+                    StandardProductCategoryId=4,
+                    Status=StandardProductStatus.InProduction
                 },
 
             }

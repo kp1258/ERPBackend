@@ -20,6 +20,10 @@ namespace ERPBackend.Entities.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; }
+        [Required]
+        public string Email { get; set; }
 
         [Required]
         public UserRole Role { get; set; }
@@ -41,23 +45,23 @@ namespace ERPBackend.Entities.Models
     {
         [EnumMember(Value = "administrator")]
         Administrator,
-        [EnumMember(Value = "warehouseman")]
+        [EnumMember(Value = "magazynier")]
         Warehouseman,
-        [EnumMember(Value = "productionManager")]
+        [EnumMember(Value = "kierownik produkcji")]
         ProductionManager,
-        [EnumMember(Value = "technologist")]
+        [EnumMember(Value = "technolog")]
         Technologist,
-        [EnumMember(Value = "salesman")]
+        [EnumMember(Value = "handlowiec")]
         Salesman
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UserStatus
     {
-        [EnumMember(Value = "active")]
+        [EnumMember(Value = "aktywny")]
         Active,
 
-        [EnumMember(Value = "inactive")]
+        [EnumMember(Value = "nieaktywny")]
         Inactive
     }
 

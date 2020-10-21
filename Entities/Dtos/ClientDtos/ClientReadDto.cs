@@ -12,5 +12,6 @@ namespace ERPBackend.Entities.Dtos.ClientDtos
         public string EMail { get; set; }
         [Required]
         public AddressInfoDto Address { get; set; }
+        public string Status { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBackend.Migrations
 {
     [DbContext(typeof(ERPContext))]
-    [Migration("20201013104109_InitialMigration")]
+    [Migration("20201021102826_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,6 +96,10 @@ namespace ERPBackend.Migrations
                     b.Property<int>("SalesmanId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("ClientId");
 
                     b.HasIndex("AddressId");
@@ -114,7 +118,8 @@ namespace ERPBackend.Migrations
                             FirstName = "Adam",
                             LastName = "Markowski",
                             PhoneNumber = "678234765",
-                            SalesmanId = 2
+                            SalesmanId = 2,
+                            Status = "Active"
                         },
                         new
                         {
@@ -125,7 +130,8 @@ namespace ERPBackend.Migrations
                             FirstName = "Edward",
                             LastName = "Solański",
                             PhoneNumber = "978456723",
-                            SalesmanId = 2
+                            SalesmanId = 2,
+                            Status = "Active"
                         },
                         new
                         {
@@ -136,7 +142,8 @@ namespace ERPBackend.Migrations
                             FirstName = "Piotr",
                             LastName = "Turowski",
                             PhoneNumber = "867544765",
-                            SalesmanId = 2
+                            SalesmanId = 2,
+                            Status = "Active"
                         });
                 });
 
@@ -146,14 +153,30 @@ namespace ERPBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime");
+
                     b.Property<int>("CustomProductId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductionManagerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ProductionStartDate")
+                        .HasColumnType("datetime");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("CustomOrderItemId");
 
@@ -168,29 +191,46 @@ namespace ERPBackend.Migrations
                         {
                             CustomOrderItemId = 1,
                             CustomProductId = 4,
+                            OrderDate = new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderId = 3,
-                            Quantity = 10
+                            Quantity = 10,
+                            Status = "Ordered"
                         },
                         new
                         {
                             CustomOrderItemId = 2,
+                            CompletionDate = new DateTime(2020, 9, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CustomProductId = 1,
+                            OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderId = 4,
-                            Quantity = 5
+                            ProductionManagerId = 3,
+                            ProductionStartDate = new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Quantity = 5,
+                            Status = "Completed"
                         },
                         new
                         {
                             CustomOrderItemId = 3,
+                            CompletionDate = new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CustomProductId = 2,
+                            OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderId = 4,
-                            Quantity = 15
+                            ProductionManagerId = 3,
+                            ProductionStartDate = new DateTime(2020, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Quantity = 15,
+                            Status = "Completed"
                         },
                         new
                         {
                             CustomOrderItemId = 4,
+                            CompletionDate = new DateTime(2020, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CustomProductId = 3,
+                            OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             OrderId = 4,
-                            Quantity = 9
+                            ProductionManagerId = 3,
+                            ProductionStartDate = new DateTime(2020, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Quantity = 9,
+                            Status = "Completed"
                         });
                 });
 
@@ -205,6 +245,19 @@ namespace ERPBackend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("PreparationCompletionDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("PreparationStartDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -223,6 +276,10 @@ namespace ERPBackend.Migrations
                             CustomProductId = 1,
                             Description = "Opis",
                             Name = "Produkt specjalny 1",
+                            OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparationCompletionDate = new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparationStartDate = new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Prepared",
                             TechnologistId = 4
                         },
                         new
@@ -230,6 +287,10 @@ namespace ERPBackend.Migrations
                             CustomProductId = 2,
                             Description = "Opis",
                             Name = "Produkt specjalny 2",
+                            OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparationCompletionDate = new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparationStartDate = new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Prepared",
                             TechnologistId = 4
                         },
                         new
@@ -237,13 +298,19 @@ namespace ERPBackend.Migrations
                             CustomProductId = 3,
                             Description = "Opis",
                             Name = "Produkt specjalny 3",
+                            OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparationCompletionDate = new DateTime(2020, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparationStartDate = new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Prepared",
                             TechnologistId = 4
                         },
                         new
                         {
                             CustomProductId = 4,
                             Description = "Opis",
-                            Name = "Produkt specjalny 4"
+                            Name = "Produkt specjalny 4",
+                            OrderDate = new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Ordered"
                         });
                 });
 
@@ -340,10 +407,13 @@ namespace ERPBackend.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("FulfillmentDate")
+                    b.Property<DateTime?>("CompletionDate")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime>("PlacingDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("RealizationStartDate")
                         .HasColumnType("datetime");
 
                     b.Property<int>("SalesmanId")
@@ -375,8 +445,9 @@ namespace ERPBackend.Migrations
                         {
                             OrderId = 1,
                             ClientId = 1,
-                            FulfillmentDate = new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CompletionDate = new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PlacingDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RealizationStartDate = new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SalesmanId = 2,
                             Status = "Completed",
                             Type = "Standard",
@@ -386,7 +457,7 @@ namespace ERPBackend.Migrations
                         {
                             OrderId = 2,
                             ClientId = 2,
-                            PlacingDate = new DateTime(2020, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PlacingDate = new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SalesmanId = 2,
                             Status = "Placed",
                             Type = "Standard"
@@ -395,7 +466,7 @@ namespace ERPBackend.Migrations
                         {
                             OrderId = 3,
                             ClientId = 3,
-                            PlacingDate = new DateTime(2020, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PlacingDate = new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SalesmanId = 2,
                             Status = "Placed",
                             Type = "Custom"
@@ -404,8 +475,9 @@ namespace ERPBackend.Migrations
                         {
                             OrderId = 4,
                             ClientId = 1,
-                            FulfillmentDate = new DateTime(2020, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CompletionDate = new DateTime(2020, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PlacingDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RealizationStartDate = new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SalesmanId = 2,
                             Status = "Completed",
                             Type = "Custom",
@@ -415,9 +487,10 @@ namespace ERPBackend.Migrations
                         {
                             OrderId = 5,
                             ClientId = 2,
-                            PlacingDate = new DateTime(2020, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PlacingDate = new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RealizationStartDate = new DateTime(2020, 10, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SalesmanId = 2,
-                            Status = "InProgress",
+                            Status = "InRealization",
                             Type = "Standard",
                             WarehousemanId = 5
                         });
@@ -561,6 +634,10 @@ namespace ERPBackend.Migrations
                     b.Property<int>("StandardProductCategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("StandardProductId");
 
                     b.HasIndex("StandardProductCategoryId");
@@ -573,28 +650,32 @@ namespace ERPBackend.Migrations
                             StandardProductId = 1,
                             Dimensions = "100x100",
                             Name = "Produkt 1",
-                            StandardProductCategoryId = 1
+                            StandardProductCategoryId = 1,
+                            Status = "InProduction"
                         },
                         new
                         {
                             StandardProductId = 2,
                             Dimensions = "100x100",
                             Name = "Produkt 2",
-                            StandardProductCategoryId = 2
+                            StandardProductCategoryId = 2,
+                            Status = "InProduction"
                         },
                         new
                         {
                             StandardProductId = 3,
                             Dimensions = "100x100",
                             Name = "Produkt 3",
-                            StandardProductCategoryId = 3
+                            StandardProductCategoryId = 3,
+                            Status = "InProduction"
                         },
                         new
                         {
                             StandardProductId = 4,
                             Dimensions = "100x100",
                             Name = "Produkt 4",
-                            StandardProductCategoryId = 4
+                            StandardProductCategoryId = 4,
+                            Status = "InProduction"
                         });
                 });
 
@@ -642,6 +723,10 @@ namespace ERPBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -660,6 +745,10 @@ namespace ERPBackend.Migrations
                         .HasColumnType("varchar(20)")
                         .HasMaxLength(20);
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
@@ -676,50 +765,60 @@ namespace ERPBackend.Migrations
                         new
                         {
                             UserId = 1,
+                            Email = "jan_k@email.com",
                             FirstName = "Jan",
                             LastName = "Kowalski",
                             Login = "jan_k",
                             Password = "password",
+                            PhoneNumber = "607934182",
                             Role = "Administrator",
                             Status = "Active"
                         },
                         new
                         {
                             UserId = 2,
+                            Email = "anna_n@email.com",
                             FirstName = "Anna",
                             LastName = "Nowak",
                             Login = "anna_n",
                             Password = "password",
+                            PhoneNumber = "709856234",
                             Role = "Salesman",
                             Status = "Active"
                         },
                         new
                         {
                             UserId = 3,
+                            Email = "andrzej_m@email.com",
                             FirstName = "Andrzej",
                             LastName = "Malinowski",
                             Login = "andrzej_m",
                             Password = "password",
+                            PhoneNumber = "679234374",
                             Role = "ProductionManager",
                             Status = "Active"
                         },
                         new
                         {
                             UserId = 4,
+                            Email = "agata_k@email.com",
                             FirstName = "Agata",
                             LastName = "Krzeszowska",
                             Login = "agata_k",
                             Password = "password",
+                            PhoneNumber = "685234054",
                             Role = "Technologist",
                             Status = "Active"
                         },
                         new
                         {
                             UserId = 5,
+                            Email = "edward_r@email.com",
                             FirstName = "Edward",
                             LastName = "Rak",
                             Login = "edward_r",
                             Password = "password",
+                            PhoneNumber = "978345278",
                             Role = "Warehouseman",
                             Status = "Active"
                         });

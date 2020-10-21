@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("customproduct")]
+    [Route("custom-products")]
     public class CustomProductController : ControllerBase
     {
         private readonly ILogger<CustomProductController> _logger;

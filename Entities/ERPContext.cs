@@ -9,7 +9,7 @@ namespace ERPBackend.Entities
     {
         public ERPContext(DbContextOptions options) : base(options)
         {
-            //this.ChangeTracker.LazyLoadingEnabled = false;
+
         }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -76,6 +76,34 @@ namespace ERPBackend.Entities
                 .HasConversion(
                     v => v.ToString(),
                     v => (OrderType)Enum.Parse(typeof(OrderType), v)
+                );
+            modelBuilder
+                .Entity<CustomOrderItem>()
+                .Property(e => e.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (CustomOrderItemStatus)Enum.Parse(typeof(CustomOrderItemStatus), v)
+                );
+            modelBuilder
+                .Entity<Client>()
+                .Property(e => e.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (ClientStatus)Enum.Parse(typeof(ClientStatus), v)
+                );
+            modelBuilder
+                .Entity<StandardProduct>()
+                .Property(e => e.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (StandardProductStatus)Enum.Parse(typeof(StandardProductStatus), v)
+                );
+            modelBuilder
+                .Entity<CustomProduct>()
+                .Property(e => e.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (CustomProductStatus)Enum.Parse(typeof(CustomProductStatus), v)
                 );
         }
     }

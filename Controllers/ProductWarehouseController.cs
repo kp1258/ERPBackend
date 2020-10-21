@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("productwarehouse")]
+    [Route("product-warehouse")]
     public class ProductWarehouseController : ControllerBase
     {
         private readonly ILogger<ProductWarehouseController> _logger;

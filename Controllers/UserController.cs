@@ -18,7 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Route("user")]
+    [Route("users")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;

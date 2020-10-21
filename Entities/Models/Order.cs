@@ -13,7 +13,8 @@ namespace ERPBackend.Entities.Models
         public int OrderId { get; set; }
         [Required]
         public DateTime PlacingDate { get; set; }
-        public DateTime? FulfillmentDate { get; set; }
+        public DateTime? RealizationStartDate { get; set; }
+        public DateTime? CompletionDate { get; set; }
         [Required]
         public OrderStatus Status { get; set; }
         [Required]
@@ -36,20 +37,20 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderStatus
     {
-        [EnumMember(Value = "placed")]
+        [EnumMember(Value = "złożone")]
         Placed,
-        [EnumMember(Value = "inProgress")]
-        InProgress,
-        [EnumMember(Value = "completed")]
+        [EnumMember(Value = "w realizacji")]
+        InRealization,
+        [EnumMember(Value = "zrealizowane")]
         Completed
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderType
     {
-        [EnumMember(Value = "standard")]
+        [EnumMember(Value = "standardowy")]
         Standard,
-        [EnumMember(Value = "custom")]
+        [EnumMember(Value = "niestandardowy")]
         Custom
     }
 }

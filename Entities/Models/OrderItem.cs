@@ -1,4 +1,8 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ERPBackend.Entities.Models
 {
@@ -12,7 +16,25 @@ namespace ERPBackend.Entities.Models
         public int CustomProductId { get; set; }
         public CustomProduct CustomProduct { get; set; }
         [Required]
+        public CustomOrderItemStatus Status { get; set; }
+        public int? ProductionManagerId { get; set; }
+        [Required]
         public int Quantity { get; set; }
+        [Required]
+        public DateTime OrderDate { get; set; }
+        public DateTime? ProductionStartDate { get; set; }
+        public DateTime? CompletionDate { get; set; }
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum CustomOrderItemStatus
+    {
+        [EnumMember(Value = "zamówiony")]
+        Ordered,
+        [EnumMember(Value = "w produkcji")]
+        InProduction,
+        [EnumMember(Value = "zrealizowany")]
+        Completed
     }
 
     public class StandardOrderItem

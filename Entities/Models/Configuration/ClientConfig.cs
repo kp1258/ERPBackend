@@ -17,7 +17,8 @@ namespace ERPBackend.Entities.Models.Configuration
                     PhoneNumber="678234765",
                     EMail="zm_stokolosa@mail.com",
                     AddressId=1,
-                    SalesmanId=2
+                    SalesmanId=2,
+                    Status=ClientStatus.Active
                 },
                 new Client{
                     ClientId=2,
@@ -27,7 +28,8 @@ namespace ERPBackend.Entities.Models.Configuration
                     PhoneNumber="978456723",
                     EMail="zm_solanscy@mail.com",
                     AddressId=2,
-                    SalesmanId=2
+                    SalesmanId=2,
+                    Status=ClientStatus.Active
                 },
                 new Client{
                     ClientId=3,
@@ -37,7 +39,8 @@ namespace ERPBackend.Entities.Models.Configuration
                     PhoneNumber="867544765",
                     EMail="zm_turowski@mail.com",
                     AddressId=3,
-                    SalesmanId=2
+                    SalesmanId=2,
+                    Status=ClientStatus.Active
                 }
             });
         }

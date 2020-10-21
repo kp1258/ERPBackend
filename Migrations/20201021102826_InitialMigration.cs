@@ -59,6 +59,8 @@ namespace ERPBackend.Migrations
                     Password = table.Column<string>(maxLength: 20, nullable: false),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
+                    PhoneNumber = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
                     Role = table.Column<string>(nullable: false),
                     Status = table.Column<string>(nullable: false)
                 },
@@ -95,7 +97,8 @@ namespace ERPBackend.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     Dimensions = table.Column<string>(nullable: true),
-                    StandardProductCategoryId = table.Column<int>(nullable: false)
+                    StandardProductCategoryId = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -120,6 +123,7 @@ namespace ERPBackend.Migrations
                     PhoneNumber = table.Column<string>(nullable: false),
                     EMail = table.Column<string>(nullable: true),
                     AddressId = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(nullable: false),
                     SalesmanId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -147,6 +151,10 @@ namespace ERPBackend.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
+                    Status = table.Column<string>(nullable: false),
+                    OrderDate = table.Column<DateTime>(nullable: false),
+                    PreparationStartDate = table.Column<DateTime>(nullable: true),
+                    PreparationCompletionDate = table.Column<DateTime>(nullable: true),
                     TechnologistId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -187,7 +195,8 @@ namespace ERPBackend.Migrations
                     OrderId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     PlacingDate = table.Column<DateTime>(nullable: false),
-                    FulfillmentDate = table.Column<DateTime>(nullable: true),
+                    RealizationStartDate = table.Column<DateTime>(nullable: true),
+                    CompletionDate = table.Column<DateTime>(nullable: true),
                     Status = table.Column<string>(nullable: false),
                     Type = table.Column<string>(nullable: false),
                     ClientId = table.Column<int>(nullable: false),
@@ -225,7 +234,12 @@ namespace ERPBackend.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     OrderId = table.Column<int>(nullable: false),
                     CustomProductId = table.Column<int>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false)
+                    Status = table.Column<string>(nullable: false),
+                    ProductionManagerId = table.Column<int>(nullable: true),
+                    Quantity = table.Column<int>(nullable: false),
+                    OrderDate = table.Column<DateTime>(nullable: false),
+                    ProductionStartDate = table.Column<DateTime>(nullable: true),
+                    CompletionDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -283,8 +297,8 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "CustomProducts",
-                columns: new[] { "CustomProductId", "Description", "Name", "TechnologistId" },
-                values: new object[] { 4, "Opis", "Produkt specjalny 4", null });
+                columns: new[] { "CustomProductId", "Description", "Name", "OrderDate", "PreparationCompletionDate", "PreparationStartDate", "Status", "TechnologistId" },
+                values: new object[] { 4, "Opis", "Produkt specjalny 4", new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Ordered", null });
 
             migrationBuilder.InsertData(
                 table: "Materials",
@@ -310,34 +324,34 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "FirstName", "LastName", "Login", "Password", "Role", "Status" },
+                columns: new[] { "UserId", "Email", "FirstName", "LastName", "Login", "Password", "PhoneNumber", "Role", "Status" },
                 values: new object[,]
                 {
-                    { 4, "Agata", "Krzeszowska", "agata_k", "password", "Technologist", "Active" },
-                    { 1, "Jan", "Kowalski", "jan_k", "password", "Administrator", "Active" },
-                    { 2, "Anna", "Nowak", "anna_n", "password", "Salesman", "Active" },
-                    { 3, "Andrzej", "Malinowski", "andrzej_m", "password", "ProductionManager", "Active" },
-                    { 5, "Edward", "Rak", "edward_r", "password", "Warehouseman", "Active" }
+                    { 4, "agata_k@email.com", "Agata", "Krzeszowska", "agata_k", "password", "685234054", "Technologist", "Active" },
+                    { 1, "jan_k@email.com", "Jan", "Kowalski", "jan_k", "password", "607934182", "Administrator", "Active" },
+                    { 2, "anna_n@email.com", "Anna", "Nowak", "anna_n", "password", "709856234", "Salesman", "Active" },
+                    { 3, "andrzej_m@email.com", "Andrzej", "Malinowski", "andrzej_m", "password", "679234374", "ProductionManager", "Active" },
+                    { 5, "edward_r@email.com", "Edward", "Rak", "edward_r", "password", "978345278", "Warehouseman", "Active" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Clients",
-                columns: new[] { "ClientId", "AddressId", "CompanyName", "EMail", "FirstName", "LastName", "PhoneNumber", "SalesmanId" },
+                columns: new[] { "ClientId", "AddressId", "CompanyName", "EMail", "FirstName", "LastName", "PhoneNumber", "SalesmanId", "Status" },
                 values: new object[,]
                 {
-                    { 1, 1, "Zakłady mięsne Stokłosa", "zm_stokolosa@mail.com", "Adam", "Markowski", "678234765", 2 },
-                    { 2, 2, "Zakłady mięsne Solańscy", "zm_solanscy@mail.com", "Edward", "Solański", "978456723", 2 },
-                    { 3, 3, "ZM Turowski", "zm_turowski@mail.com", "Piotr", "Turowski", "867544765", 2 }
+                    { 1, 1, "Zakłady mięsne Stokłosa", "zm_stokolosa@mail.com", "Adam", "Markowski", "678234765", 2, "Active" },
+                    { 2, 2, "Zakłady mięsne Solańscy", "zm_solanscy@mail.com", "Edward", "Solański", "978456723", 2, "Active" },
+                    { 3, 3, "ZM Turowski", "zm_turowski@mail.com", "Piotr", "Turowski", "867544765", 2, "Active" }
                 });
 
             migrationBuilder.InsertData(
                 table: "CustomProducts",
-                columns: new[] { "CustomProductId", "Description", "Name", "TechnologistId" },
+                columns: new[] { "CustomProductId", "Description", "Name", "OrderDate", "PreparationCompletionDate", "PreparationStartDate", "Status", "TechnologistId" },
                 values: new object[,]
                 {
-                    { 1, "Opis", "Produkt specjalny 1", 4 },
-                    { 2, "Opis", "Produkt specjalny 2", 4 },
-                    { 3, "Opis", "Produkt specjalny 3", 4 }
+                    { 1, "Opis", "Produkt specjalny 1", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Prepared", 4 },
+                    { 2, "Opis", "Produkt specjalny 2", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "Prepared", 4 },
+                    { 3, "Opis", "Produkt specjalny 3", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Prepared", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -353,25 +367,25 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "StandardProducts",
-                columns: new[] { "StandardProductId", "Dimensions", "Name", "StandardProductCategoryId" },
+                columns: new[] { "StandardProductId", "Dimensions", "Name", "StandardProductCategoryId", "Status" },
                 values: new object[,]
                 {
-                    { 1, "100x100", "Produkt 1", 1 },
-                    { 2, "100x100", "Produkt 2", 2 },
-                    { 3, "100x100", "Produkt 3", 3 },
-                    { 4, "100x100", "Produkt 4", 4 }
+                    { 1, "100x100", "Produkt 1", 1, "InProduction" },
+                    { 2, "100x100", "Produkt 2", 2, "InProduction" },
+                    { 3, "100x100", "Produkt 3", 3, "InProduction" },
+                    { 4, "100x100", "Produkt 4", 4, "InProduction" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Orders",
-                columns: new[] { "OrderId", "ClientId", "FulfillmentDate", "PlacingDate", "SalesmanId", "Status", "Type", "WarehousemanId" },
+                columns: new[] { "OrderId", "ClientId", "CompletionDate", "PlacingDate", "RealizationStartDate", "SalesmanId", "Status", "Type", "WarehousemanId" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Completed", "Standard", 5 },
-                    { 4, 1, new DateTime(2020, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Completed", "Custom", 5 },
-                    { 2, 2, null, new DateTime(2020, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Placed", "Standard", null },
-                    { 5, 2, null, new DateTime(2020, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "InProgress", "Standard", 5 },
-                    { 3, 3, null, new DateTime(2020, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Placed", "Custom", null }
+                    { 1, 1, new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Completed", "Standard", 5 },
+                    { 4, 1, new DateTime(2020, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Completed", "Custom", 5 },
+                    { 2, 2, null, new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, "Placed", "Standard", null },
+                    { 5, 2, null, new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 10, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "InRealization", "Standard", 5 },
+                    { 3, 3, null, new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2, "Placed", "Custom", null }
                 });
 
             migrationBuilder.InsertData(
@@ -387,13 +401,13 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "CustomOrderItems",
-                columns: new[] { "CustomOrderItemId", "CustomProductId", "OrderId", "Quantity" },
+                columns: new[] { "CustomOrderItemId", "CompletionDate", "CustomProductId", "OrderDate", "OrderId", "ProductionManagerId", "ProductionStartDate", "Quantity", "Status" },
                 values: new object[,]
                 {
-                    { 2, 1, 4, 5 },
-                    { 3, 2, 4, 15 },
-                    { 4, 3, 4, 9 },
-                    { 1, 4, 3, 10 }
+                    { 2, new DateTime(2020, 9, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 3, new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, "Completed" },
+                    { 3, new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 3, new DateTime(2020, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 15, "Completed" },
+                    { 4, new DateTime(2020, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 3, new DateTime(2020, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 9, "Completed" },
+                    { 1, null, 4, new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, null, null, 10, "Ordered" }
                 });
 
             migrationBuilder.InsertData(

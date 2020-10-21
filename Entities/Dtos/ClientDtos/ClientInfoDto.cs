@@ -8,5 +8,6 @@ namespace ERPBackend.Entities.Dtos.ClientDtos
         public string PhoneNumber { get; set; }
         public string EMail { get; set; }
         public AddressInfoDto Address { get; set; }
+        public string Status { get; set; }
     }
 }
