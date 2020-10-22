@@ -49,12 +49,19 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
     public async Task<Order> GetOrderByIdAsync(int orderId)
     {
         return await FindByCondition(order => order.OrderId.Equals(orderId))
+
                         .FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<Order>> GetOrdersBySalesmanAsync(int salesmanId)
     {
         return await FindByCondition(order => order.SalesmanId.Equals(salesmanId))
+                        .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Order>> GetAllActiveOrdersByWarehouseman(int warehousemanId)
+    {
+        return await FindByCondition(o => (o.WarehousemanId.Equals(warehousemanId)) && (o.Status == OrderStatus.InRealization))
                         .ToListAsync();
     }
 
@@ -68,4 +75,5 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
     {
         Update(order);
     }
+
 }

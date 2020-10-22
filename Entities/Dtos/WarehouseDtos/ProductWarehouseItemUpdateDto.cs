@@ -1,8 +1,7 @@
 namespace ERPBackend.Entities.Dtos.WarehouseDtos
 {
-    public class MaterialWarehouseItemCreateDto
+    public class ProductWarehouseItemUpdateDto
     {
         public int Quantity { get; set; }
-        public int MaterialId { get; set; }
     }
 }

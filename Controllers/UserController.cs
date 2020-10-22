@@ -149,7 +149,7 @@ namespace ERPBackend.Controllers
                 _logger.LogError($"User with id: {id} does not exist");
                 return NotFound();
             }
-            var clients = await _repository.Client.ClientsBySalesmanAsync(id);
+            var clients = await _repository.Client.GetClientsBySalesmanAsync(id);
             if (clients.Any())
             {
                 _logger.LogError($"Cannot delete user with id: {id}. It has related clients.");

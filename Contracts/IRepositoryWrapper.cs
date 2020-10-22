@@ -13,6 +13,8 @@ namespace ERPBackend.Contracts
         IMaterialRepository Material { get; }
         IMaterialWarehouseItemRepository MaterialWarehouseItem { get; }
         IProductWarehouseItemRepository ProductWarehouseItem { get; }
+        ICustomOrderItemRepository CustomOrderItem { get; }
+        IStandardOrderItemRepository StandardOrderItem { get; }
         Task SaveAsync();
     }
 }

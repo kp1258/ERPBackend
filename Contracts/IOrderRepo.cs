@@ -10,6 +10,7 @@ namespace ERPBackend.Contracts
         Task<Order> GetOrderByIdAsync(int orderId);
         Task<Order> GetOrderDetailsByIdAsync(int id);
         Task<IEnumerable<Order>> GetOrdersBySalesmanAsync(int salesmanId);
+        Task<IEnumerable<Order>> GetAllActiveOrdersByWarehouseman(int warehousemanId);
         Task<IEnumerable<Order>> GetOrdersByStatusAsync(OrderStatus status);
         void CreateOrder(Order order);
         void UpdateOrder(Order order);

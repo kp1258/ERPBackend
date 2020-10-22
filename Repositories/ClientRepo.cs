@@ -30,6 +30,7 @@ namespace ERPBackend.Repositories
                             .Include(c => c.Address)
                             .FirstOrDefaultAsync();
         }
+
         public void CreateClient(Client client)
         {
             Create(client);
@@ -45,7 +46,7 @@ namespace ERPBackend.Repositories
             Delete(client);
         }
 
-        public async Task<IEnumerable<Client>> ClientsBySalesmanAsync(int id)
+        public async Task<IEnumerable<Client>> GetClientsBySalesmanAsync(int id)
         {
             return await FindByCondition(a => a.SalesmanId.Equals(id))
                             .ToListAsync();

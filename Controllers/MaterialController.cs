@@ -57,7 +57,7 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST api/material
+        //POST /materials
         [HttpPost]
         public async Task<IActionResult> CreateMaterial([FromBody] MaterialCreateDto material)
         {
@@ -71,6 +71,13 @@ namespace ERPBackend.Controllers
             await _repository.SaveAsync();
 
             var createdMaterial = _mapper.Map<MaterialReadDto>(materialEntity);
+            var materialWarehouseItem = new MaterialWarehouseItem()
+            {
+                MaterialId = createdMaterial.MaterialId,
+                Quantity = 0
+            };
+            _repository.MaterialWarehouseItem.CreateItem(materialWarehouseItem);
+            await _repository.SaveAsync();
             return CreatedAtRoute("MaterialById", new { id = createdMaterial.MaterialId }, createdMaterial);
         }
 

@@ -24,7 +24,7 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET /standardproduct
+        //GET /standard-products
         [HttpGet]
         public async Task<IActionResult> GetAllStandardProducts()
         {
@@ -39,7 +39,7 @@ namespace ERPBackend.Controllers
             return Ok(productsResult);
         }
 
-        //GET /standardproduct/{id}
+        //GET /standard-products/{id}
         [HttpGet("{id}", Name = "StandardProductById")]
         public async Task<IActionResult> GetStandardProductById(int id)
         {
@@ -56,7 +56,7 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST /standardproduct
+        //POST /standard-products
         [HttpPost]
         public async Task<IActionResult> CreateStandardProduct([FromBody] StandardProductCreateDto product)
         {
@@ -70,6 +70,14 @@ namespace ERPBackend.Controllers
             await _repository.SaveAsync();
 
             var createdProduct = _mapper.Map<StandardProductReadDto>(productEntity);
+            var productWarehouseItem = new ProductWarehouseItem()
+            {
+                StandardProductId = createdProduct.StandardProductId,
+                Quantity = 0
+            };
+            _repository.ProductWarehouseItem.CreateItem(productWarehouseItem);
+            await _repository.SaveAsync();
+
             return CreatedAtRoute("StandardProductById", new { id = createdProduct.StandardProductId }, createdProduct);
         }
 

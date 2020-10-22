@@ -43,5 +43,12 @@ namespace ERPBackend.Repositories
         {
             Update(product);
         }
+
+        public async Task<IEnumerable<CustomProduct>> GetAllProductsByTechnologist(int technologistId)
+        {
+            return await FindByCondition(p => p.TechnologistId.Equals(technologistId))
+                            .ToListAsync();
+        }
+
     }
 }

@@ -20,6 +20,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace ERPBackend
 {
@@ -42,35 +44,18 @@ namespace ERPBackend
             options.UseMySQL(Configuration.GetConnectionString("ERPConnection")));
 
             services.ConfigureRepositoryWrapper();
-            services.AddScoped<ValidationInputFilter>();
-            ///
-            //services.ConfigureJwtAuthentication();
-            // var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
-            // services.AddSingleton(jwtTokenConfig);
-            // services.AddAuthentication(x =>
-            // {
-            //     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            // }).AddJwtBearer(x =>
-            // {
-            //     x.RequireHttpsMetadata = true;
-            //     x.SaveToken = true;
-            //     x.TokenValidationParameters = new TokenValidationParameters
-            //     {
-            //         ValidateIssuer = true,
-            //         ValidIssuer = jwtTokenConfig.Issuer,
-            //         ValidateIssuerSigningKey = true,
-            //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
-            //         ValidAudience = jwtTokenConfig.Audience,
-            //         ValidateAudience = true,
-            //         ValidateLifetime = true,
-            //         ClockSkew = TimeSpan.FromMinutes(1)
-            //     };
-            // });
-            // ///
-            services.AddControllers();
+            services.ConfigureCustomServices();
+            services.AddScoped<ModelStateValidationFilter>();
+
+            services.AddControllers()
+                    .AddNewtonsoftJson(s =>
+                    {
+                        s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                        s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    });
+
             services.AddSwaggerGen();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         }
 

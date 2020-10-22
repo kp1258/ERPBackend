@@ -9,7 +9,7 @@ namespace ERPBackend.Entities.Profiles
         public MaterialProfile()
         {
             CreateMap<Material, MaterialReadDto>();
-            CreateMap<MaterialCreateDto, MaterialReadDto>();
+            CreateMap<MaterialCreateDto, Material>();
             CreateMap<MaterialUpdateDto, Material>();
         }
     }

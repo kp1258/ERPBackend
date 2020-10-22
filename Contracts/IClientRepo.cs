@@ -11,6 +11,6 @@ namespace ERPBackend.Contracts
         void CreateClient(Client client);
         void UpdateClient(Client client);
         void DeleteClient(Client client);
-        Task<IEnumerable<Client>> ClientsBySalesmanAsync(int salesmanId);
+        Task<IEnumerable<Client>> GetClientsBySalesmanAsync(int salesmanId);
     }
 }

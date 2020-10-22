@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace ERPBackend.Entities.Models
+namespace ERPBackend.Entities.Models.Additional
 {
     public class ErrorDetails
     {

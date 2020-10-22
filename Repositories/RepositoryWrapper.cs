@@ -16,6 +16,8 @@ namespace ERPBackend.Repositories
         private IMaterialRepository _material;
         private IMaterialWarehouseItemRepository _materialWarehouseItem;
         private IProductWarehouseItemRepository _productWarehouseItem;
+        private ICustomOrderItemRepository _customOrderItem;
+        private IStandardOrderItemRepository _standardOrderItem;
         public IUserRepository User
         {
             get
@@ -120,6 +122,30 @@ namespace ERPBackend.Repositories
                     _productWarehouseItem = new ProductWarehouseItemRepository(_erpContext);
                 }
                 return _productWarehouseItem;
+            }
+        }
+
+        public ICustomOrderItemRepository CustomOrderItem
+        {
+            get
+            {
+                if (_customOrderItem == null)
+                {
+                    _customOrderItem = new CustomOrderItemRepository(_erpContext);
+                }
+                return _customOrderItem;
+            }
+        }
+
+        public IStandardOrderItemRepository StandardOrderItem
+        {
+            get
+            {
+                if (_standardOrderItem == null)
+                {
+                    _standardOrderItem = new StandardOrderItemRepository(_erpContext);
+                }
+                return _standardOrderItem;
             }
         }
 

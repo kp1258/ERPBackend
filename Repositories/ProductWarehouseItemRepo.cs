@@ -34,10 +34,21 @@ namespace ERPBackend.Repositories
                             .ToListAsync();
         }
 
+        public async Task<IEnumerable<ProductWarehouseItem>> GetAllItemsBaseAsync()
+        {
+            return await FindAll().ToListAsync();
+        }
+
         public async Task<ProductWarehouseItem> GetItemByIdAsync(int itemId)
         {
             return await FindByCondition(item => item.ProductWarehouseItemId.Equals(itemId))
                             .Include(i => i.StandardProduct)
+                            .FirstOrDefaultAsync();
+        }
+
+        public async Task<ProductWarehouseItem> GetItemByProductIdAsync(int productId)
+        {
+            return await FindByCondition(i => i.StandardProductId.Equals(productId))
                             .FirstOrDefaultAsync();
         }
 

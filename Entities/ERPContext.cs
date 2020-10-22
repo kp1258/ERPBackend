@@ -2,6 +2,7 @@ using System;
 using ERPBackend.Entities.Models.Configuration;
 using ERPBackend.Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using ERPBackend.Entities.Models.Additional;
 
 namespace ERPBackend.Entities
 {
@@ -104,6 +105,14 @@ namespace ERPBackend.Entities
                 .HasConversion(
                     v => v.ToString(),
                     v => (CustomProductStatus)Enum.Parse(typeof(CustomProductStatus), v)
+
+                );
+            modelBuilder
+                .Entity<StandardOrderItemDetail>()
+                .Property(e => e.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (OrderItemDetailStatus)Enum.Parse(typeof(OrderItemDetailStatus), v)
                 );
         }
     }

@@ -25,7 +25,7 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET /order
+        //GET /orders
         [HttpGet]
         public async Task<IActionResult> GetAllOrders()
         {
