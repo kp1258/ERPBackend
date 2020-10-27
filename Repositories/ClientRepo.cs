@@ -6,6 +6,7 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
 using System.Threading.Tasks;
+using ERPBackend.Entities.QueryParameters;
 
 namespace ERPBackend.Repositories
 {
@@ -16,12 +17,24 @@ namespace ERPBackend.Repositories
 
         }
 
-        public async Task<IEnumerable<Client>> GetAllClientsAsync()
+        public async Task<IEnumerable<Client>> GetAllClientsAsync(ClientParameters parameters)
         {
-            return await FindAll()
-                            .Include(c => c.Address)
+            if (parameters.SalesmanId == 0)
+            {
+                return await FindAll()
+                .Include(c => c.Address)
                             .OrderBy(client => client.CompanyName)
                             .ToListAsync();
+
+            }
+            else
+            {
+                return await FindByCondition(c => c.SalesmanId.Equals(parameters.SalesmanId))
+                                            .Include(c => c.Address)
+                                            .OrderBy(client => client.CompanyName)
+                                            .ToListAsync();
+            }
+
         }
 
         public async Task<Client> GetClientByIdAsync(int clientId)
@@ -49,6 +62,7 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<Client>> GetClientsBySalesmanAsync(int id)
         {
             return await FindByCondition(a => a.SalesmanId.Equals(id))
+                            .Include(c => c.Address)
                             .ToListAsync();
         }
     }

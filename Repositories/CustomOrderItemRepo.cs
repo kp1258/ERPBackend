@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
+using ERPBackend.Entities.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERPBackend.Repositories
@@ -59,9 +60,49 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<CustomOrderItem>> GetAllOrderedItemsWithSolution()
         {
             return await FindByCondition(
-                            i => (i.Status.Equals(CustomOrderItemStatus.Ordered))
+                            i => (i.Status == CustomOrderItemStatus.Ordered)
                             && (i.CustomProduct.Status.Equals(CustomProductStatus.Prepared)))
                             .ToListAsync();
+        }
+
+        public async Task<IEnumerable<CustomOrderItem>> GetAllActiveItems(CustomOrderItemPrameters parameters)
+        {
+            if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
+            {
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction))
+                .Include(i => i.CustomProduct)
+                .ToListAsync();
+            }
+            else
+            {
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction)
+                                        && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
+                                        || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
+                                        || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
+                                        .Include(i => i.CustomProduct)
+                                        .ToListAsync();
+            }
+
+        }
+
+        public async Task<IEnumerable<CustomOrderItem>> GetAllItemsHistory(CustomOrderItemPrameters parameters)
+        {
+            if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
+            {
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Completed))
+                        .Include(i => i.CustomProduct)
+                        .ToListAsync();
+            }
+            else
+            {
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Completed)
+                                        && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
+                                        || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
+                                        || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
+                                        .Include(i => i.CustomProduct)
+                                        .ToListAsync();
+            }
+
         }
     }
 }

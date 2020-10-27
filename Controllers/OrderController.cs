@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
@@ -30,6 +31,10 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllOrders()
         {
             var orders = await _repository.Order.GetAllOrdersAsync();
+            if (!orders.Any())
+            {
+                return NoContent();
+            }
             _logger.LogInformation($"Returned all orders");
 
             var ordersResult = _mapper.Map<IEnumerable<OrderReadDto>>(orders);

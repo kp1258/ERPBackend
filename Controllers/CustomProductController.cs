@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ERPBackend.Controllers
 {
@@ -29,7 +30,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllCustomProducts()
         {
             var products = await _repository.CustomProduct.GetAllProductsAsync();
-            if (products == null)
+            if (!products.Any())
             {
                 return NoContent();
             }

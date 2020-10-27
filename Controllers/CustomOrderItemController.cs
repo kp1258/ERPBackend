@@ -5,6 +5,8 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ERPBackend.Entities.QueryParameters;
+using System.Linq;
 
 namespace ERPBackend.Controllers
 {
@@ -27,11 +29,39 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllCustomOrderItems()
         {
             var items = await _repository.CustomOrderItem.GetAllItemsAsync();
-            if (items == null)
+            if (!items.Any())
             {
                 return NoContent();
             }
             _logger.LogInformation($"Returned all custom order items");
+            var itemsResult = _mapper.Map<IEnumerable<CustomOrderItemReadDto>>(items);
+            return Ok(itemsResult);
+        }
+
+        //GET /custom-order-items/active
+        [HttpGet("active")]
+        public async Task<IActionResult> GetAllActiveCustomOrderItems([FromQuery] CustomOrderItemPrameters parameters)
+        {
+            var items = await _repository.CustomOrderItem.GetAllActiveItems(parameters);
+            if (!items.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned active custom order items");
+            var itemsResult = _mapper.Map<IEnumerable<CustomOrderItemReadDto>>(items);
+            return Ok(itemsResult);
+        }
+
+        //GET /custom-order-items/history
+        [HttpGet("history")]
+        public async Task<IActionResult> GetAllCustomOrderItemsHistory([FromQuery] CustomOrderItemPrameters parameters)
+        {
+            var items = await _repository.CustomOrderItem.GetAllItemsHistory(parameters);
+            if (!items.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned custom order items history");
             var itemsResult = _mapper.Map<IEnumerable<CustomOrderItemReadDto>>(items);
             return Ok(itemsResult);
         }
@@ -41,7 +71,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllOrderedCustomOrderItemsWithSolution()
         {
             var items = await _repository.CustomOrderItem.GetAllOrderedItemsWithSolution();
-            if (items == null)
+            if (!items.Any())
             {
                 return NoContent();
             }

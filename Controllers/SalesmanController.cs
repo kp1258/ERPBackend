@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
@@ -30,7 +31,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllClientsBySalesman(int id)
         {
             var clients = await _repository.Client.GetClientsBySalesmanAsync(id);
-            if (clients == null)
+            if (!clients.Any())
             {
                 return NoContent();
             }
@@ -46,7 +47,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllOrdersBySalesman(int id)
         {
             var orders = await _repository.Order.GetOrdersBySalesmanAsync(id);
-            if (orders == null)
+            if (!orders.Any())
             {
                 return NoContent();
             }
@@ -61,7 +62,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllCustomOrderItemsBySalesman(int id)
         {
             var items = await _repository.CustomOrderItem.GetAllActiveItemsBySalesman(id);
-            if (items == null)
+            if (!items.Any())
             {
                 return NoContent();
             }

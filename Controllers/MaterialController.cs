@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
@@ -29,7 +30,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllMaterials()
         {
             var materials = await _repository.Material.GetAllMaterialsAsync();
-            if (materials == null)
+            if (!materials.Any())
             {
                 return NoContent();
             }

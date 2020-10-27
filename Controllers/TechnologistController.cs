@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
@@ -58,7 +59,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllCustomProductsByTechnologist(int technologistId)
         {
             var products = await _repository.CustomProduct.GetAllProductsByTechnologist(technologistId);
-            if (products == null)
+            if (!products.Any())
             {
                 return NoContent();
             }

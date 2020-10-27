@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
@@ -80,7 +81,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllActiveOrdersByWarehouseman(int warehousemanId)
         {
             var orders = await _serivce.GetAllOrderDetailsByWarehouseman(warehousemanId);
-            if (orders == null)
+            if (!orders.Any())
             {
                 return NoContent();
             }

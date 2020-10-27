@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
@@ -24,12 +25,12 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET /productwarehouse
+        //GET /product-warehouse
         [HttpGet]
         public async Task<IActionResult> GetAllProductWarehouseItems()
         {
             var items = await _repository.ProductWarehouseItem.GetAllItemsAsync();
-            if (items == null)
+            if (!items.Any())
             {
                 return NoContent();
             }

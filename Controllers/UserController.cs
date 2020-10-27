@@ -72,7 +72,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _repository.User.GetAllUsersAsync();
-            if (users == null)
+            if (!users.Any())
             {
                 return NoContent();
             }

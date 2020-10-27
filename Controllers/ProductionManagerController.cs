@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
@@ -34,7 +35,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllCustomOrderItemsByPM(int pmId)
         {
             var items = await _repository.CustomOrderItem.GetAllActiveItemsByProductionManager(pmId);
-            if (items == null)
+            if (!items.Any())
             {
                 return NoContent();
             }
@@ -45,7 +46,7 @@ namespace ERPBackend.Controllers
         }
 
         //PATCH /production-managers/{pmId}/custom-order-items/{itemId}
-        [HttpPatch("{pdId}/custom-order-items/{itemId}")]
+        [HttpPatch("{pmId}/custom-order-items/{itemId}/complete")]
         public async Task<IActionResult> CompleteCustomOrderItem(int pmId, int itemId, JsonPatchDocument<CustomOrderItemUpdateDto> patchDoc)
         {
             var itemModelFromRepo = await _repository.CustomOrderItem.GetItemByIdAsync(itemId);
@@ -73,7 +74,7 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetMissingStandardProducts(int pmId)
         {
             var missingProducts = await _service.GetAllMissingProducts();
-            if (missingProducts == null)
+            if (!missingProducts.Any())
             {
                 return NoContent();
             }
