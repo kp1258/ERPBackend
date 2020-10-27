@@ -9,5 +9,6 @@ namespace ERPBackend.Services
         Task<IEnumerable<MissingProduct>> GetAllMissingProducts();
         Task<IEnumerable<OrderDetails>> GetAllOrderDetailsByWarehouseman(int warehousemanId);
         Task<OrderDetails> GetOrderDetails(int orderId);
+        Task CompleteOrder(int orderId);
     }
 }

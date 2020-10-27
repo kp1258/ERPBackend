@@ -13,6 +13,7 @@ namespace ERPBackend.Profiles
             CreateMap<ClientCreateDto, Client>();
             CreateMap<ClientUpdateDto, Client>();
             CreateMap<Client, ClientInfoDto>();
+            CreateMap<Client, ClientUpdateDto>();
         }
     }
 }

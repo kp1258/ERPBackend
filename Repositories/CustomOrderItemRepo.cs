@@ -69,13 +69,13 @@ namespace ERPBackend.Repositories
         {
             if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
             {
-                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction))
+                return await FindByCondition(i => (i.Order.Status == OrderStatus.Placed || i.Order.Status == OrderStatus.InRealization))
                 .Include(i => i.CustomProduct)
                 .ToListAsync();
             }
             else
             {
-                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction)
+                return await FindByCondition(i => (i.Order.Status == OrderStatus.Placed || i.Order.Status == OrderStatus.InRealization)
                                         && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
                                         || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
@@ -89,13 +89,13 @@ namespace ERPBackend.Repositories
         {
             if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
             {
-                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Completed))
+                return await FindByCondition(i => (i.Order.Status == OrderStatus.Completed))
                         .Include(i => i.CustomProduct)
                         .ToListAsync();
             }
             else
             {
-                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Completed)
+                return await FindByCondition(i => (i.Order.Status == OrderStatus.Completed)
                                         && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
                                         || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))

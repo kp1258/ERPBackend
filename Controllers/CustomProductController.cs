@@ -25,7 +25,7 @@ namespace ERPBackend.Controllers
             _mapper = mapper;
         }
 
-        //GET /customproduct
+        //GET /custom-products
         [HttpGet]
         public async Task<IActionResult> GetAllCustomProducts()
         {
@@ -40,7 +40,7 @@ namespace ERPBackend.Controllers
             return Ok(productsResult);
         }
 
-        //GET /customproduct/{id}
+        //GET /custom-products/{id}
         [HttpGet("{id}", Name = "CustomProductById")]
         public async Task<IActionResult> GetCustomProductById(int id)
         {
@@ -57,7 +57,7 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST /customproduct
+        //POST /custom-products
         [HttpPost]
         public async Task<IActionResult> CreateCustomProduct([FromBody] CustomProductCreateDto product)
         {
@@ -75,7 +75,7 @@ namespace ERPBackend.Controllers
             return CreatedAtRoute("CustomProductById", new { id = createdProduct.CustomProductId }, createdProduct);
         }
 
-        //PUT /customproduct/{id}
+        //PUT /custom-products/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomProduct(int id, [FromBody] CustomProductUpdateDto product)
         {
@@ -95,6 +95,39 @@ namespace ERPBackend.Controllers
             _repository.CustomProduct.UpdateProduct(productEntity);
             await _repository.SaveAsync();
             return NoContent();
+        }
+
+        //GET /custom-products/ordered
+        [HttpGet("ordered")]
+        public async Task<IActionResult> GetAllOrderedProducts()
+        {
+            var product = await _repository.CustomProduct.GetAllProductsByStatus(CustomProductStatus.Ordered);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _logger.LogInformation($"Returned ordered custom products");
+                var productResult = _mapper.Map<CustomProductReadDto>(product);
+                return Ok(productResult);
+            }
+        }
+        //GET /custom-products/prepared
+        [HttpGet("prepared")]
+        public async Task<IActionResult> GetAllPreparedProducts()
+        {
+            var product = await _repository.CustomProduct.GetAllProductsByStatus(CustomProductStatus.Prepared);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _logger.LogInformation($"Returned prepared custom products");
+                var productResult = _mapper.Map<CustomProductReadDto>(product);
+                return Ok(productResult);
+            }
         }
     }
 }

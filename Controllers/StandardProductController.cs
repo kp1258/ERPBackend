@@ -5,6 +5,7 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -100,6 +101,27 @@ namespace ERPBackend.Controllers
             _mapper.Map(product, productEntity);
 
             _repository.StandardProduct.UpdateProduct(productEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+        //PATCH /standard-products/{id}
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateStandardProductPatch(int id, JsonPatchDocument<StandardProductUpdateDto> patchDoc)
+        {
+            var productModelFromRepo = await _repository.StandardProduct.GetProductByIdAsync(id);
+            if (productModelFromRepo == null)
+            {
+                return NotFound();
+            }
+            var productToPatch = _mapper.Map<StandardProductUpdateDto>(productModelFromRepo);
+            patchDoc.ApplyTo(productToPatch, ModelState);
+            if (!TryValidateModel(productToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+            _mapper.Map(productToPatch, productModelFromRepo);
+            _repository.StandardProduct.UpdateProduct(productModelFromRepo);
             await _repository.SaveAsync();
             return NoContent();
         }

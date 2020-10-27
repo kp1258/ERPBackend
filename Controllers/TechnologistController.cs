@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ProductDtos;
+using ERPBackend.Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -64,6 +65,36 @@ namespace ERPBackend.Controllers
                 return NoContent();
             }
             _logger.LogInformation($"Returned all custom products binded witch specified technologist");
+
+            var productsResult = _mapper.Map<IEnumerable<CustomProductReadDto>>(products);
+            return Ok(productsResult);
+        }
+
+        //GET /technologists/{id}/custom-products/prepared
+        [HttpGet("{technologistId}/custom-products/prepared")]
+        public async Task<IActionResult> GetAllCompletedCustomProductsByTechnologist(int technologistId)
+        {
+            var products = await _repository.CustomProduct.GetAllProductsByTechnologistAndStatus(technologistId, CustomProductStatus.Prepared);
+            if (!products.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all prepared custom products binded with specified technologist");
+
+            var productsResult = _mapper.Map<IEnumerable<CustomProductReadDto>>(products);
+            return Ok(productsResult);
+        }
+
+        //GET /technologists/{id}/custom-products/in-preparation
+        [HttpGet("{technologistId}/custom-products/in-preparation")]
+        public async Task<IActionResult> GetAllInPreparationCustomProductsByTechnologist(int technologistId)
+        {
+            var products = await _repository.CustomProduct.GetAllProductsByTechnologistAndStatus(technologistId, CustomProductStatus.InPreparation);
+            if (!products.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all custom products in preparation binded witch specified technologist");
 
             var productsResult = _mapper.Map<IEnumerable<CustomProductReadDto>>(products);
             return Ok(productsResult);

@@ -11,6 +11,7 @@ using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.UserDtos;
 using ERPBackend.Entities.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -139,41 +140,47 @@ namespace ERPBackend.Controllers
             return NoContent();
         }
 
-        //DELETE /user/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        //PATCH /users/{id}
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateUserPatch(int id, JsonPatchDocument<UserUpdateDto> patchDoc)
         {
-            var user = await _repository.User.GetUserByIdAsync(id);
-            if (user == null)
+            var userModelFromRepo = await _repository.User.GetUserByIdAsync(id);
+            if (userModelFromRepo == null)
             {
-                _logger.LogError($"User with id: {id} does not exist");
                 return NotFound();
             }
-            var clients = await _repository.Client.GetClientsBySalesmanAsync(id);
-            if (clients.Any())
+            var userToPatch = _mapper.Map<UserUpdateDto>(userModelFromRepo);
+            patchDoc.ApplyTo(userToPatch, ModelState);
+            if (!TryValidateModel(userToPatch))
             {
-                _logger.LogError($"Cannot delete user with id: {id}. It has related clients.");
-                return BadRequest("Cannot delete user. It has related clients. Delete those first");
+                return ValidationProblem(ModelState);
             }
-            _repository.User.DeleteUser(user);
+            _mapper.Map(userToPatch, userModelFromRepo);
+            _repository.User.UpdateUser(userModelFromRepo);
             await _repository.SaveAsync();
             return NoContent();
         }
 
-        //PUT /user/{id}
-        [HttpPut("status/{id}")]
-        public async Task<IActionResult> ChangeUserStatus(int id)
-        {
-            var user = await _repository.User.GetUserByIdAsync(id);
-            if (user == null)
-            {
-                _logger.LogError($"User with id {id} does not exist");
-                return NotFound();
-            }
-            await _repository.User.ChangeStatusAsync(id);
-            await _repository.SaveAsync();
-            return NoContent();
-        }
+        //DELETE /user/{id}
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> DeleteUser(int id)
+        // {
+        //     var user = await _repository.User.GetUserByIdAsync(id);
+        //     if (user == null)
+        //     {
+        //         _logger.LogError($"User with id: {id} does not exist");
+        //         return NotFound();
+        //     }
+        //     var clients = await _repository.Client.GetClientsBySalesmanAsync(id);
+        //     if (clients.Any())
+        //     {
+        //         _logger.LogError($"Cannot delete user with id: {id}. It has related clients.");
+        //         return BadRequest("Cannot delete user. It has related clients. Delete those first");
+        //     }
+        //     _repository.User.DeleteUser(user);
+        //     await _repository.SaveAsync();
+        //     return NoContent();
+        // }
 
 
     }

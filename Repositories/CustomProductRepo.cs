@@ -50,5 +50,16 @@ namespace ERPBackend.Repositories
                             .ToListAsync();
         }
 
+        public async Task<IEnumerable<CustomProduct>> GetAllProductsByStatus(CustomProductStatus status)
+        {
+            return await FindByCondition(p => p.Status == status)
+                            .ToListAsync();
+        }
+
+        public async Task<IEnumerable<CustomProduct>> GetAllProductsByTechnologistAndStatus(int technologistId, CustomProductStatus status)
+        {
+            return await FindByCondition(p => (p.Status == status && p.TechnologistId.Equals(technologistId)))
+                        .ToListAsync();
+        }
     }
 }

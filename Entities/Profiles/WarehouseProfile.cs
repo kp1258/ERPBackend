@@ -13,9 +13,11 @@ namespace ERPBackend.Entities.Profiles
             CreateMap<MaterialWarehouseItem, MaterialWarehouseItemReadDto>();
             CreateMap<MaterialWarehouseItemUpdateDto, MaterialWarehouseItem>();
             CreateMap<MaterialWarehouseItem, MaterialWarehouseItemUpdateDto>();
+            CreateMap<MaterialWarehouseItem, MaterialWarehouseItemUpdateDto>();
 
             CreateMap<ProductWarehouseItem, ProductWarehouseItemReadDto>();
             CreateMap<ProductWarehouseItemUpdateDto, ProductWarehouseItem>();
+            CreateMap<ProductWarehouseItem, ProductWarehouseItemUpdateDto>();
             CreateMap<ProductWarehouseItem, ProductWarehouseItemUpdateDto>();
 
             CreateMap<MissingProduct, MissingProductDto>();

@@ -53,8 +53,8 @@ namespace ERPBackend.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        //PATCH /warehousemen/{warehousemanId}/orders/{orderId}/completion
-        [HttpPatch("{warehousemanId}/orders/{orderId}/completion")]
+        //PATCH /warehousemen/{warehousemanId}/orders/{orderId}/complete
+        [HttpPatch("{warehousemanId}/orders/{orderId}/complete")]
         public async Task<IActionResult> CompleteOrder(int warehousemanId, int orderId, JsonPatchDocument<OrderUpdateDto> patchDoc)
         {
             var orderModelFromRepo = await _repository.Order.GetOrderByIdAsync(orderId);
@@ -70,6 +70,7 @@ namespace ERPBackend.Controllers
             }
             _mapper.Map(orderToPatch, orderModelFromRepo);
             orderModelFromRepo.CompletionDate = DateTime.Now;
+            await _serivce.CompleteOrder(orderModelFromRepo.OrderId);
 
             _repository.Order.UpdateOrder(orderModelFromRepo);
             await _repository.SaveAsync();

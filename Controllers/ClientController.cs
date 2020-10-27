@@ -7,6 +7,7 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ClientDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Entities.QueryParameters;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -94,6 +95,27 @@ namespace ERPBackend.Controllers
             _mapper.Map(client, clientEntity);
 
             _repository.Client.UpdateClient(clientEntity);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
+
+        //PATCH /clients/{id}
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateUserPatch(int id, JsonPatchDocument<ClientUpdateDto> patchDoc)
+        {
+            var clientModelFromRepo = await _repository.Client.GetClientByIdAsync(id);
+            if (clientModelFromRepo == null)
+            {
+                return NotFound();
+            }
+            var clientToPatch = _mapper.Map<ClientUpdateDto>(clientModelFromRepo);
+            patchDoc.ApplyTo(clientToPatch, ModelState);
+            if (!TryValidateModel(clientToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+            _mapper.Map(clientToPatch, clientModelFromRepo);
+            _repository.Client.UpdateClient(clientModelFromRepo);
             await _repository.SaveAsync();
             return NoContent();
         }

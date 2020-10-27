@@ -12,6 +12,7 @@ namespace ERPBackend.Entities.Profiles
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>();
             CreateMap<User, UserInfoDto>();
+            CreateMap<User, UserUpdateDto>();
         }
     }
 }

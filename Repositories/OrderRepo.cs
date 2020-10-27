@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities;
 using ERPBackend.Entities.Models;
+using ERPBackend.Entities.QueryParameters;
 using ERPBackend.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +27,17 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 
     public async Task<IEnumerable<Order>> GetAllOrdersAsync()
     {
-        return await FindAll().OrderBy(order => order.PlacingDate)
+        return await FindAll()
+                        .OrderBy(order => order.PlacingDate)
+                        .Include(o => o.Client)
+                            .ThenInclude(c => c.Address)
+                        .Include(o => o.Salesman)
+                        .Include(o => o.Warehouseman)
+                        .Include(o => o.CustomOrderItems)
+                            .ThenInclude(o => o.CustomProduct)
+                        .Include(o => o.StandardOrderItems)
+                            .ThenInclude(o => o.StandardProduct)
+                                .ThenInclude(o => o.StandardProductCategory)
                         .ToListAsync();
     }
 
@@ -76,4 +87,75 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
         Update(order);
     }
 
+    public async Task<IEnumerable<Order>> GetAllActiveOrders(OrderParameters parameters)
+    {
+        if (parameters.SalesmanId == 0 && parameters.WarehousemanId == 0)
+        {
+            return await FindByCondition(o => (o.Status == OrderStatus.Placed || o.Status == OrderStatus.InRealization))
+                            .OrderBy(o => o.PlacingDate)
+                        .Include(o => o.Client)
+                            .ThenInclude(c => c.Address)
+                        .Include(o => o.Salesman)
+                        .Include(o => o.Warehouseman)
+                        .Include(o => o.CustomOrderItems)
+                            .ThenInclude(o => o.CustomProduct)
+                        .Include(o => o.StandardOrderItems)
+                            .ThenInclude(o => o.StandardProduct)
+                                .ThenInclude(o => o.StandardProductCategory)
+                                .ToListAsync();
+
+        }
+        else
+        {
+            return await FindByCondition(o => (o.Status == OrderStatus.Placed || o.Status == OrderStatus.InRealization)
+                        && (o.SalesmanId.Equals(parameters.SalesmanId) || o.WarehousemanId.Equals(parameters.WarehousemanId)))
+                            .OrderBy(o => o.PlacingDate)
+                        .Include(o => o.Client)
+                            .ThenInclude(c => c.Address)
+                        .Include(o => o.Salesman)
+                        .Include(o => o.Warehouseman)
+                        .Include(o => o.CustomOrderItems)
+                            .ThenInclude(o => o.CustomProduct)
+                        .Include(o => o.StandardOrderItems)
+                            .ThenInclude(o => o.StandardProduct)
+                                .ThenInclude(o => o.StandardProductCategory)
+                                .ToListAsync();
+        }
+    }
+
+    public async Task<IEnumerable<Order>> GetAllOrdersHistory(OrderParameters parameters)
+    {
+        if (parameters.SalesmanId == 0 && parameters.WarehousemanId == 0)
+        {
+            return await FindByCondition(o => (o.Status == OrderStatus.Completed))
+                            .OrderBy(o => o.PlacingDate)
+                        .Include(o => o.Client)
+                            .ThenInclude(c => c.Address)
+                        .Include(o => o.Salesman)
+                        .Include(o => o.Warehouseman)
+                        .Include(o => o.CustomOrderItems)
+                            .ThenInclude(o => o.CustomProduct)
+                        .Include(o => o.StandardOrderItems)
+                            .ThenInclude(o => o.StandardProduct)
+                                .ThenInclude(o => o.StandardProductCategory)
+                                .ToListAsync();
+
+        }
+        else
+        {
+            return await FindByCondition(o => (o.Status == OrderStatus.Completed)
+                        && (o.SalesmanId.Equals(parameters.SalesmanId) || o.WarehousemanId.Equals(parameters.WarehousemanId)))
+                            .OrderBy(o => o.PlacingDate)
+                        .Include(o => o.Client)
+                            .ThenInclude(c => c.Address)
+                        .Include(o => o.Salesman)
+                        .Include(o => o.Warehouseman)
+                        .Include(o => o.CustomOrderItems)
+                            .ThenInclude(o => o.CustomProduct)
+                        .Include(o => o.StandardOrderItems)
+                            .ThenInclude(o => o.StandardProduct)
+                                .ThenInclude(o => o.StandardProductCategory)
+                                .ToListAsync();
+        }
+    }
 }

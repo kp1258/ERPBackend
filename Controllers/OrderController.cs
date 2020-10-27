@@ -6,6 +6,7 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.OrderDtos;
 using ERPBackend.Entities.Models;
+using ERPBackend.Entities.QueryParameters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -37,7 +38,7 @@ namespace ERPBackend.Controllers
             }
             _logger.LogInformation($"Returned all orders");
 
-            var ordersResult = _mapper.Map<IEnumerable<OrderReadDto>>(orders);
+            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
             return Ok(ordersResult);
         }
 
@@ -53,23 +54,6 @@ namespace ERPBackend.Controllers
             else
             {
                 _logger.LogInformation($"Returned order with specified id");
-                var orderResult = _mapper.Map<OrderReadDto>(order);
-                return Ok(orderResult);
-            }
-        }
-
-        //GET /order/details/{id}
-        [HttpGet("details/{id}", Name = "OrderDetailsById")]
-        public async Task<IActionResult> GetOrderDetailsById(int id)
-        {
-            var order = await _repository.Order.GetOrderDetailsByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                _logger.LogInformation($"Returned order details with specified id");
                 var orderResult = _mapper.Map<OrderInfoDto>(order);
                 return Ok(orderResult);
             }
@@ -94,5 +78,67 @@ namespace ERPBackend.Controllers
             var createdOrder = _mapper.Map<OrderInfoDto>(orderEntity);
             return CreatedAtRoute("OrderDetailsById", new { id = createdOrder.OrderId }, createdOrder);
         }
+
+        //GET /order/placed
+        [HttpGet("placed")]
+        public async Task<IActionResult> GetPlacedOrders()
+        {
+            var orders = await _repository.Order.GetOrdersByStatusAsync(OrderStatus.Placed);
+            if (!orders.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all orders");
+
+            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            return Ok(ordersResult);
+        }
+
+        //GET /orders/active
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActiveOrders([FromQuery] OrderParameters parameters)
+        {
+            var orders = await _repository.Order.GetAllActiveOrders(parameters);
+            if (!orders.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all orders");
+
+            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            return Ok(ordersResult);
+        }
+
+        //GET /orders/history
+        [HttpGet("history")]
+        public async Task<IActionResult> GetOrdersHistory([FromQuery] OrderParameters parameters)
+        {
+            var orders = await _repository.Order.GetAllOrdersHistory(parameters);
+            if (!orders.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all orders");
+
+            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            return Ok(ordersResult);
+        }
+
+        //GET /order/details/{id}
+        // [HttpGet("details/{id}", Name = "OrderDetailsById")]
+        // public async Task<IActionResult> GetOrderDetailsById(int id)
+        // {
+        //     var order = await _repository.Order.GetOrderDetailsByIdAsync(id);
+        //     if (order == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     else
+        //     {
+        //         _logger.LogInformation($"Returned order details with specified id");
+        //         var orderResult = _mapper.Map<OrderInfoDto>(order);
+        //         return Ok(orderResult);
+        //     }
+        // }
     }
 }

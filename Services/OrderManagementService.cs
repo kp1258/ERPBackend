@@ -17,6 +17,22 @@ namespace ERPBackend.Services
             _repository = repositoryWrapper;
         }
 
+        public async Task CompleteOrder(int orderId)
+        {
+            var order = await _repository.Order.GetOrderByIdAsync(orderId);
+            if (order.Type == OrderType.Standard)
+            {
+                var standardOrderItems = order.StandardOrderItems;
+                foreach (var item in standardOrderItems)
+                {
+                    var warehouseItem = await _repository.ProductWarehouseItem.GetItemByProductIdAsync(item.StandardProductId);
+                    warehouseItem.Quantity = warehouseItem.Quantity - item.Quantity;
+                    _repository.ProductWarehouseItem.UpdateItem(warehouseItem);
+                }
+                await _repository.SaveAsync();
+            }
+        }
+
         public async Task<IEnumerable<MissingProduct>> GetAllMissingProducts()
         {
             var standardOrderItems = await _repository.StandardOrderItem.GetAllItemsFromActiveOrders();
