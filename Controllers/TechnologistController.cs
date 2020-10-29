@@ -97,6 +97,7 @@ namespace ERPBackend.Controllers
             _logger.LogInformation($"Returned all custom products in preparation binded witch specified technologist");
 
             var productsResult = _mapper.Map<IEnumerable<CustomProductReadDto>>(products);
+            Console.WriteLine(productsResult);
             return Ok(productsResult);
         }
     }

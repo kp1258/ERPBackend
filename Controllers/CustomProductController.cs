@@ -101,32 +101,32 @@ namespace ERPBackend.Controllers
         [HttpGet("ordered")]
         public async Task<IActionResult> GetAllOrderedProducts()
         {
-            var product = await _repository.CustomProduct.GetAllProductsByStatus(CustomProductStatus.Ordered);
-            if (product == null)
+            var products = await _repository.CustomProduct.GetAllProductsByStatus(CustomProductStatus.Ordered);
+            if (!products.Any())
             {
-                return NotFound();
+                return NoContent();
             }
             else
             {
                 _logger.LogInformation($"Returned ordered custom products");
-                var productResult = _mapper.Map<CustomProductReadDto>(product);
-                return Ok(productResult);
+                var productsResult = _mapper.Map<IEnumerable<CustomProductReadDto>>(products);
+                return Ok(productsResult);
             }
         }
         //GET /custom-products/prepared
         [HttpGet("prepared")]
         public async Task<IActionResult> GetAllPreparedProducts()
         {
-            var product = await _repository.CustomProduct.GetAllProductsByStatus(CustomProductStatus.Prepared);
-            if (product == null)
+            var products = await _repository.CustomProduct.GetAllProductsByStatus(CustomProductStatus.Prepared);
+            if (!products.Any())
             {
-                return NotFound();
+                return NoContent();
             }
             else
             {
                 _logger.LogInformation($"Returned prepared custom products");
-                var productResult = _mapper.Map<CustomProductReadDto>(product);
-                return Ok(productResult);
+                var productsResult = _mapper.Map<IEnumerable<CustomProductReadDto>>(products);
+                return Ok(productsResult);
             }
         }
     }
