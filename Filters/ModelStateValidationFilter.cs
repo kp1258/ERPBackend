@@ -3,14 +3,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ERPBackend.Filters
 {
-    public class ValidationInputFilter : IActionFilter
+    public class ModelStateValidationFilter : ActionFilterAttribute
     {
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-
-        }
-
-        public void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid)
             {

@@ -107,14 +107,14 @@ namespace ERPBackend.Controllers
 
         //PATCH /standard-products/{id}
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateStandardProductPatch(int id, JsonPatchDocument<StandardProductUpdateDto> patchDoc)
+        public async Task<IActionResult> UpdateStandardProductPatch(int id, JsonPatchDocument<StandardProductPatchDto> patchDoc)
         {
             var productModelFromRepo = await _repository.StandardProduct.GetProductByIdAsync(id);
             if (productModelFromRepo == null)
             {
                 return NotFound();
             }
-            var productToPatch = _mapper.Map<StandardProductUpdateDto>(productModelFromRepo);
+            var productToPatch = _mapper.Map<StandardProductPatchDto>(productModelFromRepo);
             patchDoc.ApplyTo(productToPatch, ModelState);
             if (!TryValidateModel(productToPatch))
             {

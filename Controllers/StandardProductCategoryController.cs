@@ -59,7 +59,7 @@ namespace ERPBackend.Controllers
 
         //POST /standardproduct/category
         [HttpPost]
-        public async Task<IActionResult> CreateStandardProductCategory([FromBody] StandardProductCategoryDto category)
+        public async Task<IActionResult> CreateStandardProductCategory([FromBody] StandardProductCategoryCreateDto category)
         {
             if (category == null)
             {
@@ -76,7 +76,7 @@ namespace ERPBackend.Controllers
 
         //PUT /standardproduct/category/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClient(int id, [FromBody] StandardProductCategoryDto category)
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] StandardProductCategoryUpdateDto category)
         {
             if (category == null)
             {

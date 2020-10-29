@@ -78,7 +78,7 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 
     public async Task<IEnumerable<Order>> GetOrdersByStatusAsync(OrderStatus status)
     {
-        return await FindByCondition(order => order.Status.Equals(status))
+        return await FindByCondition(order => order.Status == status)
                         .ToListAsync();
     }
 

@@ -142,14 +142,14 @@ namespace ERPBackend.Controllers
 
         //PATCH /users/{id}
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateUserPatch(int id, JsonPatchDocument<UserUpdateDto> patchDoc)
+        public async Task<IActionResult> UpdateUserPatch(int id, JsonPatchDocument<UserPatchDto> patchDoc)
         {
             var userModelFromRepo = await _repository.User.GetUserByIdAsync(id);
             if (userModelFromRepo == null)
             {
                 return NotFound();
             }
-            var userToPatch = _mapper.Map<UserUpdateDto>(userModelFromRepo);
+            var userToPatch = _mapper.Map<UserPatchDto>(userModelFromRepo);
             patchDoc.ApplyTo(userToPatch, ModelState);
             if (!TryValidateModel(userToPatch))
             {

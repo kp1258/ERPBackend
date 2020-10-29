@@ -14,6 +14,9 @@ namespace ERPBackend.Profiles
             CreateMap<ClientUpdateDto, Client>();
             CreateMap<Client, ClientInfoDto>();
             CreateMap<Client, ClientUpdateDto>();
+
+            CreateMap<Client, ClientPatchDto>();
+            CreateMap<ClientPatchDto, Client>();
         }
     }
 }

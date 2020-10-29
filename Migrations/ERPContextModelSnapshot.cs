@@ -17,6 +17,35 @@ namespace ERPBackend.Migrations
                 .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("ERPBackend.Entities.Models.Additional.StandardOrderItemDetail", b =>
+                {
+                    b.Property<int>("StandardOrderItemDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("MissingQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StandardOrderItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StandardProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("StandardOrderItemDetailId");
+
+                    b.HasIndex("StandardProductId");
+
+                    b.ToTable("StandardOrderItemDetail");
+                });
+
             modelBuilder.Entity("ERPBackend.Entities.Models.Address", b =>
                 {
                     b.Property<int>("AddressId")
@@ -76,7 +105,7 @@ namespace ERPBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("EMail")
+                    b.Property<string>("Email")
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -112,7 +141,7 @@ namespace ERPBackend.Migrations
                             ClientId = 1,
                             AddressId = 1,
                             CompanyName = "Zakłady mięsne Stokłosa",
-                            EMail = "zm_stokolosa@mail.com",
+                            Email = "zm_stokolosa@mail.com",
                             FirstName = "Adam",
                             LastName = "Markowski",
                             PhoneNumber = "678234765",
@@ -124,7 +153,7 @@ namespace ERPBackend.Migrations
                             ClientId = 2,
                             AddressId = 2,
                             CompanyName = "Zakłady mięsne Solańscy",
-                            EMail = "zm_solanscy@mail.com",
+                            Email = "zm_solanscy@mail.com",
                             FirstName = "Edward",
                             LastName = "Solański",
                             PhoneNumber = "978456723",
@@ -136,7 +165,7 @@ namespace ERPBackend.Migrations
                             ClientId = 3,
                             AddressId = 3,
                             CompanyName = "ZM Turowski",
-                            EMail = "zm_turowski@mail.com",
+                            Email = "zm_turowski@mail.com",
                             FirstName = "Piotr",
                             LastName = "Turowski",
                             PhoneNumber = "867544765",
@@ -820,6 +849,15 @@ namespace ERPBackend.Migrations
                             Role = "Warehouseman",
                             Status = "Active"
                         });
+                });
+
+            modelBuilder.Entity("ERPBackend.Entities.Models.Additional.StandardOrderItemDetail", b =>
+                {
+                    b.HasOne("ERPBackend.Entities.Models.StandardProduct", "StandardProduct")
+                        .WithMany()
+                        .HasForeignKey("StandardProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.Client", b =>

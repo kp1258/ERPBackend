@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using ERPBackend.Entities.Models;
+using ERPBackend.Entities.Models.Additional;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

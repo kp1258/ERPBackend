@@ -47,18 +47,21 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<CustomProduct>> GetAllProductsByTechnologist(int technologistId)
         {
             return await FindByCondition(p => p.TechnologistId.Equals(technologistId))
+                            .Include(p => p.Technologist)
                             .ToListAsync();
         }
 
         public async Task<IEnumerable<CustomProduct>> GetAllProductsByStatus(CustomProductStatus status)
         {
             return await FindByCondition(p => p.Status == status)
+                            .Include(p => p.Technologist)
                             .ToListAsync();
         }
 
         public async Task<IEnumerable<CustomProduct>> GetAllProductsByTechnologistAndStatus(int technologistId, CustomProductStatus status)
         {
             return await FindByCondition(p => (p.Status == status && p.TechnologistId.Equals(technologistId)))
+                        .Include(p => p.Technologist)
                         .ToListAsync();
         }
     }

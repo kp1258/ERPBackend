@@ -17,7 +17,7 @@ namespace ERPBackend.Entities.Models
         public string LastName { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
-        public string EMail { get; set; }
+        public string Email { get; set; }
         [Required]
         public int AddressId { get; set; }
         public Address Address { get; set; }
