@@ -66,6 +66,34 @@ namespace ERPBackend.Controllers
             return Ok(itemsResult);
         }
 
+        //GET /custom-order-items/active-orders
+        [HttpGet("active-orders")]
+        public async Task<IActionResult> GetAllCustomOrderItemsFromActiveOrders([FromQuery] CustomOrderItemPrameters parameters)
+        {
+            var items = await _repository.CustomOrderItem.GetAllItemsFromActiveOrders(parameters);
+            if (!items.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned active custom order items");
+            var itemsResult = _mapper.Map<IEnumerable<CustomOrderItemReadDto>>(items);
+            return Ok(itemsResult);
+        }
+
+        //GET /custom-order-items/orders-history
+        [HttpGet("orders-history")]
+        public async Task<IActionResult> GetAllCustomOrderItemsFromOrdersHistory([FromQuery] CustomOrderItemPrameters parameters)
+        {
+            var items = await _repository.CustomOrderItem.GetAllItemsFromOrdersHistory(parameters);
+            if (!items.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned custom order items history");
+            var itemsResult = _mapper.Map<IEnumerable<CustomOrderItemReadDto>>(items);
+            return Ok(itemsResult);
+        }
+
         //GET /custom-order-items/prepared
         [HttpGet("prepared")]
         public async Task<IActionResult> GetAllOrderedCustomOrderItemsWithSolution()

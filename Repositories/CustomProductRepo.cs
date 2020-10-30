@@ -53,7 +53,7 @@ namespace ERPBackend.Repositories
 
         public async Task<IEnumerable<CustomProduct>> GetAllProductsByStatus(CustomProductStatus status)
         {
-            return await FindByCondition(p => p.Status == status)
+            return await FindByCondition(p => p.Status == status && p.CustomOrderItem.Order.Status != OrderStatus.Placed)
                             .Include(p => p.Technologist)
                             .ToListAsync();
         }

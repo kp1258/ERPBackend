@@ -32,14 +32,14 @@ namespace ERPBackend.Controllers
 
         //PATCH /warehousemen/{warehousemanId}/orders/{orderId}
         [HttpPatch("{warehousemanId}/orders/{orderId}")]
-        public async Task<IActionResult> AcceptOrderForRealization(int warehousemanId, int orderId, JsonPatchDocument<OrderUpdateDto> patchDoc)
+        public async Task<IActionResult> AcceptOrderForRealization(int warehousemanId, int orderId, JsonPatchDocument<OrderPatchDto> patchDoc)
         {
             var orderModelFromRepo = await _repository.Order.GetOrderByIdAsync(orderId);
             if (orderModelFromRepo == null)
             {
                 return NotFound();
             }
-            var orderToPatch = _mapper.Map<OrderUpdateDto>(orderModelFromRepo);
+            var orderToPatch = _mapper.Map<OrderPatchDto>(orderModelFromRepo);
             patchDoc.ApplyTo(orderToPatch, ModelState);
             if (!TryValidateModel(orderToPatch))
             {
@@ -55,14 +55,14 @@ namespace ERPBackend.Controllers
         }
         //PATCH /warehousemen/{warehousemanId}/orders/{orderId}/complete
         [HttpPatch("{warehousemanId}/orders/{orderId}/complete")]
-        public async Task<IActionResult> CompleteOrder(int warehousemanId, int orderId, JsonPatchDocument<OrderUpdateDto> patchDoc)
+        public async Task<IActionResult> CompleteOrder(int warehousemanId, int orderId, JsonPatchDocument<OrderPatchDto> patchDoc)
         {
             var orderModelFromRepo = await _repository.Order.GetOrderByIdAsync(orderId);
             if (orderModelFromRepo == null)
             {
                 return NotFound();
             }
-            var orderToPatch = _mapper.Map<OrderUpdateDto>(orderModelFromRepo);
+            var orderToPatch = _mapper.Map<OrderPatchDto>(orderModelFromRepo);
             patchDoc.ApplyTo(orderToPatch, ModelState);
             if (!TryValidateModel(orderToPatch))
             {

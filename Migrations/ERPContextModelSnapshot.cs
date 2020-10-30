@@ -207,7 +207,8 @@ namespace ERPBackend.Migrations
 
                     b.HasKey("CustomOrderItemId");
 
-                    b.HasIndex("CustomProductId");
+                    b.HasIndex("CustomProductId")
+                        .IsUnique();
 
                     b.HasIndex("OrderId");
 
@@ -878,8 +879,8 @@ namespace ERPBackend.Migrations
             modelBuilder.Entity("ERPBackend.Entities.Models.CustomOrderItem", b =>
                 {
                     b.HasOne("ERPBackend.Entities.Models.CustomProduct", "CustomProduct")
-                        .WithMany("CustomOrderItems")
-                        .HasForeignKey("CustomProductId")
+                        .WithOne("CustomOrderItem")
+                        .HasForeignKey("ERPBackend.Entities.Models.CustomOrderItem", "CustomProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

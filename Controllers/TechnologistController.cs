@@ -29,14 +29,14 @@ namespace ERPBackend.Controllers
 
         //PATCH /technologists/{technologistId}/custom-products/{productId}
         [HttpPatch("{technologistId}/custom-products/{productId}")]
-        public async Task<IActionResult> AcceptProductToPreparation(int technologistId, int productId, JsonPatchDocument<CustomProductUpdateDto> patchDoc)
+        public async Task<IActionResult> AcceptProductToPreparation(int technologistId, int productId, JsonPatchDocument<CustomProductPatchDto> patchDoc)
         {
             var productModelFromRepo = await _repository.CustomProduct.GetProductByIdAsync(productId);
             if (productModelFromRepo == null)
             {
                 return NotFound();
             }
-            var productToPatch = _mapper.Map<CustomProductUpdateDto>(productModelFromRepo);
+            var productToPatch = _mapper.Map<CustomProductPatchDto>(productModelFromRepo);
             patchDoc.ApplyTo(productToPatch, ModelState);
 
             if (!TryValidateModel(productToPatch))

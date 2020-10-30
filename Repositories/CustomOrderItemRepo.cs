@@ -61,7 +61,7 @@ namespace ERPBackend.Repositories
         {
             return await FindByCondition(
                             i => (i.Status == CustomOrderItemStatus.Ordered)
-                            && (i.CustomProduct.Status.Equals(CustomProductStatus.Prepared)))
+                            && (i.CustomProduct.Status == CustomProductStatus.Prepared))
                             .ToListAsync();
         }
 
@@ -69,17 +69,21 @@ namespace ERPBackend.Repositories
         {
             if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
             {
-                return await FindByCondition(i => (i.Order.Status == OrderStatus.Placed || i.Order.Status == OrderStatus.InRealization))
-                .Include(i => i.CustomProduct)
-                .ToListAsync();
+                return await FindByCondition(i => ((i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction)
+                                            && i.Order.Status == OrderStatus.InRealization && i.CustomProduct.Status == CustomProductStatus.Prepared))
+                                                .Include(i => i.CustomProduct)
+                                                    .ThenInclude(i => i.Technologist)
+                                                .ToListAsync();
             }
             else
             {
-                return await FindByCondition(i => (i.Order.Status == OrderStatus.Placed || i.Order.Status == OrderStatus.InRealization)
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction)
+                                        && (i.Order.Status == OrderStatus.InRealization)
                                         && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
                                         || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
                                         .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.Technologist)
                                         .ToListAsync();
             }
 
@@ -89,8 +93,53 @@ namespace ERPBackend.Repositories
         {
             if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
             {
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Completed))
+                        .Include(i => i.CustomProduct)
+                        .ThenInclude(i => i.Technologist)
+                        .ToListAsync();
+            }
+            else
+            {
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Completed)
+                                        && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
+                                        || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
+                                        || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
+                                        .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.Technologist)
+                                        .ToListAsync();
+            }
+
+        }
+
+        public async Task<IEnumerable<CustomOrderItem>> GetAllItemsFromActiveOrders(CustomOrderItemPrameters parameters)
+        {
+            if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
+            {
+                return await FindByCondition(i => (i.Order.Status == OrderStatus.Placed || i.Order.Status == OrderStatus.InRealization))
+                .Include(i => i.CustomProduct)
+                .ThenInclude(i => i.Technologist)
+                .ToListAsync();
+            }
+            else
+            {
+                return await FindByCondition(i => (i.Order.Status == OrderStatus.Placed || i.Order.Status == OrderStatus.InRealization)
+                                        && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
+                                        || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
+                                        || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
+                                        .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.Technologist)
+                                        .ToListAsync();
+            }
+
+        }
+
+        public async Task<IEnumerable<CustomOrderItem>> GetAllItemsFromOrdersHistory(CustomOrderItemPrameters parameters)
+        {
+            if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
+            {
                 return await FindByCondition(i => (i.Order.Status == OrderStatus.Completed))
                         .Include(i => i.CustomProduct)
+                        .ThenInclude(i => i.Technologist)
                         .ToListAsync();
             }
             else
@@ -100,6 +149,7 @@ namespace ERPBackend.Repositories
                                         || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
                                         .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.Technologist)
                                         .ToListAsync();
             }
 

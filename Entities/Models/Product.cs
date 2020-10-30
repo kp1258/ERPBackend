@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Converters;
 
 namespace ERPBackend.Entities.Models
@@ -19,6 +21,10 @@ namespace ERPBackend.Entities.Models
         public StandardProductCategory StandardProductCategory { get; set; }
         [Required]
         public StandardProductStatus Status { get; set; }
+
+        // public string ImageName { get; set; }
+        // [NotMapped]
+        // public IFormFile ImageFile { get; set; }
 
         public ICollection<StandardOrderItem> StandardOrderItem { get; set; }
         public ProductWarehouseItem ProductItem { get; set; }
@@ -50,7 +56,7 @@ namespace ERPBackend.Entities.Models
         public int? TechnologistId { get; set; }
         public User Technologist { get; set; }
 
-        public ICollection<CustomOrderItem> CustomOrderItems { get; set; }
+        public CustomOrderItem CustomOrderItem { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

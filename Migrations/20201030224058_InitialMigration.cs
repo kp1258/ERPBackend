@@ -460,7 +460,8 @@ namespace ERPBackend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CustomOrderItems_CustomProductId",
                 table: "CustomOrderItems",
-                column: "CustomProductId");
+                column: "CustomProductId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomOrderItems_OrderId",

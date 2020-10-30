@@ -79,6 +79,16 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
     public async Task<IEnumerable<Order>> GetOrdersByStatusAsync(OrderStatus status)
     {
         return await FindByCondition(order => order.Status == status)
+            .OrderBy(o => o.PlacingDate)
+                        .Include(o => o.Client)
+                            .ThenInclude(c => c.Address)
+                        .Include(o => o.Salesman)
+                        .Include(o => o.Warehouseman)
+                        .Include(o => o.CustomOrderItems)
+                            .ThenInclude(o => o.CustomProduct)
+                        .Include(o => o.StandardOrderItems)
+                            .ThenInclude(o => o.StandardProduct)
+                                .ThenInclude(o => o.StandardProductCategory)
                         .ToListAsync();
     }
 

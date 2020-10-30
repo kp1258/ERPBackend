@@ -14,7 +14,8 @@ namespace ERPBackend.Contracts
         Task<IEnumerable<CustomOrderItem>> GetAllOrderedItemsWithSolution();
         Task<IEnumerable<CustomOrderItem>> GetAllActiveItems(CustomOrderItemPrameters parameters);
         Task<IEnumerable<CustomOrderItem>> GetAllItemsHistory(CustomOrderItemPrameters parameters);
-
+        Task<IEnumerable<CustomOrderItem>> GetAllItemsFromActiveOrders(CustomOrderItemPrameters parameters);
+        Task<IEnumerable<CustomOrderItem>> GetAllItemsFromOrdersHistory(CustomOrderItemPrameters parameters);
         void CreateItem(CustomOrderItem item);
         void UpdateItem(CustomOrderItem item);
         void DeleteItem(CustomOrderItem item);

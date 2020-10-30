@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
+using ERPBackend.Entities.Dtos.OrderItemDtos;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Services;
@@ -47,14 +48,14 @@ namespace ERPBackend.Controllers
 
         //PATCH /production-managers/{pmId}/custom-order-items/{itemId}
         [HttpPatch("{pmId}/custom-order-items/{itemId}/complete")]
-        public async Task<IActionResult> CompleteCustomOrderItem(int pmId, int itemId, JsonPatchDocument<CustomOrderItemUpdateDto> patchDoc)
+        public async Task<IActionResult> CompleteCustomOrderItem(int pmId, int itemId, JsonPatchDocument<CustomOrderItemPatchDto> patchDoc)
         {
             var itemModelFromRepo = await _repository.CustomOrderItem.GetItemByIdAsync(itemId);
             if (itemModelFromRepo == null)
             {
                 return NotFound();
             }
-            var itemToPatch = _mapper.Map<CustomOrderItemUpdateDto>(itemModelFromRepo);
+            var itemToPatch = _mapper.Map<CustomOrderItemPatchDto>(itemModelFromRepo);
             patchDoc.ApplyTo(itemToPatch, ModelState);
 
             if (!TryValidateModel(itemToPatch))
@@ -85,14 +86,14 @@ namespace ERPBackend.Controllers
 
         //PATCH /production-mamangers/{pmId}/custom-order-items/{itemId}
         [HttpPatch("{pmId}/custom-order-items/{itemId}")]
-        public async Task<IActionResult> AcceptToProduction(int pmId, int itemId, JsonPatchDocument<CustomOrderItemUpdateDto> patchDoc)
+        public async Task<IActionResult> AcceptToProduction(int pmId, int itemId, JsonPatchDocument<CustomOrderItemPatchDto> patchDoc)
         {
             var itemModelFromRepo = await _repository.CustomOrderItem.GetItemByIdAsync(itemId);
             if (itemModelFromRepo == null)
             {
                 return NotFound();
             }
-            var itemToPatch = _mapper.Map<CustomOrderItemUpdateDto>(itemModelFromRepo);
+            var itemToPatch = _mapper.Map<CustomOrderItemPatchDto>(itemModelFromRepo);
             patchDoc.ApplyTo(itemToPatch, ModelState);
             if (!TryValidateModel(itemToPatch))
             {

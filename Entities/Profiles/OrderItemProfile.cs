@@ -15,6 +15,8 @@ namespace ERPBackend.Entities.Profiles
             CreateMap<CustomOrderItemCreateDto, CustomOrderItem>();
             CreateMap<CustomOrderItemUpdateDto, CustomOrderItem>();
             CreateMap<CustomOrderItem, CustomOrderItemUpdateDto>();
+            CreateMap<CustomOrderItem, CustomOrderItemPatchDto>();
+            CreateMap<CustomOrderItemPatchDto, CustomOrderItem>();
 
             CreateMap<StandardOrderItem, StandardOrderItemReadDto>();
             CreateMap<StandardOrderItemCreateDto, StandardOrderItem>();
