@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ERPBackend.Contracts;
+using ERPBackend.Entities.Dtos.AdditionalDtos;
 using ERPBackend.Entities.Dtos.OrderDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Entities.QueryParameters;
+using ERPBackend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,12 +21,14 @@ namespace ERPBackend.Controllers
         private readonly ILogger<OrderController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
+        private IOrderManagementService _service;
 
-        public OrderController(ILogger<OrderController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public OrderController(ILogger<OrderController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IOrderManagementService service)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
+            _service = service;
         }
 
         //GET /orders
@@ -98,14 +102,15 @@ namespace ERPBackend.Controllers
         [HttpGet("active")]
         public async Task<IActionResult> GetActiveOrders([FromQuery] OrderParameters parameters)
         {
-            var orders = await _repository.Order.GetAllActiveOrders(parameters);
+            // var orders = await _repository.Order.GetAllActiveOrders(parameters);
+            var orders = await _service.GetAllOrderDetails(parameters);
             if (!orders.Any())
             {
                 return NoContent();
             }
             _logger.LogInformation($"Returned all orders");
 
-            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            var ordersResult = _mapper.Map<IEnumerable<OrderDetailsDto>>(orders);
             return Ok(ordersResult);
         }
 
@@ -123,22 +128,5 @@ namespace ERPBackend.Controllers
             var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
             return Ok(ordersResult);
         }
-
-        //GET /order/details/{id}
-        // [HttpGet("details/{id}", Name = "OrderDetailsById")]
-        // public async Task<IActionResult> GetOrderDetailsById(int id)
-        // {
-        //     var order = await _repository.Order.GetOrderDetailsByIdAsync(id);
-        //     if (order == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     else
-        //     {
-        //         _logger.LogInformation($"Returned order details with specified id");
-        //         var orderResult = _mapper.Map<OrderInfoDto>(order);
-        //         return Ok(orderResult);
-        //     }
-        // }
     }
 }

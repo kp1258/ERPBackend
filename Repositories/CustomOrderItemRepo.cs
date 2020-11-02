@@ -19,15 +19,21 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<CustomOrderItem>> GetAllActiveItemsBySalesman(int salesmanId)
         {
             return await FindByCondition(i => (i.Order.SalesmanId.Equals(salesmanId)) && (i.Order.Status != OrderStatus.Completed))
-                        .Include(i => i.CustomProduct)
-                        .ToListAsync();
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.Technologist)
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.FileList)
+                            .ToListAsync();
         }
 
         public async Task<IEnumerable<CustomOrderItem>> GetAllItemsAsync()
         {
             return await FindAll()
                             .Include(i => i.CustomProduct)
-                            .OrderBy(i => i.OrderDate)
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.Technologist)
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.FileList)
                             .ToListAsync();
         }
 
@@ -35,11 +41,18 @@ namespace ERPBackend.Repositories
         {
             return await FindByCondition(i => i.CustomOrderItemId.Equals(itemId))
                             .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.Technologist)
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.FileList)
                             .FirstOrDefaultAsync();
         }
         public async Task<IEnumerable<CustomOrderItem>> GetAllActiveItemsByProductionManager(int productionManagerId)
         {
             return await FindByCondition(i => (i.ProductionManagerId.Equals(productionManagerId)) && (i.Status == CustomOrderItemStatus.InProduction))
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.Technologist)
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.FileList)
                             .ToListAsync();
         }
 
@@ -62,6 +75,10 @@ namespace ERPBackend.Repositories
             return await FindByCondition(
                             i => (i.Status == CustomOrderItemStatus.Ordered)
                             && (i.CustomProduct.Status == CustomProductStatus.Prepared))
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.Technologist)
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.FileList)
                             .ToListAsync();
         }
 
@@ -69,21 +86,25 @@ namespace ERPBackend.Repositories
         {
             if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
             {
-                return await FindByCondition(i => ((i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction)
+                return await FindByCondition(i => ((i.Status == CustomOrderItemStatus.InProduction)
                                             && i.Order.Status == OrderStatus.InRealization && i.CustomProduct.Status == CustomProductStatus.Prepared))
                                                 .Include(i => i.CustomProduct)
                                                     .ThenInclude(i => i.Technologist)
+                                                .Include(i => i.CustomProduct)
+                                                    .ThenInclude(i => i.FileList)
                                                 .ToListAsync();
             }
             else
             {
-                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Ordered || i.Status == CustomOrderItemStatus.InProduction)
-                                        && (i.Order.Status == OrderStatus.InRealization)
+                return await FindByCondition(i => (i.Status == CustomOrderItemStatus.InProduction)
+                                        && (i.Order.Status == OrderStatus.InRealization && i.CustomProduct.Status == CustomProductStatus.Prepared)
                                         && ((i.ProductionManagerId.Equals(parameters.ProductionManagerId))
                                         || (i.Order.WarehousemanId.Equals(parameters.WarehousemanId))
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
                                         .Include(i => i.CustomProduct)
                                             .ThenInclude(i => i.Technologist)
+                                        .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.FileList)
                                         .ToListAsync();
             }
 
@@ -94,9 +115,11 @@ namespace ERPBackend.Repositories
             if (parameters.SalesmanId == 0 && parameters.ProductionManagerId == 0 && parameters.WarehousemanId == 0)
             {
                 return await FindByCondition(i => (i.Status == CustomOrderItemStatus.Completed))
-                        .Include(i => i.CustomProduct)
-                        .ThenInclude(i => i.Technologist)
-                        .ToListAsync();
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.Technologist)
+                            .Include(i => i.CustomProduct)
+                                .ThenInclude(i => i.FileList)
+                            .ToListAsync();
             }
             else
             {
@@ -106,6 +129,8 @@ namespace ERPBackend.Repositories
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
                                         .Include(i => i.CustomProduct)
                                             .ThenInclude(i => i.Technologist)
+                                        .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.FileList)
                                         .ToListAsync();
             }
 
@@ -117,7 +142,9 @@ namespace ERPBackend.Repositories
             {
                 return await FindByCondition(i => (i.Order.Status == OrderStatus.Placed || i.Order.Status == OrderStatus.InRealization))
                 .Include(i => i.CustomProduct)
-                .ThenInclude(i => i.Technologist)
+                    .ThenInclude(i => i.Technologist)
+                .Include(i => i.CustomProduct)
+                    .ThenInclude(i => i.FileList)
                 .ToListAsync();
             }
             else
@@ -128,6 +155,8 @@ namespace ERPBackend.Repositories
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
                                         .Include(i => i.CustomProduct)
                                             .ThenInclude(i => i.Technologist)
+                                        .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.FileList)
                                         .ToListAsync();
             }
 
@@ -139,7 +168,9 @@ namespace ERPBackend.Repositories
             {
                 return await FindByCondition(i => (i.Order.Status == OrderStatus.Completed))
                         .Include(i => i.CustomProduct)
-                        .ThenInclude(i => i.Technologist)
+                            .ThenInclude(i => i.Technologist)
+                        .Include(i => i.CustomProduct)
+                            .ThenInclude(i => i.FileList)
                         .ToListAsync();
             }
             else
@@ -150,6 +181,8 @@ namespace ERPBackend.Repositories
                                         || (i.Order.SalesmanId.Equals(parameters.SalesmanId))))
                                         .Include(i => i.CustomProduct)
                                             .ThenInclude(i => i.Technologist)
+                                        .Include(i => i.CustomProduct)
+                                            .ThenInclude(i => i.FileList)
                                         .ToListAsync();
             }
 

@@ -76,21 +76,5 @@ namespace ERPBackend.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-
-        //GET /warehousemen/{warehousemanId}/orders
-        [HttpGet("{warehousemanId}/orders")]
-        public async Task<IActionResult> GetAllActiveOrdersByWarehouseman(int warehousemanId)
-        {
-            var orders = await _serivce.GetAllOrderDetailsByWarehouseman(warehousemanId);
-            if (!orders.Any())
-            {
-                return NoContent();
-            }
-            _logger.LogInformation($"Returned all orders realized by specified warehouseman");
-
-            var ordersResult = _mapper.Map<IEnumerable<OrderDetailsDto>>(orders);
-            return Ok(ordersResult);
-        }
-
     }
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
 
@@ -14,6 +15,8 @@ namespace ERPBackend.Entities.Profiles
 
             CreateMap<CustomProduct, CustomProductPatchDto>();
             CreateMap<CustomProductPatchDto, CustomProduct>();
+
+            CreateMap<FileItem, FileItemReadDto>();
         }
 
     }

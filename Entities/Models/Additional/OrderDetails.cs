@@ -42,7 +42,7 @@ namespace ERPBackend.Entities.Models.Additional
     [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderItemDetailStatus
     {
-        [EnumMember(Value = "dotępny")]
+        [EnumMember(Value = "dostępny")]
         Available,
         [EnumMember(Value = "niedostępny")]
         Unavailable

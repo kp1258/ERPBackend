@@ -18,6 +18,7 @@ namespace ERPBackend.Repositories
         {
             return await FindAll()
                             .OrderBy(products => products.Name)
+                            .Include(p => p.FileList)
                             .Include(p => p.Technologist)
                             .ToListAsync();
         }
@@ -25,6 +26,7 @@ namespace ERPBackend.Repositories
         public async Task<CustomProduct> GetProductByIdAsync(int productId)
         {
             return await FindByCondition(product => product.CustomProductId.Equals(productId))
+                            .Include(p => p.FileList)
                             .Include(p => p.Technologist)
                             .FirstOrDefaultAsync();
         }
@@ -47,6 +49,7 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<CustomProduct>> GetAllProductsByTechnologist(int technologistId)
         {
             return await FindByCondition(p => p.TechnologistId.Equals(technologistId))
+                            .Include(p => p.FileList)
                             .Include(p => p.Technologist)
                             .ToListAsync();
         }
@@ -54,6 +57,7 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<CustomProduct>> GetAllProductsByStatus(CustomProductStatus status)
         {
             return await FindByCondition(p => p.Status == status && p.CustomOrderItem.Order.Status != OrderStatus.Placed)
+                            .Include(p => p.FileList)
                             .Include(p => p.Technologist)
                             .ToListAsync();
         }
@@ -61,6 +65,7 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<CustomProduct>> GetAllProductsByTechnologistAndStatus(int technologistId, CustomProductStatus status)
         {
             return await FindByCondition(p => (p.Status == status && p.TechnologistId.Equals(technologistId)))
+                        .Include(p => p.FileList)
                         .Include(p => p.Technologist)
                         .ToListAsync();
         }

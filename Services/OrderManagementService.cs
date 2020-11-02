@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Models;
 using ERPBackend.Entities.Models.Additional;
+using ERPBackend.Entities.QueryParameters;
 
 namespace ERPBackend.Services
 {
@@ -62,9 +63,9 @@ namespace ERPBackend.Services
             return missingProducts;
         }
 
-        public async Task<IEnumerable<OrderDetails>> GetAllOrderDetailsByWarehouseman(int warehousemanId)
+        public async Task<IEnumerable<OrderDetails>> GetAllOrderDetails(OrderParameters parameters)
         {
-            var orders = await _repository.Order.GetAllActiveOrdersByWarehouseman(warehousemanId);
+            var orders = await _repository.Order.GetAllActiveOrders(parameters);
             List<OrderDetails> orderDetailsList = new List<OrderDetails>();
             foreach (var order in orders)
             {

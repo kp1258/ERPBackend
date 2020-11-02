@@ -60,7 +60,8 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
     public async Task<Order> GetOrderByIdAsync(int orderId)
     {
         return await FindByCondition(order => order.OrderId.Equals(orderId))
-
+                            .Include(o => o.StandardOrderItems)
+                            .Include(o => o.CustomOrderItems)
                         .FirstOrDefaultAsync();
     }
 
