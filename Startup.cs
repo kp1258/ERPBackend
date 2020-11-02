@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Azure.Storage.Blobs;
 using ERPBackend.Entities;
 using ERPBackend.Extensions;
 using ERPBackend.Filters;
 using ERPBackend.Infrastructure;
+using ERPBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +55,8 @@ namespace ERPBackend
                         s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                         s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     });
+            services.AddSingleton(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorageConnectionString")));
+            services.AddScoped<IBlobStorageService, BlobStorageService>();
 
             services.AddSwaggerGen();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
