@@ -98,7 +98,10 @@ namespace ERPBackend.Migrations
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     Dimensions = table.Column<string>(nullable: true),
                     StandardProductCategoryId = table.Column<int>(nullable: false),
-                    Status = table.Column<string>(nullable: false)
+                    Status = table.Column<string>(nullable: false),
+                    ImageName = table.Column<string>(nullable: true),
+                    ImagePath = table.Column<string>(nullable: true),
+                    BlobName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,7 +153,8 @@ namespace ERPBackend.Migrations
                     CustomProductId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
+                    OrderDescription = table.Column<string>(nullable: false),
+                    SolutionDescription = table.Column<string>(nullable: true),
                     Status = table.Column<string>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     PreparationStartDate = table.Column<DateTime>(nullable: true),
@@ -250,6 +254,29 @@ namespace ERPBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FileItems",
+                columns: table => new
+                {
+                    FileItemId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    CustomProductId = table.Column<int>(nullable: false),
+                    FileName = table.Column<string>(nullable: false),
+                    FilePath = table.Column<string>(nullable: false),
+                    BlobName = table.Column<string>(nullable: false),
+                    Type = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileItems", x => x.FileItemId);
+                    table.ForeignKey(
+                        name: "FK_FileItems_CustomProducts_CustomProductId",
+                        column: x => x.CustomProductId,
+                        principalTable: "CustomProducts",
+                        principalColumn: "CustomProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomOrderItems",
                 columns: table => new
                 {
@@ -320,8 +347,8 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "CustomProducts",
-                columns: new[] { "CustomProductId", "Description", "Name", "OrderDate", "PreparationCompletionDate", "PreparationStartDate", "Status", "TechnologistId" },
-                values: new object[] { 4, "Opis", "Produkt specjalny 4", new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "Ordered", null });
+                columns: new[] { "CustomProductId", "Name", "OrderDate", "OrderDescription", "PreparationCompletionDate", "PreparationStartDate", "SolutionDescription", "Status", "TechnologistId" },
+                values: new object[] { 4, "Produkt specjalny 4", new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "Opis zamówienia", null, null, null, "Ordered", null });
 
             migrationBuilder.InsertData(
                 table: "Materials",
@@ -369,12 +396,12 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "CustomProducts",
-                columns: new[] { "CustomProductId", "Description", "Name", "OrderDate", "PreparationCompletionDate", "PreparationStartDate", "Status", "TechnologistId" },
+                columns: new[] { "CustomProductId", "Name", "OrderDate", "OrderDescription", "PreparationCompletionDate", "PreparationStartDate", "SolutionDescription", "Status", "TechnologistId" },
                 values: new object[,]
                 {
-                    { 1, "Opis", "Produkt specjalny 1", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Prepared", 4 },
-                    { 2, "Opis", "Produkt specjalny 2", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "Prepared", 4 },
-                    { 3, "Opis", "Produkt specjalny 3", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Prepared", 4 }
+                    { 1, "Produkt specjalny 1", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Opis zamówienia", new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Prepared", 4 },
+                    { 2, "Produkt specjalny 2", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Opis zamówienia", new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Prepared", 4 },
+                    { 3, "Produkt specjalny 3", new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Opis zamówienia", new DateTime(2020, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Prepared", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -390,13 +417,13 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "StandardProducts",
-                columns: new[] { "StandardProductId", "Dimensions", "Name", "StandardProductCategoryId", "Status" },
+                columns: new[] { "StandardProductId", "BlobName", "Dimensions", "ImageName", "ImagePath", "Name", "StandardProductCategoryId", "Status" },
                 values: new object[,]
                 {
-                    { 1, "100x100", "Produkt 1", 1, "InProduction" },
-                    { 2, "100x100", "Produkt 2", 2, "InProduction" },
-                    { 3, "100x100", "Produkt 3", 3, "InProduction" },
-                    { 4, "100x100", "Produkt 4", 4, "InProduction" }
+                    { 1, null, "100x100", null, null, "Produkt 1", 1, "InProduction" },
+                    { 2, null, "100x100", null, null, "Produkt 2", 2, "InProduction" },
+                    { 3, null, "100x100", null, null, "Produkt 3", 3, "InProduction" },
+                    { 4, null, "100x100", null, null, "Produkt 4", 4, "InProduction" }
                 });
 
             migrationBuilder.InsertData(
@@ -474,6 +501,11 @@ namespace ERPBackend.Migrations
                 column: "TechnologistId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FileItems_CustomProductId",
+                table: "FileItems",
+                column: "CustomProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MaterialWarehouse_MaterialId",
                 table: "MaterialWarehouse",
                 column: "MaterialId",
@@ -525,6 +557,9 @@ namespace ERPBackend.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CustomOrderItems");
+
+            migrationBuilder.DropTable(
+                name: "FileItems");
 
             migrationBuilder.DropTable(
                 name: "MaterialWarehouse");

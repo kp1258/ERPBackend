@@ -15,6 +15,7 @@ namespace ERPBackend.Contracts
         IProductWarehouseItemRepository ProductWarehouseItem { get; }
         ICustomOrderItemRepository CustomOrderItem { get; }
         IStandardOrderItemRepository StandardOrderItem { get; }
+        IFileItemRepository FileItem { get; }
         Task SaveAsync();
     }
 }

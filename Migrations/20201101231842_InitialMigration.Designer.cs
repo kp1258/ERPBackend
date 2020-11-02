@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBackend.Migrations
 {
     [DbContext(typeof(ERPContext))]
-    [Migration("20201030224058_InitialMigration")]
+    [Migration("20201101231842_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -270,10 +270,6 @@ namespace ERPBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -281,11 +277,18 @@ namespace ERPBackend.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("OrderDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("PreparationCompletionDate")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("PreparationStartDate")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("SolutionDescription")
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -304,9 +307,9 @@ namespace ERPBackend.Migrations
                         new
                         {
                             CustomProductId = 1,
-                            Description = "Opis",
                             Name = "Produkt specjalny 1",
                             OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OrderDescription = "Opis zamówienia",
                             PreparationCompletionDate = new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PreparationStartDate = new DateTime(2020, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Prepared",
@@ -315,9 +318,9 @@ namespace ERPBackend.Migrations
                         new
                         {
                             CustomProductId = 2,
-                            Description = "Opis",
                             Name = "Produkt specjalny 2",
                             OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OrderDescription = "Opis zamówienia",
                             PreparationCompletionDate = new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PreparationStartDate = new DateTime(2020, 9, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Prepared",
@@ -326,9 +329,9 @@ namespace ERPBackend.Migrations
                         new
                         {
                             CustomProductId = 3,
-                            Description = "Opis",
                             Name = "Produkt specjalny 3",
                             OrderDate = new DateTime(2020, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OrderDescription = "Opis zamówienia",
                             PreparationCompletionDate = new DateTime(2020, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PreparationStartDate = new DateTime(2020, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = "Prepared",
@@ -337,11 +340,43 @@ namespace ERPBackend.Migrations
                         new
                         {
                             CustomProductId = 4,
-                            Description = "Opis",
                             Name = "Produkt specjalny 4",
                             OrderDate = new DateTime(2020, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            OrderDescription = "Opis zamówienia",
                             Status = "Ordered"
                         });
+                });
+
+            modelBuilder.Entity("ERPBackend.Entities.Models.FileItem", b =>
+                {
+                    b.Property<int>("FileItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("BlobName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("CustomProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("FileItemId");
+
+                    b.HasIndex("CustomProductId");
+
+                    b.ToTable("FileItems");
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.Material", b =>
@@ -653,7 +688,16 @@ namespace ERPBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("BlobName")
+                        .HasColumnType("text");
+
                     b.Property<string>("Dimensions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -898,6 +942,15 @@ namespace ERPBackend.Migrations
                     b.HasOne("ERPBackend.Entities.Models.User", "Technologist")
                         .WithMany("CustomProducts")
                         .HasForeignKey("TechnologistId");
+                });
+
+            modelBuilder.Entity("ERPBackend.Entities.Models.FileItem", b =>
+                {
+                    b.HasOne("ERPBackend.Entities.Models.CustomProduct", "CustomProduct")
+                        .WithMany("FileList")
+                        .HasForeignKey("CustomProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ERPBackend.Entities.Models.MaterialWarehouseItem", b =>

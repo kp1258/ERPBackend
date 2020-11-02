@@ -18,6 +18,7 @@ namespace ERPBackend.Repositories
         private IProductWarehouseItemRepository _productWarehouseItem;
         private ICustomOrderItemRepository _customOrderItem;
         private IStandardOrderItemRepository _standardOrderItem;
+        private IFileItemRepository _fileItem;
         public IUserRepository User
         {
             get
@@ -146,6 +147,18 @@ namespace ERPBackend.Repositories
                     _standardOrderItem = new StandardOrderItemRepository(_erpContext);
                 }
                 return _standardOrderItem;
+            }
+        }
+
+        public IFileItemRepository FileItem
+        {
+            get
+            {
+                if (_fileItem == null)
+                {
+                    _fileItem = new FileItemRepository(_erpContext);
+                }
+                return _fileItem;
             }
         }
 

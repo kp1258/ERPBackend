@@ -6,6 +6,8 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
+using ERPBackend.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,12 +21,14 @@ namespace ERPBackend.Controllers
         private readonly ILogger<TechnologistController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
+        private IBlobStorageService _service;
 
-        public TechnologistController(ILogger<TechnologistController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public TechnologistController(ILogger<TechnologistController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobStorageService service)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
+            _service = service;
         }
 
         //PATCH /technologists/{technologistId}/custom-products/{productId}
@@ -51,9 +55,25 @@ namespace ERPBackend.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
-        //PATCH /technologists/{technologistId}/custom-products/{productId}/solution
-        // [HttpPatch("{technologistId}/custom-products/{productId}/solution")]
-        // public async Task<IActionResult> AddSolutionToCustomProduct
+
+        //POST /technologists/{technologistId}/custom-products/{productId}/solution
+        [HttpPost("{technologistId}/custom-products/{productId}/solution")]
+        public async Task<IActionResult> AddSolutionToCustomProduct(int technologistId, int productId, [FromForm] CustomProductAddSolutionDto solution)
+        {
+            var product = await _repository.CustomProduct.GetProductByIdAsync(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            product.PreparationCompletionDate = DateTime.Now;
+            product.Status = CustomProductStatus.Prepared;
+            product.SolutionDescription = solution.SolutionDescription;
+            await _service.UploadSolutionFilesAsync(product.CustomProductId, solution.Files);
+            _repository.CustomProduct.Update(product);
+            await _repository.SaveAsync();
+            return NoContent();
+
+        }
 
         //GET /technologists/{id}/custom-products
         [HttpGet("{technologistId}/custom-products")]
