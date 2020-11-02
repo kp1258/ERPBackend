@@ -24,6 +24,7 @@ namespace ERPBackend.Entities
         public DbSet<StandardProductCategory> StandardProductCategories { get; set; }
         public DbSet<ProductWarehouseItem> ProductWarehouse { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<FileItem> FileItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
@@ -113,6 +114,13 @@ namespace ERPBackend.Entities
                 .HasConversion(
                     v => v.ToString(),
                     v => (OrderItemDetailStatus)Enum.Parse(typeof(OrderItemDetailStatus), v)
+                );
+            modelBuilder
+                .Entity<FileItem>()
+                .Property(e => e.Type)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (FileType)Enum.Parse(typeof(FileType), v)
                 );
         }
     }

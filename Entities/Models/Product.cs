@@ -22,9 +22,9 @@ namespace ERPBackend.Entities.Models
         [Required]
         public StandardProductStatus Status { get; set; }
 
-        // public string ImageName { get; set; }
-        // [NotMapped]
-        // public IFormFile ImageFile { get; set; }
+        public string ImageName { get; set; }
+        public string ImagePath { get; set; }
+        public string BlobName { get; set; }
 
         public ICollection<StandardOrderItem> StandardOrderItem { get; set; }
         public ProductWarehouseItem ProductItem { get; set; }
@@ -45,7 +45,8 @@ namespace ERPBackend.Entities.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Description { get; set; }
+        public string OrderDescription { get; set; }
+        public string SolutionDescription { get; set; }
         [Required]
         public CustomProductStatus Status { get; set; }
         [Required]
@@ -55,6 +56,7 @@ namespace ERPBackend.Entities.Models
 
         public int? TechnologistId { get; set; }
         public User Technologist { get; set; }
+        public IEnumerable<FileItem> FileList { get; set; }
 
         public CustomOrderItem CustomOrderItem { get; set; }
     }

@@ -5,6 +5,7 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
+using ERPBackend.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,12 +19,14 @@ namespace ERPBackend.Controllers
         private readonly ILogger<StandardProductController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
+        private IBlobStorageService _blobStorageService;
 
-        public StandardProductController(ILogger<StandardProductController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public StandardProductController(ILogger<StandardProductController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobStorageService blobStorageService)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
+            _blobStorageService = blobStorageService;
         }
 
         //GET /standard-products
@@ -60,7 +63,7 @@ namespace ERPBackend.Controllers
 
         //POST /standard-products
         [HttpPost]
-        public async Task<IActionResult> CreateStandardProduct([FromBody] StandardProductCreateDto product)
+        public async Task<IActionResult> CreateStandardProduct([FromForm] StandardProductCreateDto product)
         {
             if (product == null)
             {
@@ -68,6 +71,12 @@ namespace ERPBackend.Controllers
                 return BadRequest("Standard product object is null");
             }
             var productEntity = _mapper.Map<StandardProduct>(product);
+            var blobName = _blobStorageService.GenerateFileName(product.ImageName);
+            var filePath = await _blobStorageService.UploadFileBlobAsync(product.ImageFile, blobName, "standardproducts");
+            productEntity.ImageName = product.ImageName;
+            productEntity.ImagePath = filePath;
+            productEntity.BlobName = blobName;
+
             _repository.StandardProduct.CreateProduct(productEntity);
             await _repository.SaveAsync();
 

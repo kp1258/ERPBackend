@@ -14,7 +14,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 new CustomProduct{
                     CustomProductId=1,
                     Name="Produkt specjalny 1",
-                    Description="Opis",
+                    OrderDescription="Opis zamówienia",
                     TechnologistId=4,
                     Status=CustomProductStatus.Prepared,
                     OrderDate=new DateTime(year:2020, month:9,day:1),
@@ -24,7 +24,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 new CustomProduct{
                     CustomProductId=2,
                     Name="Produkt specjalny 2",
-                    Description="Opis",
+                    OrderDescription="Opis zamówienia",
                     TechnologistId=4,
                     Status=CustomProductStatus.Prepared,
                     OrderDate=new DateTime(year:2020, month:9,day:1),
@@ -34,7 +34,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 new CustomProduct{
                     CustomProductId=3,
                     Name="Produkt specjalny 3",
-                    Description="Opis",
+                    OrderDescription="Opis zamówienia",
                     TechnologistId=4,
                     Status=CustomProductStatus.Prepared,
                     OrderDate=new DateTime(year:2020, month:9,day:1),
@@ -44,7 +44,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 new CustomProduct{
                     CustomProductId=4,
                     Name="Produkt specjalny 4",
-                    Description="Opis",
+                    OrderDescription="Opis zamówienia",
                     TechnologistId=null,
                     Status=CustomProductStatus.Ordered,
                     OrderDate=new DateTime(year:2020, month:10, day:20),
