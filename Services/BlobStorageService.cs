@@ -84,12 +84,10 @@ namespace ERPBackend.Services
 
         public async Task UploadSolutionFilesAsync(int productId, IFormFileCollection files)
         {
-            Console.WriteLine("Jest git");
             if (files != null)
             {
                 foreach (var file in files)
                 {
-                    Console.WriteLine("jEstem wewnątrz pętli foreach");
                     string blobName = GenerateFileName(file.FileName);
                     string filePath = await UploadFileBlobAsync(file, blobName, "customproductssolutions");
                     var fileItem = new FileItem
@@ -109,6 +107,35 @@ namespace ERPBackend.Services
                 Console.WriteLine("Files jest null");
             }
 
+        }
+
+        public async Task UploadOrderFilesAsync(IEnumerable<FileItem> files)
+        {
+            if (files != null)
+            {
+                foreach (var fileItem in files)
+                {
+                    var file = fileItem.File;
+                    string blobName = GenerateFileName(file.FileName);
+                    string filePath = await UploadFileBlobAsync(file, blobName, "customproductsorders");
+                    // var newFileItem = new FileItem
+                    // {
+                    //     CustomProductId = productId,
+                    //     FileName = file.FileName,
+                    //     FilePath = filePath,
+                    //     BlobName = blobName,
+                    //     Type = FileType.Order,
+                    // };
+                    fileItem.BlobName = blobName;
+                    fileItem.FilePath = filePath;
+                    _repository.FileItem.UpdateItem(fileItem);
+                }
+                await _repository.SaveAsync();
+            }
+            else
+            {
+                Console.WriteLine("Files jest null");
+            }
         }
     }
 

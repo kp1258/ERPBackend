@@ -63,24 +63,23 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST /order
+        //POST /orders
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto order)
+        public async Task<IActionResult> CreateOrder([FromForm] OrderCreateDto orderDto)
         {
-            if (order == null)
+            if (orderDto == null)
             {
                 _logger.LogError("Order object sent from client is null");
                 return BadRequest("Order object is null");
             }
-            var orderEntity = _mapper.Map<Order>(order);
-            DateTime placingDate = DateTime.Now;
-            orderEntity.PlacingDate = placingDate;
+            var orderEntity = _mapper.Map<Order>(orderDto);
+            orderEntity.PlacingDate = DateTime.Now;
             orderEntity.Status = OrderStatus.Placed;
             _repository.Order.CreateOrder(orderEntity);
             await _repository.SaveAsync();
-
+            await _service.PlaceOrder(orderDto, orderEntity);
             var createdOrder = _mapper.Map<OrderInfoDto>(orderEntity);
-            return CreatedAtRoute("OrderDetailsById", new { id = createdOrder.OrderId }, createdOrder);
+            return CreatedAtRoute("OrderById", new { id = createdOrder.OrderId }, createdOrder);
         }
 
         //GET /order/placed

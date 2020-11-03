@@ -17,6 +17,7 @@ namespace ERPBackend.Entities.Profiles
             CreateMap<CustomProductPatchDto, CustomProduct>();
 
             CreateMap<FileItem, FileItemReadDto>();
+            CreateMap<FileItemCreateDto, FileItem>();
         }
 
     }

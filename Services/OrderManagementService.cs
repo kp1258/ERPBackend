@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ERPBackend.Contracts;
+using ERPBackend.Entities.Dtos.OrderDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Entities.Models.Additional;
 using ERPBackend.Entities.QueryParameters;
@@ -12,10 +13,12 @@ namespace ERPBackend.Services
     public class OrderManagementService : IOrderManagementService
     {
         private readonly IRepositoryWrapper _repository;
+        private readonly IBlobStorageService _service;
 
-        public OrderManagementService(IRepositoryWrapper repositoryWrapper)
+        public OrderManagementService(IRepositoryWrapper repositoryWrapper, IBlobStorageService service)
         {
             _repository = repositoryWrapper;
+            _service = service;
         }
 
         public async Task CompleteOrder(int orderId)
@@ -127,6 +130,20 @@ namespace ERPBackend.Services
                 StandardOrderItemDetails = orderItemDetails
             };
             return orderDetails;
+        }
+
+        public async Task PlaceOrder(OrderCreateDto orderDto, Order orderEntity)
+        {
+            if (orderEntity.Type == OrderType.Custom)
+            {
+                var orderItems = orderEntity.CustomOrderItems;
+                foreach (var item in orderItems)
+                {
+                    var customProduct = item.CustomProduct;
+                    await _service.UploadOrderFilesAsync(customProduct.FileList);
+                }
+            }
+            await _repository.SaveAsync();
         }
     }
 }

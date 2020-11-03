@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ERPBackend.Entities.Dtos;
+using ERPBackend.Entities.Models;
 using ERPBackend.Entities.Models.Additional;
 using Microsoft.AspNetCore.Http;
 
@@ -14,6 +15,7 @@ namespace ERPBackend.Services
         Task DownloadFileBlobAsync(string blobName, string containerName);
         Task DeleteBlobAsync(string blobName, string containerName);
         Task UploadSolutionFilesAsync(int productId, IFormFileCollection files);
+        Task UploadOrderFilesAsync(IEnumerable<FileItem> filesItems);
         string GenerateFileName(string fileName);
 
     }

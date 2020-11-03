@@ -46,7 +46,9 @@ namespace ERPBackend.Entities.Models
         public string Name { get; set; }
         [Required]
         public string OrderDescription { get; set; }
+
         public string SolutionDescription { get; set; }
+
         [Required]
         public CustomProductStatus Status { get; set; }
         [Required]

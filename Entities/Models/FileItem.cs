@@ -21,6 +21,8 @@ namespace ERPBackend.Entities.Models
         public string BlobName { get; set; }
         [Required]
         public FileType Type { get; set; }
+        [NotMapped]
+        public IFormFile File { get; set; }
 
     }
     [JsonConverter(typeof(StringEnumConverter))]
