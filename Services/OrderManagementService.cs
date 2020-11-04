@@ -139,7 +139,9 @@ namespace ERPBackend.Services
                 var orderItems = orderEntity.CustomOrderItems;
                 foreach (var item in orderItems)
                 {
+                    item.OrderDate = DateTime.Now;
                     var customProduct = item.CustomProduct;
+                    customProduct.OrderDate = DateTime.Now;
                     await _service.UploadOrderFilesAsync(customProduct.FileList);
                 }
             }
