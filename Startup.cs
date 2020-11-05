@@ -8,7 +8,7 @@ using Azure.Storage.Blobs;
 using ERPBackend.Entities;
 using ERPBackend.Extensions;
 using ERPBackend.Filters;
-using ERPBackend.Infrastructure;
+using ERPBackend.Helpers;
 using ERPBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +45,31 @@ namespace ERPBackend
             services.AddDbContext<ERPContext>(options =>
             options.UseMySQL(Configuration.GetConnectionString("ERPConnection")));
 
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
+
+            services.AddAuthentication(
+                x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                }
+            ).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
             services.ConfigureRepositoryWrapper();
             services.ConfigureCustomServices();
             services.AddScoped<ModelStateValidationFilter>();
@@ -57,6 +82,7 @@ namespace ERPBackend
                     });
             services.AddSingleton(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorageConnectionString")));
             services.AddScoped<IBlobStorageService, BlobStorageService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddSwaggerGen();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

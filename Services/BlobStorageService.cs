@@ -118,14 +118,6 @@ namespace ERPBackend.Services
                     var file = fileItem.File;
                     string blobName = GenerateFileName(file.FileName);
                     string filePath = await UploadFileBlobAsync(file, blobName, "customproductsorders");
-                    // var newFileItem = new FileItem
-                    // {
-                    //     CustomProductId = productId,
-                    //     FileName = file.FileName,
-                    //     FilePath = filePath,
-                    //     BlobName = blobName,
-                    //     Type = FileType.Order,
-                    // };
                     fileItem.BlobName = blobName;
                     fileItem.FilePath = filePath;
                     _repository.FileItem.UpdateItem(fileItem);

@@ -13,5 +13,6 @@ namespace ERPBackend.Contracts
         void UpdateUser(User user);
         void DeleteUser(User user);
         Task ChangeStatusAsync(int userId);
+        Task<User> FindUser(string login);
     }
 }

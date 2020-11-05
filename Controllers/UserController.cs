@@ -10,6 +10,7 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.UserDtos;
 using ERPBackend.Entities.Models;
+using ERPBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ERPBackend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("users")]
     public class UserController : ControllerBase
@@ -25,50 +27,44 @@ namespace ERPBackend.Controllers
         private readonly ILogger<UserController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
+        private IAuthenticationService _service;
 
-        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IAuthenticationService service)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
+            _service = service;
         }
 
 
-        //GET api/user/signin
+        //POST /users/sign-in
         [AllowAnonymous]
-        [HttpPost, Route("signin")]
-        public IActionResult SignIn([FromBody] UserSignInDto user)
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> SignIn([FromBody] UserSignInDto userCredentials)
         {
-            if (user == null)
+            if (userCredentials == null)
             {
                 return BadRequest("Invalid client request");
             }
-            if (user.Login == "johndoe" && user.Password == "def@123")
+            var token = await _service.Authenticate(userCredentials);
+            var user = await _repository.User.FindUser(userCredentials.Login);
+            if (token == null)
             {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Login),
-                    new Claim(ClaimTypes.Role, "Administrator")
-                };
-                var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:5000",
-                    audience: "http://localhost:5000",
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(5),
-                    signingCredentials: signinCredentials
-                );
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return Ok(new { Token = tokenString });
+                return Unauthorized();
             }
             else
             {
-                return Unauthorized();
+                return Ok(new
+                {
+                    token = token,
+                    userId = user.UserId
+                });
             }
         }
 
         //GET /user
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -101,6 +97,7 @@ namespace ERPBackend.Controllers
         }
 
         //POST /user
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto user)
         {
@@ -110,7 +107,9 @@ namespace ERPBackend.Controllers
                 return BadRequest("User object is null");
             }
             var userEntity = _mapper.Map<User>(user);
-
+            //
+            userEntity.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            //
             _repository.User.CreateUser(userEntity);
             await _repository.SaveAsync();
 

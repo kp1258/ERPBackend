@@ -14,7 +14,6 @@ namespace ERPBackend.Entities.Models
         [StringLength(20)]
         public string Login { get; set; }
         [Required]
-        [StringLength(20)]
         public string Password { get; set; }
         [Required]
         public string FirstName { get; set; }
