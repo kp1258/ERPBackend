@@ -10,6 +10,7 @@ using ERPBackend.Entities.Models;
 using System.Threading.Tasks;
 using ERPBackend.Helpers;
 using System;
+using ERPBackend.Entities.Models.Additional;
 
 namespace ERPBackend.Services
 {
@@ -24,7 +25,7 @@ namespace ERPBackend.Services
             _appsettings = appSettings.Value;
         }
 
-        public async Task<string> Authenticate(UserSignInDto userCredentials)
+        public async Task<AuthenticationResponse> Authenticate(UserSignInDto userCredentials)
         {
             var user = await _repository.User.FindUser(userCredentials.Login);
             if (user == null || !BCrypt.Net.BCrypt.Verify(userCredentials.Password, user.Password))
@@ -32,7 +33,12 @@ namespace ERPBackend.Services
                 return null;
             }
             var token = GenerateToken(user);
-            return token;
+            var response = new AuthenticationResponse
+            {
+                UserId = user.UserId,
+                Token = token
+            };
+            return response;
         }
 
         public string GenerateToken(User user)

@@ -8,20 +8,37 @@ using ERPBackend.Entities.Models;
 using ERPBackend.Entities.Models.Additional;
 using ERPBackend.Entities.QueryParameters;
 
-namespace ERPBackend.Services
+namespace ERPBackend.Services.ModelsServices
 {
-    public class OrderManagementService : IOrderManagementService
+    public class OrderService : IOrderService
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IBlobStorageService _service;
 
-        public OrderManagementService(IRepositoryWrapper repositoryWrapper, IBlobStorageService service)
+        public OrderService(IRepositoryWrapper repositoryWrapper, IBlobStorageService service)
         {
             _repository = repositoryWrapper;
             _service = service;
         }
 
-        public async Task CompleteOrder(int orderId)
+        public async Task AccepOrderToRealization(Order order, int warehousemanId)
+        {
+            order.WarehousemanId = warehousemanId;
+            order.RealizationStartDate = DateTime.Now;
+
+            _repository.Order.UpdateOrder(order);
+            await _repository.SaveAsync();
+        }
+
+        public async Task CompleteOrder(Order order)
+        {
+            order.CompletionDate = DateTime.Now;
+            await FulfillOrder(order.OrderId);
+            _repository.Order.UpdateOrder(order);
+            await _repository.SaveAsync();
+        }
+
+        public async Task FulfillOrder(int orderId)
         {
             var order = await _repository.Order.GetOrderByIdAsync(orderId);
             if (order.Type == OrderType.Standard)
@@ -35,35 +52,6 @@ namespace ERPBackend.Services
                 }
                 await _repository.SaveAsync();
             }
-        }
-
-        public async Task<IEnumerable<MissingProduct>> GetAllMissingProducts()
-        {
-            var standardOrderItems = await _repository.StandardOrderItem.GetAllItemsFromActiveOrders();
-            Console.WriteLine(standardOrderItems.FirstOrDefault());
-            var orderedProducts = standardOrderItems
-                            .GroupBy(i => i.StandardProductId)
-                            .Select(i => new { productId = i.Key, quantity = i.Sum(i => i.Quantity) });
-            List<MissingProduct> missingProducts = new List<MissingProduct>();
-            var items = await _repository.ProductWarehouseItem.GetAllItemsAsync();
-
-            foreach (var orderedProduct in orderedProducts)
-            {
-                var item = items.FirstOrDefault(i => i.StandardProductId.Equals(orderedProduct.productId));
-                if (item.Quantity < orderedProduct.quantity)
-                {
-                    var missingQuantity = orderedProduct.quantity - item.Quantity;
-                    var missingProduct = new MissingProduct
-                    {
-                        StandardProductId = item.StandardProductId,
-                        StandardProduct = item.StandardProduct,
-                        Quantity = missingQuantity
-                    };
-                    missingProducts.Add(missingProduct);
-                }
-
-            }
-            return missingProducts;
         }
 
         public async Task<IEnumerable<OrderDetails>> GetAllOrderDetails(OrderParameters parameters)
@@ -132,8 +120,12 @@ namespace ERPBackend.Services
             return orderDetails;
         }
 
-        public async Task PlaceOrder(OrderCreateDto orderDto, Order orderEntity)
+        public async Task PlaceOrder(Order orderEntity)
         {
+            orderEntity.PlacingDate = DateTime.Now;
+            orderEntity.Status = OrderStatus.Placed;
+            _repository.Order.CreateOrder(orderEntity);
+            await _repository.SaveAsync();
             if (orderEntity.Type == OrderType.Custom)
             {
                 var orderItems = orderEntity.CustomOrderItems;

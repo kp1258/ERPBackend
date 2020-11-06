@@ -5,15 +5,16 @@ using ERPBackend.Entities.Models;
 using ERPBackend.Entities.Models.Additional;
 using ERPBackend.Entities.QueryParameters;
 
-namespace ERPBackend.Services
+namespace ERPBackend.Services.ModelsServices
 {
-    public interface IOrderManagementService
+    public interface IOrderService
     {
-        Task<IEnumerable<MissingProduct>> GetAllMissingProducts();
         Task<IEnumerable<OrderDetails>> GetAllOrderDetails(OrderParameters parameters);
-        // Task<IEnumerable<OrderDetails>> GetAllOrderDetailsByWarehouseman(int warehousemanId);
         Task<OrderDetails> GetOrderDetails(int orderId);
-        Task CompleteOrder(int orderId);
-        Task PlaceOrder(OrderCreateDto orderCreateDto, Order orderEntity);
+        Task FulfillOrder(int orderId);
+        Task PlaceOrder(Order orderEntity);
+
+        Task AccepOrderToRealization(Order order, int warehousemanId);
+        Task CompleteOrder(Order order);
     }
 }
