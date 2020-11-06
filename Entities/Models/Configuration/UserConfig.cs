@@ -13,7 +13,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 {
                     UserId = 1,
                     Login = "jan_k",
-                    Password = "password",
+                    Password = BCrypt.Net.BCrypt.HashPassword("password"),
                     FirstName = "Jan",
                     LastName = "Kowalski",
                     PhoneNumber="607934182",
@@ -25,7 +25,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 {
                     UserId=2,
                     Login="anna_n",
-                    Password="password",
+                    Password=BCrypt.Net.BCrypt.HashPassword("password"),
                     FirstName="Anna",
                     LastName="Nowak",
                     PhoneNumber="709856234",
@@ -37,7 +37,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 {
                     UserId=3,
                     Login="andrzej_m",
-                    Password="password",
+                    Password=BCrypt.Net.BCrypt.HashPassword("password"),
                     FirstName="Andrzej",
                     LastName="Malinowski",
                     PhoneNumber="679234374",
@@ -49,7 +49,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 {
                     UserId=4,
                     Login="agata_k",
-                    Password="password",
+                    Password=BCrypt.Net.BCrypt.HashPassword("password"),
                     FirstName="Agata",
                     LastName="Krzeszowska",
                     PhoneNumber="685234054",
@@ -61,7 +61,7 @@ namespace ERPBackend.Entities.Models.Configuration
                 {
                     UserId=5,
                     Login="edward_r",
-                    Password="password",
+                    Password=BCrypt.Net.BCrypt.HashPassword("password"),
                     FirstName="Edward",
                     LastName="Rak",
                     PhoneNumber="978345278",

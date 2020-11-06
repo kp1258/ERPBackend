@@ -45,8 +45,9 @@ namespace ERPBackend.Entities.Models
         [Required]
         public string Name { get; set; }
         [Required]
+        [MaxLength(200)]
         public string OrderDescription { get; set; }
-
+        [MaxLength(200)]
         public string SolutionDescription { get; set; }
 
         [Required]

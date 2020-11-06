@@ -7,6 +7,7 @@ namespace ERPBackend.Entities.Models
     {
         public int ProductWarehouseItemId { get; set; }
         [Required]
+        [Range(0, 1000)]
         public int Quantity { get; set; }
         [Required]
         public int StandardProductId { get; set; }

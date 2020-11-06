@@ -81,8 +81,6 @@ namespace ERPBackend
                         s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     });
             services.AddSingleton(x => new BlobServiceClient(Configuration.GetValue<string>("AzureBlobStorageConnectionString")));
-            services.AddScoped<IBlobStorageService, BlobStorageService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddSwaggerGen();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
