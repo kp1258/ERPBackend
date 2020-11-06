@@ -8,8 +8,8 @@ namespace ERPBackend.Entities.Profiles
     {
         public StandardProductCategoryProfile()
         {
-            CreateMap<StandardProductCategory, StandardProductCategoryDto>();
-            CreateMap<StandardProductCategoryDto, StandardProductCategory>();
+            CreateMap<StandardProductCategory, StandardProductCategoryReadDto>();
+            CreateMap<StandardProductCategoryReadDto, StandardProductCategory>();
 
             CreateMap<StandardProductCategoryUpdateDto, StandardProductCategory>();
             CreateMap<StandardProductCategoryCreateDto, StandardProductCategory>();
