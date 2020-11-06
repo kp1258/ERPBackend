@@ -2,6 +2,7 @@ using System.Text;
 using ERPBackend.Contracts;
 using ERPBackend.Repositories;
 using ERPBackend.Services;
+using ERPBackend.Services.ModelsServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,7 +42,16 @@ namespace ERPBackend.Extensions
 
         public static void ConfigureCustomServices(this IServiceCollection services)
         {
-            services.AddScoped<IOrderManagementService, OrderManagementService>();
+            services.AddScoped<ICustomOrderItemService, CustomOrderItemService>();
+            services.AddScoped<ICustomProductService, CustomProductService>();
+            services.AddScoped<IMaterialService, MaterialService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IStandardProductService, StandardProductService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IClientService, ClientService>();
+
+            services.AddScoped<IBlobStorageService, BlobStorageService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
         }
 
         public static void ConfigureJwtAuthentication(this IServiceCollection services)
