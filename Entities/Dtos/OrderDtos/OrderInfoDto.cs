@@ -6,7 +6,7 @@ using ERPBackend.Entities.Dtos.UserDtos;
 
 namespace ERPBackend.Entities.Dtos.OrderDtos
 {
-    public class OrderInfoDto
+    public class OrderReadDto
     {
         public int OrderId { get; set; }
         public DateTime PlacingDate { get; set; }
