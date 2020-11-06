@@ -7,6 +7,7 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.AdditionalDtos;
 using ERPBackend.Entities.Dtos.OrderDtos;
 using ERPBackend.Services;
+using ERPBackend.Services.ModelsServices;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,19 +21,19 @@ namespace ERPBackend.Controllers
         private readonly ILogger<WarehousemanController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
-        private IOrderManagementService _serivce;
+        private IOrderService _orderSerivce;
 
-        public WarehousemanController(ILogger<WarehousemanController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IOrderManagementService service)
+        public WarehousemanController(ILogger<WarehousemanController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IOrderService orderService)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
-            _serivce = service;
+            _orderSerivce = orderService;
         }
 
         //PATCH /warehousemen/{warehousemanId}/orders/{orderId}
         [HttpPatch("{warehousemanId}/orders/{orderId}")]
-        public async Task<IActionResult> AcceptOrderForRealization(int warehousemanId, int orderId, JsonPatchDocument<OrderPatchDto> patchDoc)
+        public async Task<IActionResult> AcceptOrderToRealization(int warehousemanId, int orderId, JsonPatchDocument<OrderPatchDto> patchDoc)
         {
             var orderModelFromRepo = await _repository.Order.GetOrderByIdAsync(orderId);
             if (orderModelFromRepo == null)
@@ -46,11 +47,9 @@ namespace ERPBackend.Controllers
                 return ValidationProblem(ModelState);
             }
             _mapper.Map(orderToPatch, orderModelFromRepo);
-            orderModelFromRepo.WarehousemanId = warehousemanId;
-            orderModelFromRepo.RealizationStartDate = DateTime.Now;
 
-            _repository.Order.UpdateOrder(orderModelFromRepo);
-            await _repository.SaveAsync();
+            await _orderSerivce.AccepOrderToRealization(orderModelFromRepo, warehousemanId);
+
             return NoContent();
         }
         //PATCH /warehousemen/{warehousemanId}/orders/{orderId}/complete
@@ -69,11 +68,9 @@ namespace ERPBackend.Controllers
                 return ValidationProblem(ModelState);
             }
             _mapper.Map(orderToPatch, orderModelFromRepo);
-            orderModelFromRepo.CompletionDate = DateTime.Now;
-            await _serivce.CompleteOrder(orderModelFromRepo.OrderId);
 
-            _repository.Order.UpdateOrder(orderModelFromRepo);
-            await _repository.SaveAsync();
+            await _orderSerivce.CompleteOrder(orderModelFromRepo);
+
             return NoContent();
         }
     }

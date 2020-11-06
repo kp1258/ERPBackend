@@ -8,7 +8,8 @@ using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.OrderItemDtos;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
-using ERPBackend.Services;
+using ERPBackend.Services.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,19 +17,23 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Production Manager")]
     [Route("production-managers")]
     public class ProductionManagerController : ControllerBase
     {
         private readonly ILogger<ProductionManagerController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
-        private IOrderManagementService _service;
-        public ProductionManagerController(ILogger<ProductionManagerController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IOrderManagementService orderService)
+        private IStandardProductService _standardProductService;
+        private ICustomOrderItemService _customOrderItemService;
+
+        public ProductionManagerController(ILogger<ProductionManagerController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IStandardProductService standardProductService, ICustomOrderItemService customOrderItemService)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
-            _service = orderService;
+            _standardProductService = standardProductService;
+            _customOrderItemService = customOrderItemService;
         }
 
         //GET /production-managers/{pmId}/custom-order-items
@@ -64,9 +69,9 @@ namespace ERPBackend.Controllers
             }
 
             _mapper.Map(itemToPatch, itemModelFromRepo);
-            itemModelFromRepo.CompletionDate = DateTime.Now;
-            _repository.CustomOrderItem.UpdateItem(itemModelFromRepo);
-            await _repository.SaveAsync();
+
+            await _customOrderItemService.CompleteCustomOrderItem(itemModelFromRepo);
+
             return NoContent();
         }
 
@@ -74,7 +79,9 @@ namespace ERPBackend.Controllers
         [HttpGet("{pmId}/standard-products")]
         public async Task<IActionResult> GetMissingStandardProducts(int pmId)
         {
-            var missingProducts = await _service.GetAllMissingProducts();
+
+            var missingProducts = await _standardProductService.GetAllMissingProducts();
+
             if (!missingProducts.Any())
             {
                 return NoContent();
@@ -101,11 +108,8 @@ namespace ERPBackend.Controllers
             }
             _mapper.Map(itemToPatch, itemModelFromRepo);
 
-            itemModelFromRepo.ProductionManagerId = pmId;
-            itemModelFromRepo.ProductionStartDate = DateTime.Now;
+            await _customOrderItemService.AcceptToProduction(itemModelFromRepo, pmId);
 
-            _repository.CustomOrderItem.UpdateItem(itemModelFromRepo);
-            await _repository.SaveAsync();
             return NoContent();
         }
     }

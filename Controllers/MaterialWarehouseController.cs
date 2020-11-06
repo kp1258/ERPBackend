@@ -5,6 +5,7 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.WarehouseDtos;
 using ERPBackend.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("material-warehouse")]
     public class MaterialWarehouseController : ControllerBase
     {
@@ -41,6 +43,7 @@ namespace ERPBackend.Controllers
         }
 
         //PATCH /product-warehouse/{id}
+        [Authorize(Roles = "Warehouseman")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> ChangeMaterialWarehouseStock(int id, JsonPatchDocument<MaterialWarehouseItemUpdateDto> patchDoc)
         {

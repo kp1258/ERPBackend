@@ -8,22 +8,24 @@ using ERPBackend.Entities.Dtos.AdditionalDtos;
 using ERPBackend.Entities.Dtos.OrderDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Entities.QueryParameters;
-using ERPBackend.Services;
+using ERPBackend.Services.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("orders")]
     public class OrderController : ControllerBase
     {
         private readonly ILogger<OrderController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
-        private IOrderManagementService _service;
+        private IOrderService _service;
 
-        public OrderController(ILogger<OrderController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IOrderManagementService service)
+        public OrderController(ILogger<OrderController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IOrderService service)
         {
             _logger = logger;
             _repository = repositoryWrapper;
@@ -42,7 +44,7 @@ namespace ERPBackend.Controllers
             }
             _logger.LogInformation($"Returned all orders");
 
-            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            var ordersResult = _mapper.Map<IEnumerable<OrderReadDto>>(orders);
             return Ok(ordersResult);
         }
 
@@ -58,12 +60,13 @@ namespace ERPBackend.Controllers
             else
             {
                 _logger.LogInformation($"Returned order with specified id");
-                var orderResult = _mapper.Map<OrderInfoDto>(order);
+                var orderResult = _mapper.Map<OrderReadDto>(order);
                 return Ok(orderResult);
             }
         }
 
         //POST /orders
+        [Authorize(Roles = "Salesman")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromForm] OrderCreateDto orderDto)
         {
@@ -73,12 +76,10 @@ namespace ERPBackend.Controllers
                 return BadRequest("Order object is null");
             }
             var orderEntity = _mapper.Map<Order>(orderDto);
-            orderEntity.PlacingDate = DateTime.Now;
-            orderEntity.Status = OrderStatus.Placed;
-            _repository.Order.CreateOrder(orderEntity);
-            await _repository.SaveAsync();
-            await _service.PlaceOrder(orderDto, orderEntity);
-            var createdOrder = _mapper.Map<OrderInfoDto>(orderEntity);
+
+            await _service.PlaceOrder(orderEntity);
+
+            var createdOrder = _mapper.Map<OrderReadDto>(orderEntity);
             return CreatedAtRoute("OrderById", new { id = createdOrder.OrderId }, createdOrder);
         }
 
@@ -93,7 +94,7 @@ namespace ERPBackend.Controllers
             }
             _logger.LogInformation($"Returned all orders");
 
-            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            var ordersResult = _mapper.Map<IEnumerable<OrderReadDto>>(orders);
             return Ok(ordersResult);
         }
 
@@ -124,7 +125,7 @@ namespace ERPBackend.Controllers
             }
             _logger.LogInformation($"Returned all orders");
 
-            var ordersResult = _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            var ordersResult = _mapper.Map<IEnumerable<OrderReadDto>>(orders);
             return Ok(ordersResult);
         }
     }

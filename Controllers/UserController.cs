@@ -11,6 +11,7 @@ using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.UserDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Services;
+using ERPBackend.Services.ModelsServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -27,14 +28,16 @@ namespace ERPBackend.Controllers
         private readonly ILogger<UserController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
-        private IAuthenticationService _service;
+        private IAuthenticationService _authenticationService;
+        private IUserService _userService;
 
-        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IAuthenticationService service)
+        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IAuthenticationService authenticationService, IUserService userService)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
-            _service = service;
+            _authenticationService = authenticationService;
+            _userService = userService;
         }
 
 
@@ -47,24 +50,18 @@ namespace ERPBackend.Controllers
             {
                 return BadRequest("Invalid client request");
             }
-            var token = await _service.Authenticate(userCredentials);
-            var user = await _repository.User.FindUser(userCredentials.Login);
-            if (token == null)
+            var response = await _authenticationService.Authenticate(userCredentials);
+            if (response == null)
             {
                 return Unauthorized();
             }
             else
             {
-                return Ok(new
-                {
-                    token = token,
-                    userId = user.UserId
-                });
+                return Ok(response);
             }
         }
 
         //GET /user
-        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -97,7 +94,7 @@ namespace ERPBackend.Controllers
         }
 
         //POST /user
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto user)
         {
@@ -107,17 +104,15 @@ namespace ERPBackend.Controllers
                 return BadRequest("User object is null");
             }
             var userEntity = _mapper.Map<User>(user);
-            //
-            userEntity.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            //
-            _repository.User.CreateUser(userEntity);
-            await _repository.SaveAsync();
+
+            await _userService.CreateUser(userEntity);
 
             var createdUser = _mapper.Map<UserReadDto>(userEntity);
             return CreatedAtRoute("UserById", new { id = createdUser.UserId }, createdUser);
         }
 
         //PUT /user/{id}
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
@@ -132,14 +127,17 @@ namespace ERPBackend.Controllers
                 _logger.LogError($"User with id: {id}, does not exist");
                 return NotFound();
             }
+            var password = userEntity.Password;
+            var status = userEntity.Status;
             _mapper.Map(user, userEntity);
 
-            _repository.User.UpdateUser(userEntity);
-            await _repository.SaveAsync();
+            await _userService.UpdateUser(userEntity, password, status);
+
             return NoContent();
         }
 
         //PATCH /users/{id}
+        [Authorize(Roles = "Administrator")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateUserPatch(int id, JsonPatchDocument<UserPatchDto> patchDoc)
         {
@@ -155,8 +153,10 @@ namespace ERPBackend.Controllers
                 return ValidationProblem(ModelState);
             }
             _mapper.Map(userToPatch, userModelFromRepo);
+
             _repository.User.UpdateUser(userModelFromRepo);
             await _repository.SaveAsync();
+
             return NoContent();
         }
 

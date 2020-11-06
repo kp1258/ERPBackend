@@ -36,7 +36,7 @@ namespace ERPBackend.Controllers
             }
             _logger.LogInformation($"Returned all standard product categories");
 
-            var categoriesResult = _mapper.Map<IEnumerable<StandardProductCategoryDto>>(categories);
+            var categoriesResult = _mapper.Map<IEnumerable<StandardProductCategoryReadDto>>(categories);
             return Ok(categoriesResult);
         }
 
@@ -52,7 +52,7 @@ namespace ERPBackend.Controllers
             else
             {
                 _logger.LogInformation($"Returned standard product category with specified id");
-                var categoryResult = _mapper.Map<StandardProductCategoryDto>(category);
+                var categoryResult = _mapper.Map<StandardProductCategoryReadDto>(category);
                 return Ok(categoryResult);
             }
         }
@@ -70,7 +70,7 @@ namespace ERPBackend.Controllers
             _repository.StandardProductCategory.CreateCategory(categoryEntity);
             await _repository.SaveAsync();
 
-            var createdCategory = _mapper.Map<StandardProductCategoryDto>(categoryEntity);
+            var createdCategory = _mapper.Map<StandardProductCategoryReadDto>(categoryEntity);
             return CreatedAtRoute("CategoryById", new { id = createdCategory.StandardProductCategoryId }, createdCategory);
         }
 

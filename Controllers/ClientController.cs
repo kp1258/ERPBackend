@@ -7,6 +7,8 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ClientDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Entities.QueryParameters;
+using ERPBackend.Services.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,12 +16,14 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("clients")]
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
+        private IClientService _service;
 
         public ClientController(ILogger<ClientController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
@@ -61,6 +65,7 @@ namespace ERPBackend.Controllers
         }
 
         //POST /client
+        [Authorize(Roles = "Salesman")]
         [HttpPost]
         public async Task<IActionResult> CreateClient([FromBody] ClientCreateDto client)
         {
@@ -70,14 +75,15 @@ namespace ERPBackend.Controllers
                 return BadRequest("Client object is null");
             }
             var clientEntity = _mapper.Map<Client>(client);
-            _repository.Client.CreateClient(clientEntity);
-            await _repository.SaveAsync();
+
+            await _service.CreateClient(clientEntity);
 
             var createdClient = _mapper.Map<ClientReadDto>(clientEntity);
             return CreatedAtRoute("ClientById", new { id = createdClient.ClientId }, createdClient);
         }
 
         //PUT /client/{id}
+        [Authorize(Roles = "Salesman")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientUpdateDto client)
         {
@@ -92,14 +98,16 @@ namespace ERPBackend.Controllers
                 _logger.LogError($"Client with id {id} does not exist");
                 return NotFound();
             }
+            var status = clientEntity.Status;
             _mapper.Map(client, clientEntity);
 
-            _repository.Client.UpdateClient(clientEntity);
-            await _repository.SaveAsync();
+            await _service.UpdateClient(clientEntity, status);
+
             return NoContent();
         }
 
         //PATCH /clients/{id}
+        [Authorize(Roles = "Salesman")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateUserPatch(int id, JsonPatchDocument<ClientPatchDto> patchDoc)
         {

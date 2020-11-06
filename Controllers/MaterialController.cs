@@ -6,23 +6,28 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.MaterialDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Filters;
+using ERPBackend.Services.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("materials")]
     public class MaterialController : ControllerBase
     {
         private readonly ILogger<MaterialController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
-        public MaterialController(ILogger<MaterialController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        private IMaterialService _service;
+        public MaterialController(ILogger<MaterialController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IMaterialService service)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
+            _service = service;
         }
 
         //GET /material
@@ -68,18 +73,8 @@ namespace ERPBackend.Controllers
                 return BadRequest("Material object is null");
             }
             var materialEntity = _mapper.Map<Material>(material);
-            _repository.Material.CreateMaterial(materialEntity);
-            await _repository.SaveAsync();
-
-            var createdMaterial = _mapper.Map<MaterialReadDto>(materialEntity);
-            var materialWarehouseItem = new MaterialWarehouseItem()
-            {
-                MaterialId = createdMaterial.MaterialId,
-                Quantity = 0
-            };
-            _repository.MaterialWarehouseItem.CreateItem(materialWarehouseItem);
-            await _repository.SaveAsync();
-            return CreatedAtRoute("MaterialById", new { id = createdMaterial.MaterialId }, createdMaterial);
+            await _service.CreateMaterial(materialEntity);
+            return CreatedAtRoute("MaterialById", new { id = materialEntity.MaterialId }, materialEntity);
         }
 
         //PUT /material/{id}

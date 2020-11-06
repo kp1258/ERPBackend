@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ERPBackend.Entities.QueryParameters;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("custom-order-items")]
     public class CustomOrderItemController : ControllerBase
     {
