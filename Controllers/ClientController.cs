@@ -25,11 +25,12 @@ namespace ERPBackend.Controllers
         private IMapper _mapper;
         private IClientService _service;
 
-        public ClientController(ILogger<ClientController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public ClientController(ILogger<ClientController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IClientService service)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
+            _service = service;
         }
 
         //GET /client
@@ -79,7 +80,7 @@ namespace ERPBackend.Controllers
             await _service.CreateClient(clientEntity);
 
             var createdClient = _mapper.Map<ClientReadDto>(clientEntity);
-            return CreatedAtRoute("ClientById", new { id = createdClient.ClientId }, createdClient);
+            return CreatedAtRoute("ClientById", new { id = clientEntity.ClientId }, clientEntity);
         }
 
         //PUT /client/{id}

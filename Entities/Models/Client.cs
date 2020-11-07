@@ -39,9 +39,9 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ClientStatus
     {
-        [EnumMember(Value = "aktywny")]
+        [EnumMember(Value = "Aktywny")]
         Active,
-        [EnumMember(Value = "nieaktywny")]
+        [EnumMember(Value = "Nieaktywny")]
         Inactive
 
     }

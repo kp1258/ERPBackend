@@ -33,9 +33,9 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StandardProductStatus
     {
-        [EnumMember(Value = "produkowany")]
+        [EnumMember(Value = "Produkowany")]
         InProduction,
-        [EnumMember(Value = "wycofany z produkcji")]
+        [EnumMember(Value = "Wycofany z produkcji")]
         Discontinued
     }
 
@@ -67,11 +67,11 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum CustomProductStatus
     {
-        [EnumMember(Value = "zamówiony")]
+        [EnumMember(Value = "Zamówiony")]
         Ordered,
-        [EnumMember(Value = "w przygotowaniu")]
+        [EnumMember(Value = "W przygotowaniu")]
         InPreparation,
-        [EnumMember(Value = "przygotowany")]
+        [EnumMember(Value = "Przygotowany")]
         Prepared
     }
 }

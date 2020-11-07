@@ -46,25 +46,25 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UserRole
     {
-        [EnumMember(Value = "administrator")]
+        [EnumMember(Value = "Administrator")]
         Administrator,
-        [EnumMember(Value = "magazynier")]
+        [EnumMember(Value = "Magazynier")]
         Warehouseman,
-        [EnumMember(Value = "kierownik produkcji")]
+        [EnumMember(Value = "Kierownik produkcji")]
         ProductionManager,
-        [EnumMember(Value = "technolog")]
+        [EnumMember(Value = "Technolog")]
         Technologist,
-        [EnumMember(Value = "handlowiec")]
+        [EnumMember(Value = "Handlowiec")]
         Salesman
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UserStatus
     {
-        [EnumMember(Value = "aktywny")]
+        [EnumMember(Value = "Aktywny")]
         Active,
 
-        [EnumMember(Value = "nieaktywny")]
+        [EnumMember(Value = "Nieaktywny")]
         Inactive
     }
 

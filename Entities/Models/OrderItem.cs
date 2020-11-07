@@ -30,11 +30,11 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum CustomOrderItemStatus
     {
-        [EnumMember(Value = "zamówiony")]
+        [EnumMember(Value = "Zamówiony")]
         Ordered,
-        [EnumMember(Value = "w produkcji")]
+        [EnumMember(Value = "W produkcji")]
         InProduction,
-        [EnumMember(Value = "zrealizowany")]
+        [EnumMember(Value = "Zrealizowany")]
         Completed
     }
 

@@ -26,9 +26,9 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum FileType
     {
-        [EnumMember(Value = "order")]
+        [EnumMember(Value = "Order")]
         Order,
-        [EnumMember(Value = "solution")]
+        [EnumMember(Value = "Solution")]
         Solution
     }
 }

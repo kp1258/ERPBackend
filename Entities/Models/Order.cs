@@ -37,20 +37,20 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderStatus
     {
-        [EnumMember(Value = "złożone")]
+        [EnumMember(Value = "Złożone")]
         Placed,
-        [EnumMember(Value = "w realizacji")]
+        [EnumMember(Value = "W realizacji")]
         InRealization,
-        [EnumMember(Value = "zrealizowane")]
+        [EnumMember(Value = "Zrealizowane")]
         Completed
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderType
     {
-        [EnumMember(Value = "standardowy")]
+        [EnumMember(Value = "Standardowy")]
         Standard,
-        [EnumMember(Value = "niestandardowy")]
+        [EnumMember(Value = "Niestandardowy")]
         Custom
     }
 }
