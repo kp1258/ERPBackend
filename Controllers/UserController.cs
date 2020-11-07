@@ -9,6 +9,7 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.UserDtos;
+using ERPBackend.Entities.Dtos.AdditionalDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Services;
 using ERPBackend.Services.ModelsServices;
@@ -58,6 +59,49 @@ namespace ERPBackend.Controllers
             else
             {
                 return Ok(response);
+            }
+        }
+
+        //POST /change-password/{id}
+        [HttpPost("change-password/{id}")]
+        public async Task<IActionResult> ChangePasswordUser(int id, [FromBody] ChangePasswordUserDto dto)
+        {
+            var user = await _repository.User.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var success = await _userService.ChangePasswordUser(user, dto);
+            if (success)
+            {
+                _logger.LogInformation("User password has been changed");
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        //POST /change-password/admin/{id}
+        [Authorize(Roles = "Administrator")]
+        [HttpPost("change-password/admin/{id}")]
+        public async Task<IActionResult> ChangePasswordAdmin(int id, [FromBody] ChangePasswordAdminDto dto)
+        {
+            var user = await _repository.User.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var success = await _userService.ChangePasswordAdmin(user, dto);
+            if (success)
+            {
+                _logger.LogInformation("User password has been changed");
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
             }
         }
 

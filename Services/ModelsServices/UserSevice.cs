@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using ERPBackend.Contracts;
+using ERPBackend.Entities.Dtos.AdditionalDtos;
 using ERPBackend.Entities.Models;
 
 namespace ERPBackend.Services.ModelsServices
@@ -28,6 +29,30 @@ namespace ERPBackend.Services.ModelsServices
             user.Status = status;
             _repository.User.UpdateUser(user);
             await _repository.SaveAsync();
+        }
+
+        public async Task<bool> ChangePasswordUser(User user, ChangePasswordUserDto dto)
+        {
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.Password))
+            {
+                return false;
+            }
+            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            _repository.User.UpdateUser(user);
+            await _repository.SaveAsync();
+            return true;
+        }
+
+        public async Task<bool> ChangePasswordAdmin(User user, ChangePasswordAdminDto dto)
+        {
+            if (user == null)
+            {
+                return false;
+            }
+            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            _repository.User.UpdateUser(user);
+            await _repository.SaveAsync();
+            return true;
         }
 
     }

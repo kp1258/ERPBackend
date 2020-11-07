@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ERPBackend.Entities.Dtos.UserDtos
+namespace ERPBackend.Entities.Dtos.AdditionalDtos
 {
-    public class UserPasswordUpdateDto
+    public class ChangePasswordUserDto
     {
         [Required]
         public string OldPassword { get; set; }
