@@ -14,15 +14,18 @@ namespace ERPBackend.Entities.Models
         [StringLength(20)]
         public string Login { get; set; }
         [Required]
-        [StringLength(20)]
         public string Password { get; set; }
         [Required]
+        [MaxLength(30)]
         public string FirstName { get; set; }
         [Required]
+        [MaxLength(50)]
         public string LastName { get; set; }
         [Required]
+        [MinLength(9), MaxLength(12)]
         public string PhoneNumber { get; set; }
         [Required]
+        [MaxLength(30)]
         public string Email { get; set; }
 
         [Required]
@@ -43,25 +46,25 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UserRole
     {
-        [EnumMember(Value = "administrator")]
+        [EnumMember(Value = "Administrator")]
         Administrator,
-        [EnumMember(Value = "magazynier")]
+        [EnumMember(Value = "Magazynier")]
         Warehouseman,
-        [EnumMember(Value = "kierownik produkcji")]
+        [EnumMember(Value = "Kierownik produkcji")]
         ProductionManager,
-        [EnumMember(Value = "technolog")]
+        [EnumMember(Value = "Technolog")]
         Technologist,
-        [EnumMember(Value = "handlowiec")]
+        [EnumMember(Value = "Handlowiec")]
         Salesman
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UserStatus
     {
-        [EnumMember(Value = "aktywny")]
+        [EnumMember(Value = "Aktywny")]
         Active,
 
-        [EnumMember(Value = "nieaktywny")]
+        [EnumMember(Value = "Nieaktywny")]
         Inactive
     }
 

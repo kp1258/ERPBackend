@@ -11,19 +11,23 @@ namespace ERPBackend.Entities.Models.Configuration
             builder.HasData(new List<Material>{
                 new Material{
                     MaterialId=1,
-                    Name="Materiał 1"
+                    Name="Materiał 1",
+                    Unit="kilogramy"
                 },
                 new Material{
                     MaterialId=2,
-                    Name="Materiał 2"
+                    Name="Materiał 2",
+                    Unit="kilogramy"
                 },
                 new Material{
                     MaterialId=3,
-                    Name="Materiał 3"
+                    Name="Materiał 3",
+                    Unit="kilogramy"
                 },
                 new Material{
                     MaterialId=4,
-                    Name="Materiał 4"
+                    Name="Materiał 4",
+                    Unit="kilogramy"
                 }
             });
         }

@@ -7,6 +7,8 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Services;
+using ERPBackend.Services.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -15,20 +17,21 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Technologist")]
     [Route("technologists")]
     public class TechnologistController : ControllerBase
     {
         private readonly ILogger<TechnologistController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
-        private IBlobStorageService _service;
+        private ICustomProductService _customProductService;
 
-        public TechnologistController(ILogger<TechnologistController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobStorageService service)
+        public TechnologistController(ILogger<TechnologistController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, ICustomProductService customProductService)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
-            _service = service;
+            _customProductService = customProductService;
         }
 
         //PATCH /technologists/{technologistId}/custom-products/{productId}
@@ -48,11 +51,9 @@ namespace ERPBackend.Controllers
                 return ValidationProblem(ModelState);
             }
             _mapper.Map(productToPatch, productModelFromRepo);
-            productModelFromRepo.TechnologistId = technologistId;
-            productModelFromRepo.PreparationStartDate = DateTime.Now;
 
-            _repository.CustomProduct.UpdateProduct(productModelFromRepo);
-            await _repository.SaveAsync();
+            await _customProductService.AcceptToPreparation(productModelFromRepo, technologistId);
+
             return NoContent();
         }
 
@@ -65,12 +66,9 @@ namespace ERPBackend.Controllers
             {
                 return NotFound();
             }
-            product.PreparationCompletionDate = DateTime.Now;
-            product.Status = CustomProductStatus.Prepared;
-            product.SolutionDescription = solution.SolutionDescription;
-            await _service.UploadSolutionFilesAsync(product.CustomProductId, solution.Files);
-            _repository.CustomProduct.Update(product);
-            await _repository.SaveAsync();
+
+            await _customProductService.AddSolution(product, solution);
+
             return NoContent();
 
         }
@@ -117,7 +115,6 @@ namespace ERPBackend.Controllers
             _logger.LogInformation($"Returned all custom products in preparation binded witch specified technologist");
 
             var productsResult = _mapper.Map<IEnumerable<CustomProductReadDto>>(products);
-            Console.WriteLine(productsResult);
             return Ok(productsResult);
         }
     }

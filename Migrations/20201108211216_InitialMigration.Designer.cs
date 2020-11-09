@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBackend.Migrations
 {
     [DbContext(typeof(ERPContext))]
-    [Migration("20201101231842_InitialMigration")]
+    [Migration("20201108211216_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,15 +56,18 @@ namespace ERPBackend.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(6)")
+                        .HasMaxLength(6);
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
                     b.HasKey("AddressId");
 
@@ -105,22 +108,27 @@ namespace ERPBackend.Migrations
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Email")
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(12)")
+                        .HasMaxLength(12);
 
                     b.Property<int>("SalesmanId")
                         .HasColumnType("int");
@@ -279,7 +287,8 @@ namespace ERPBackend.Migrations
 
                     b.Property<string>("OrderDescription")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime?>("PreparationCompletionDate")
                         .HasColumnType("datetime");
@@ -288,7 +297,8 @@ namespace ERPBackend.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("SolutionDescription")
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -354,7 +364,6 @@ namespace ERPBackend.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("BlobName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("CustomProductId")
@@ -365,7 +374,6 @@ namespace ERPBackend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("FilePath")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
@@ -390,6 +398,11 @@ namespace ERPBackend.Migrations
                         .HasColumnType("varchar(40)")
                         .HasMaxLength(40);
 
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20);
+
                     b.HasKey("MaterialId");
 
                     b.ToTable("Materials");
@@ -398,22 +411,26 @@ namespace ERPBackend.Migrations
                         new
                         {
                             MaterialId = 1,
-                            Name = "Materiał 1"
+                            Name = "Materiał 1",
+                            Unit = "kilogramy"
                         },
                         new
                         {
                             MaterialId = 2,
-                            Name = "Materiał 2"
+                            Name = "Materiał 2",
+                            Unit = "kilogramy"
                         },
                         new
                         {
                             MaterialId = 3,
-                            Name = "Materiał 3"
+                            Name = "Materiał 3",
+                            Unit = "kilogramy"
                         },
                         new
                         {
                             MaterialId = 4,
-                            Name = "Materiał 4"
+                            Name = "Materiał 4",
+                            Unit = "kilogramy"
                         });
                 });
 
@@ -799,15 +816,18 @@ namespace ERPBackend.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -816,12 +836,12 @@ namespace ERPBackend.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("varchar(20)")
-                        .HasMaxLength(20);
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(12)")
+                        .HasMaxLength(12);
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -843,7 +863,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Jan",
                             LastName = "Kowalski",
                             Login = "jan_k",
-                            Password = "password",
+                            Password = "$2a$11$7lfhYYnX2SW2JNKhMnjO9ObqUvWlilxA.xmw0wZyqS.bGdrqqRG5q",
                             PhoneNumber = "607934182",
                             Role = "Administrator",
                             Status = "Active"
@@ -855,7 +875,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Anna",
                             LastName = "Nowak",
                             Login = "anna_n",
-                            Password = "password",
+                            Password = "$2a$11$tpRNnkfzErWzP/bwhGGy/.C.VdwoIBgCjpYz/WISWlTu0IC62SKo2",
                             PhoneNumber = "709856234",
                             Role = "Salesman",
                             Status = "Active"
@@ -867,7 +887,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Andrzej",
                             LastName = "Malinowski",
                             Login = "andrzej_m",
-                            Password = "password",
+                            Password = "$2a$11$gi0KZhxVgJDeMG32Iy/6M.DMz4FnmvwYyzDs/jENr4CjkkA6Mx8Rm",
                             PhoneNumber = "679234374",
                             Role = "ProductionManager",
                             Status = "Active"
@@ -879,7 +899,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Agata",
                             LastName = "Krzeszowska",
                             Login = "agata_k",
-                            Password = "password",
+                            Password = "$2a$11$z0xh/Fl2EoL5OReqxoe0WuvOb4qJ90gTMSOlAfKr9w/JN8gruLSjq",
                             PhoneNumber = "685234054",
                             Role = "Technologist",
                             Status = "Active"
@@ -891,7 +911,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Edward",
                             LastName = "Rak",
                             Login = "edward_r",
-                            Password = "password",
+                            Password = "$2a$11$Kdmc41EhlQvrxaTfQof29OmC0HS8IW8C3LbtxrPYw/v9b2lK/YWRe",
                             PhoneNumber = "978345278",
                             Role = "Warehouseman",
                             Status = "Active"

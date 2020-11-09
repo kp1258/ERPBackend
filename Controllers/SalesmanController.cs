@@ -6,12 +6,14 @@ using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.ClientDtos;
 using ERPBackend.Entities.Dtos.OrderDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Salesman")]
     [Route("salesmen")]
     public class SalesmanController : ControllerBase
     {
@@ -31,6 +33,22 @@ namespace ERPBackend.Controllers
         public async Task<IActionResult> GetAllClientsBySalesman(int id)
         {
             var clients = await _repository.Client.GetClientsBySalesmanAsync(id);
+            if (!clients.Any())
+            {
+                return NoContent();
+            }
+
+            _logger.LogInformation($"Returned all salesman's clients");
+
+            var clientsResult = _mapper.Map<IEnumerable<ClientReadDto>>(clients);
+            return Ok(clientsResult);
+        }
+
+        //GET /salesmen/{id}/clients/active
+        [HttpGet("{id}/clients/active")]
+        public async Task<IActionResult> GetActiveClientsBySalesman(int id)
+        {
+            var clients = await _repository.Client.GetActiveClientsBySalesmanAsync(id);
             if (!clients.Any())
             {
                 return NoContent();

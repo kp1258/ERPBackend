@@ -8,10 +8,12 @@ namespace ERPBackend.Contracts
     public interface IUserRepository : IRepositoryBase<User>
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<IEnumerable<User>> GetAcitveUsersWithoutSpecifiedUser(int userId);
         Task<User> GetUserByIdAsync(int userId);
         void CreateUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);
         Task ChangeStatusAsync(int userId);
+        Task<User> FindUser(string login);
     }
 }

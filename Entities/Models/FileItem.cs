@@ -15,9 +15,7 @@ namespace ERPBackend.Entities.Models
         public CustomProduct CustomProduct { get; set; }
         [Required]
         public string FileName { get; set; }
-        [Required]
         public string FilePath { get; set; }
-        [Required]
         public string BlobName { get; set; }
         [Required]
         public FileType Type { get; set; }
@@ -28,9 +26,9 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum FileType
     {
-        [EnumMember(Value = "order")]
+        [EnumMember(Value = "Order")]
         Order,
-        [EnumMember(Value = "solution")]
+        [EnumMember(Value = "Solution")]
         Solution
     }
 }

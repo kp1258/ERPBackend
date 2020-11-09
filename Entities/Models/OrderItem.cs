@@ -19,6 +19,7 @@ namespace ERPBackend.Entities.Models
         public CustomOrderItemStatus Status { get; set; }
         public int? ProductionManagerId { get; set; }
         [Required]
+        [Range(0, 100)]
         public int Quantity { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
@@ -29,11 +30,11 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum CustomOrderItemStatus
     {
-        [EnumMember(Value = "zamówiony")]
+        [EnumMember(Value = "Zamówiony")]
         Ordered,
-        [EnumMember(Value = "w produkcji")]
+        [EnumMember(Value = "W produkcji")]
         InProduction,
-        [EnumMember(Value = "zrealizowany")]
+        [EnumMember(Value = "Zrealizowany")]
         Completed
     }
 
@@ -47,6 +48,7 @@ namespace ERPBackend.Entities.Models
         public int StandardProductId { get; set; }
         public StandardProduct StandardProduct { get; set; }
         [Required]
+        [Range(0, 100)]
         public int Quantity { get; set; }
     }
 }

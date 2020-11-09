@@ -57,5 +57,17 @@ namespace ERPBackend.Repositories
                 }
             }
         }
+
+        public async Task<User> FindUser(string login)
+        {
+            return await FindByCondition(x => x.Login == login)
+                            .SingleOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAcitveUsersWithoutSpecifiedUser(int userId)
+        {
+            return await FindByCondition(x => x.Status == UserStatus.Active && x.UserId != userId)
+                            .ToListAsync();
+        }
     }
 }

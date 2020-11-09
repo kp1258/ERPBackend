@@ -6,8 +6,12 @@ namespace ERPBackend.Entities.Models
     {
         public int MaterialId { get; set; }
         [Required]
-        [StringLength(40)]
+        [MaxLength(40)]
         public string Name { get; set; }
+
+        [Required]
+        [MaxLength(20)]
+        public string Unit { get; set; }
 
         public MaterialWarehouseItem MaterialItem { get; set; }
     }

@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ERPBackend.Entities.Dtos.UserDtos
 {
     public class UserPatchDto
     {
-        public string Status {get; set;}
+        [Required]
+        public string Status { get; set; }
     }
 }

@@ -39,19 +39,6 @@ namespace ERPBackend.Services
             var blobDownloadInfo = await blobClient.DownloadAsync();
         }
 
-        public async Task<BlobInfo> GetBlobAsync(string name, string containerName)
-        {
-            var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
-            var blobClient = containerClient.GetBlobClient(name);
-            var blobDownloadInfo = await blobClient.DownloadAsync();
-            var blobInfo = new BlobInfo
-            {
-                Content = blobDownloadInfo.Value.Content,
-                ContentType = blobDownloadInfo.Value.ContentType
-            };
-            return blobInfo;
-        }
-
         public async Task<IEnumerable<string>> ListBlobsAsync(string containerName)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
@@ -118,14 +105,6 @@ namespace ERPBackend.Services
                     var file = fileItem.File;
                     string blobName = GenerateFileName(file.FileName);
                     string filePath = await UploadFileBlobAsync(file, blobName, "customproductsorders");
-                    // var newFileItem = new FileItem
-                    // {
-                    //     CustomProductId = productId,
-                    //     FileName = file.FileName,
-                    //     FilePath = filePath,
-                    //     BlobName = blobName,
-                    //     Type = FileType.Order,
-                    // };
                     fileItem.BlobName = blobName;
                     fileItem.FilePath = filePath;
                     _repository.FileItem.UpdateItem(fileItem);
@@ -134,7 +113,7 @@ namespace ERPBackend.Services
             }
             else
             {
-                Console.WriteLine("Files jest null");
+                Console.WriteLine("Files is null");
             }
         }
     }

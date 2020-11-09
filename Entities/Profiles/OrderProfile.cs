@@ -11,10 +11,7 @@ namespace ERPBackend.Profiles
         public OrderProfile()
         {
             CreateMap<Order, OrderReadDto>();
-            CreateMap<Order, OrderInfoDto>();
             CreateMap<OrderCreateDto, Order>();
-            CreateMap<OrderUpdateDto, Order>();
-            CreateMap<Order, OrderUpdateDto>();
 
             CreateMap<OrderDetails, OrderDetailsDto>();
 

@@ -42,5 +42,11 @@ namespace ERPBackend.Repositories
             Delete(product);
         }
 
+        public async Task<IEnumerable<StandardProduct>> GetAllProducedProductsAsync()
+        {
+            return await FindByCondition(p => p.Status == StandardProductStatus.Produced)
+                            .Include(p => p.StandardProductCategory)
+                            .ToListAsync();
+        }
     }
 }

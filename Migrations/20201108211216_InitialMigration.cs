@@ -14,9 +14,9 @@ namespace ERPBackend.Migrations
                 {
                     AddressId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Street = table.Column<string>(nullable: false),
-                    PostalCode = table.Column<string>(nullable: false),
-                    City = table.Column<string>(nullable: false)
+                    Street = table.Column<string>(maxLength: 30, nullable: false),
+                    PostalCode = table.Column<string>(maxLength: 6, nullable: false),
+                    City = table.Column<string>(maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,7 +29,8 @@ namespace ERPBackend.Migrations
                 {
                     MaterialId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 40, nullable: false)
+                    Name = table.Column<string>(maxLength: 40, nullable: false),
+                    Unit = table.Column<string>(maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,11 +57,11 @@ namespace ERPBackend.Migrations
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Login = table.Column<string>(maxLength: 20, nullable: false),
-                    Password = table.Column<string>(maxLength: 20, nullable: false),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
-                    PhoneNumber = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 30, nullable: false),
+                    LastName = table.Column<string>(maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 12, nullable: false),
+                    Email = table.Column<string>(maxLength: 30, nullable: false),
                     Role = table.Column<string>(nullable: false),
                     Status = table.Column<string>(nullable: false)
                 },
@@ -120,11 +121,11 @@ namespace ERPBackend.Migrations
                 {
                     ClientId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    CompanyName = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
-                    PhoneNumber = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: true),
+                    CompanyName = table.Column<string>(maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(maxLength: 30, nullable: false),
+                    LastName = table.Column<string>(maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 12, nullable: false),
+                    Email = table.Column<string>(maxLength: 30, nullable: true),
                     AddressId = table.Column<int>(nullable: false),
                     Status = table.Column<string>(nullable: false),
                     SalesmanId = table.Column<int>(nullable: false)
@@ -153,8 +154,8 @@ namespace ERPBackend.Migrations
                     CustomProductId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
-                    OrderDescription = table.Column<string>(nullable: false),
-                    SolutionDescription = table.Column<string>(nullable: true),
+                    OrderDescription = table.Column<string>(maxLength: 200, nullable: false),
+                    SolutionDescription = table.Column<string>(maxLength: 200, nullable: true),
                     Status = table.Column<string>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     PreparationStartDate = table.Column<DateTime>(nullable: true),
@@ -261,8 +262,8 @@ namespace ERPBackend.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     CustomProductId = table.Column<int>(nullable: false),
                     FileName = table.Column<string>(nullable: false),
-                    FilePath = table.Column<string>(nullable: false),
-                    BlobName = table.Column<string>(nullable: false),
+                    FilePath = table.Column<string>(nullable: true),
+                    BlobName = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -352,13 +353,13 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Materials",
-                columns: new[] { "MaterialId", "Name" },
+                columns: new[] { "MaterialId", "Name", "Unit" },
                 values: new object[,]
                 {
-                    { 1, "Materiał 1" },
-                    { 2, "Materiał 2" },
-                    { 3, "Materiał 3" },
-                    { 4, "Materiał 4" }
+                    { 1, "Materiał 1", "kilogramy" },
+                    { 2, "Materiał 2", "kilogramy" },
+                    { 3, "Materiał 3", "kilogramy" },
+                    { 4, "Materiał 4", "kilogramy" }
                 });
 
             migrationBuilder.InsertData(
@@ -377,11 +378,11 @@ namespace ERPBackend.Migrations
                 columns: new[] { "UserId", "Email", "FirstName", "LastName", "Login", "Password", "PhoneNumber", "Role", "Status" },
                 values: new object[,]
                 {
-                    { 4, "agata_k@email.com", "Agata", "Krzeszowska", "agata_k", "password", "685234054", "Technologist", "Active" },
-                    { 1, "jan_k@email.com", "Jan", "Kowalski", "jan_k", "password", "607934182", "Administrator", "Active" },
-                    { 2, "anna_n@email.com", "Anna", "Nowak", "anna_n", "password", "709856234", "Salesman", "Active" },
-                    { 3, "andrzej_m@email.com", "Andrzej", "Malinowski", "andrzej_m", "password", "679234374", "ProductionManager", "Active" },
-                    { 5, "edward_r@email.com", "Edward", "Rak", "edward_r", "password", "978345278", "Warehouseman", "Active" }
+                    { 4, "agata_k@email.com", "Agata", "Krzeszowska", "agata_k", "$2a$11$z0xh/Fl2EoL5OReqxoe0WuvOb4qJ90gTMSOlAfKr9w/JN8gruLSjq", "685234054", "Technologist", "Active" },
+                    { 1, "jan_k@email.com", "Jan", "Kowalski", "jan_k", "$2a$11$7lfhYYnX2SW2JNKhMnjO9ObqUvWlilxA.xmw0wZyqS.bGdrqqRG5q", "607934182", "Administrator", "Active" },
+                    { 2, "anna_n@email.com", "Anna", "Nowak", "anna_n", "$2a$11$tpRNnkfzErWzP/bwhGGy/.C.VdwoIBgCjpYz/WISWlTu0IC62SKo2", "709856234", "Salesman", "Active" },
+                    { 3, "andrzej_m@email.com", "Andrzej", "Malinowski", "andrzej_m", "$2a$11$gi0KZhxVgJDeMG32Iy/6M.DMz4FnmvwYyzDs/jENr4CjkkA6Mx8Rm", "679234374", "ProductionManager", "Active" },
+                    { 5, "edward_r@email.com", "Edward", "Rak", "edward_r", "$2a$11$Kdmc41EhlQvrxaTfQof29OmC0HS8IW8C3LbtxrPYw/v9b2lK/YWRe", "978345278", "Warehouseman", "Active" }
                 });
 
             migrationBuilder.InsertData(

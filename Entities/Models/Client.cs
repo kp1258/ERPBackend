@@ -10,13 +10,18 @@ namespace ERPBackend.Entities.Models
     {
         public int ClientId { get; set; }
         [Required]
+        [MaxLength(50)]
         public string CompanyName { get; set; }
         [Required]
+        [MaxLength(30)]
         public string FirstName { get; set; }
         [Required]
+        [MaxLength(50)]
         public string LastName { get; set; }
         [Required]
+        [MinLength(9), MaxLength(12)]
         public string PhoneNumber { get; set; }
+        [MaxLength(30)]
         public string Email { get; set; }
         [Required]
         public int AddressId { get; set; }
@@ -34,9 +39,9 @@ namespace ERPBackend.Entities.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ClientStatus
     {
-        [EnumMember(Value = "aktywny")]
+        [EnumMember(Value = "Aktywny")]
         Active,
-        [EnumMember(Value = "nieaktywny")]
+        [EnumMember(Value = "Nieaktywny")]
         Inactive
 
     }

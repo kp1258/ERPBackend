@@ -9,7 +9,10 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Dtos.UserDtos;
+using ERPBackend.Entities.Dtos.AdditionalDtos;
 using ERPBackend.Entities.Models;
+using ERPBackend.Services;
+using ERPBackend.Services.ModelsServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ERPBackend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("users")]
     public class UserController : ControllerBase
@@ -25,54 +29,102 @@ namespace ERPBackend.Controllers
         private readonly ILogger<UserController> _logger;
         private IRepositoryWrapper _repository;
         private IMapper _mapper;
+        private IAuthenticationService _authenticationService;
+        private IUserService _userService;
 
-        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public UserController(ILogger<UserController> logger, IRepositoryWrapper repositoryWrapper, IMapper mapper, IAuthenticationService authenticationService, IUserService userService)
         {
             _logger = logger;
             _repository = repositoryWrapper;
             _mapper = mapper;
+            _authenticationService = authenticationService;
+            _userService = userService;
         }
 
 
-        //GET api/user/signin
+        //POST /users/sign-in
         [AllowAnonymous]
-        [HttpPost, Route("signin")]
-        public IActionResult SignIn([FromBody] UserSignInDto user)
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> SignIn([FromBody] UserSignInDto userCredentials)
         {
-            if (user == null)
+            if (userCredentials == null)
             {
                 return BadRequest("Invalid client request");
             }
-            if (user.Login == "johndoe" && user.Password == "def@123")
-            {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Login),
-                    new Claim(ClaimTypes.Role, "Administrator")
-                };
-                var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:5000",
-                    audience: "http://localhost:5000",
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(5),
-                    signingCredentials: signinCredentials
-                );
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return Ok(new { Token = tokenString });
-            }
-            else
+            var response = await _authenticationService.Authenticate(userCredentials);
+            if (response == null)
             {
                 return Unauthorized();
             }
+            else
+            {
+                return Ok(response);
+            }
         }
 
-        //GET /user
+        //POST /change-password/{id}
+        [HttpPost("change-password/{id}")]
+        public async Task<IActionResult> ChangePasswordUser(int id, [FromBody] ChangePasswordUserDto dto)
+        {
+            var user = await _repository.User.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var success = await _userService.ChangePasswordUser(user, dto);
+            if (success)
+            {
+                _logger.LogInformation("User password has been changed");
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        //POST /change-password/admin/{id}
+        [Authorize(Roles = "Administrator")]
+        [HttpPost("change-password/admin/{id}")]
+        public async Task<IActionResult> ChangePasswordAdmin(int id, [FromBody] ChangePasswordAdminDto dto)
+        {
+            var user = await _repository.User.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var success = await _userService.ChangePasswordAdmin(user, dto);
+            if (success)
+            {
+                _logger.LogInformation("User password has been changed");
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        //GET /users
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _repository.User.GetAllUsersAsync();
+            if (!users.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all users");
+
+            var usersResult = _mapper.Map<IEnumerable<UserReadDto>>(users);
+            return Ok(usersResult);
+        }
+
+        //GET /users/info/{id}
+        [HttpGet("info/{id}")]
+        public async Task<IActionResult> GetActiveUsersWithoutSepcifiedUser(int id)
+        {
+            var users = await _repository.User.GetAcitveUsersWithoutSpecifiedUser(id);
             if (!users.Any())
             {
                 return NoContent();
@@ -101,6 +153,7 @@ namespace ERPBackend.Controllers
         }
 
         //POST /user
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto user)
         {
@@ -111,14 +164,14 @@ namespace ERPBackend.Controllers
             }
             var userEntity = _mapper.Map<User>(user);
 
-            _repository.User.CreateUser(userEntity);
-            await _repository.SaveAsync();
+            await _userService.CreateUser(userEntity);
 
             var createdUser = _mapper.Map<UserReadDto>(userEntity);
             return CreatedAtRoute("UserById", new { id = createdUser.UserId }, createdUser);
         }
 
         //PUT /user/{id}
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
@@ -133,14 +186,17 @@ namespace ERPBackend.Controllers
                 _logger.LogError($"User with id: {id}, does not exist");
                 return NotFound();
             }
+            var password = userEntity.Password;
+            var status = userEntity.Status;
             _mapper.Map(user, userEntity);
 
-            _repository.User.UpdateUser(userEntity);
-            await _repository.SaveAsync();
+            await _userService.UpdateUser(userEntity, password, status);
+
             return NoContent();
         }
 
         //PATCH /users/{id}
+        [Authorize(Roles = "Administrator")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateUserPatch(int id, JsonPatchDocument<UserPatchDto> patchDoc)
         {
@@ -156,8 +212,10 @@ namespace ERPBackend.Controllers
                 return ValidationProblem(ModelState);
             }
             _mapper.Map(userToPatch, userModelFromRepo);
+
             _repository.User.UpdateUser(userModelFromRepo);
             await _repository.SaveAsync();
+
             return NoContent();
         }
 
