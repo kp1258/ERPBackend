@@ -34,7 +34,7 @@ namespace ERPBackend.Entities.Models
     public enum StandardProductStatus
     {
         [EnumMember(Value = "Produkowany")]
-        InProduction,
+        Produced,
         [EnumMember(Value = "Wycofany z produkcji")]
         Discontinued
     }

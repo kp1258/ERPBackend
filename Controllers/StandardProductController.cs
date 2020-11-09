@@ -7,6 +7,7 @@ using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Services;
 using ERPBackend.Services.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("standard-products")]
     public class StandardProductController : ControllerBase
     {
@@ -40,6 +42,21 @@ namespace ERPBackend.Controllers
                 return NoContent();
             }
             _logger.LogInformation($"Returned all standard products");
+
+            var productsResult = _mapper.Map<IEnumerable<StandardProductReadDto>>(products);
+            return Ok(productsResult);
+        }
+
+        // GET /standard-products/produced
+        [HttpGet("produced")]
+        public async Task<IActionResult> GetAllProducedStandardProducts()
+        {
+            var products = await _repository.StandardProduct.GetAllProducedProductsAsync();
+            if (!products.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all produced standard products");
 
             var productsResult = _mapper.Map<IEnumerable<StandardProductReadDto>>(products);
             return Ok(productsResult);
@@ -80,7 +97,7 @@ namespace ERPBackend.Controllers
 
         //PUT /standardproduct/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStandardProduct(int id, [FromBody] StandardProductUpdateDto product)
+        public async Task<IActionResult> UpdateStandardProduct(int id, [FromForm] StandardProductUpdateDto product)
         {
             if (product == null)
             {
@@ -95,7 +112,7 @@ namespace ERPBackend.Controllers
             }
             _mapper.Map(product, productEntity);
 
-            await _service.UpdateStandardProduct(productEntity);
+            await _service.UpdateStandardProduct(productEntity, product);
 
             return NoContent();
         }

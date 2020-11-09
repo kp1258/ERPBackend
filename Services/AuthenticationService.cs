@@ -28,7 +28,7 @@ namespace ERPBackend.Services
         public async Task<AuthenticationResponse> Authenticate(UserSignInDto userCredentials)
         {
             var user = await _repository.User.FindUser(userCredentials.Login);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(userCredentials.Password, user.Password))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(userCredentials.Password, user.Password) || user.Status == UserStatus.Inactive)
             {
                 return null;
             }

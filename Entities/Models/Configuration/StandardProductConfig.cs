@@ -16,7 +16,7 @@ namespace ERPBackend.Entities.Models.Configuration
                     Name = "Produkt 1",
                     Dimensions="100x100",
                     StandardProductCategoryId=1,
-                    Status=StandardProductStatus.InProduction
+                    Status=StandardProductStatus.Produced
                 },
                 new StandardProduct
                 {
@@ -24,7 +24,7 @@ namespace ERPBackend.Entities.Models.Configuration
                     Name = "Produkt 2",
                     Dimensions="100x100",
                     StandardProductCategoryId=2,
-                    Status=StandardProductStatus.InProduction
+                    Status=StandardProductStatus.Produced
                 },
                 new StandardProduct
                 {
@@ -32,7 +32,7 @@ namespace ERPBackend.Entities.Models.Configuration
                     Name = "Produkt 3",
                     Dimensions="100x100",
                     StandardProductCategoryId=3,
-                    Status=StandardProductStatus.InProduction
+                    Status=StandardProductStatus.Produced
                 },
                 new StandardProduct
                 {
@@ -40,7 +40,7 @@ namespace ERPBackend.Entities.Models.Configuration
                     Name = "Produkt 4",
                     Dimensions="100x100",
                     StandardProductCategoryId=4,
-                    Status=StandardProductStatus.InProduction
+                    Status=StandardProductStatus.Produced
                 },
 
             }

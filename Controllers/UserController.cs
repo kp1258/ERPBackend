@@ -105,11 +105,26 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //GET /user
+        //GET /users
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _repository.User.GetAllUsersAsync();
+            if (!users.Any())
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"Returned all users");
+
+            var usersResult = _mapper.Map<IEnumerable<UserReadDto>>(users);
+            return Ok(usersResult);
+        }
+
+        //GET /users/info/{id}
+        [HttpGet("info/{id}")]
+        public async Task<IActionResult> GetActiveUsersWithoutSepcifiedUser(int id)
+        {
+            var users = await _repository.User.GetAcitveUsersWithoutSpecifiedUser(id);
             if (!users.Any())
             {
                 return NoContent();

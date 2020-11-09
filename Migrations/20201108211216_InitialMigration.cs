@@ -29,7 +29,8 @@ namespace ERPBackend.Migrations
                 {
                     MaterialId = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 40, nullable: false)
+                    Name = table.Column<string>(maxLength: 40, nullable: false),
+                    Unit = table.Column<string>(maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -352,13 +353,13 @@ namespace ERPBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Materials",
-                columns: new[] { "MaterialId", "Name" },
+                columns: new[] { "MaterialId", "Name", "Unit" },
                 values: new object[,]
                 {
-                    { 1, "Materiał 1" },
-                    { 2, "Materiał 2" },
-                    { 3, "Materiał 3" },
-                    { 4, "Materiał 4" }
+                    { 1, "Materiał 1", "kilogramy" },
+                    { 2, "Materiał 2", "kilogramy" },
+                    { 3, "Materiał 3", "kilogramy" },
+                    { 4, "Materiał 4", "kilogramy" }
                 });
 
             migrationBuilder.InsertData(
@@ -377,11 +378,11 @@ namespace ERPBackend.Migrations
                 columns: new[] { "UserId", "Email", "FirstName", "LastName", "Login", "Password", "PhoneNumber", "Role", "Status" },
                 values: new object[,]
                 {
-                    { 4, "agata_k@email.com", "Agata", "Krzeszowska", "agata_k", "$2a$11$W3Q84NtFSKNJ6SZETJV4aOt4ZK319T44dFb2u2XHAQVnqs2Cjw7BK", "685234054", "Technologist", "Active" },
-                    { 1, "jan_k@email.com", "Jan", "Kowalski", "jan_k", "$2a$11$lIRcDebWOVJ7dA/toLJehutX4Hre.za81COXHNxLYzz5nFMgTUdFS", "607934182", "Administrator", "Active" },
-                    { 2, "anna_n@email.com", "Anna", "Nowak", "anna_n", "$2a$11$F2febxoL3lMGrKqreq13mOAoWaSXIpErVDdViOilJdjeaL.yT0JyC", "709856234", "Salesman", "Active" },
-                    { 3, "andrzej_m@email.com", "Andrzej", "Malinowski", "andrzej_m", "$2a$11$EBcFy0o29ZtwUo6cAze2BOtKB6kOjThYkEcvk13yt0deq/iSjbMaK", "679234374", "ProductionManager", "Active" },
-                    { 5, "edward_r@email.com", "Edward", "Rak", "edward_r", "$2a$11$mtMXaXrRiV.fKl.2TLISNO0/npFNIj4sYmsc897VbTYHdiyobEy56", "978345278", "Warehouseman", "Active" }
+                    { 4, "agata_k@email.com", "Agata", "Krzeszowska", "agata_k", "$2a$11$z0xh/Fl2EoL5OReqxoe0WuvOb4qJ90gTMSOlAfKr9w/JN8gruLSjq", "685234054", "Technologist", "Active" },
+                    { 1, "jan_k@email.com", "Jan", "Kowalski", "jan_k", "$2a$11$7lfhYYnX2SW2JNKhMnjO9ObqUvWlilxA.xmw0wZyqS.bGdrqqRG5q", "607934182", "Administrator", "Active" },
+                    { 2, "anna_n@email.com", "Anna", "Nowak", "anna_n", "$2a$11$tpRNnkfzErWzP/bwhGGy/.C.VdwoIBgCjpYz/WISWlTu0IC62SKo2", "709856234", "Salesman", "Active" },
+                    { 3, "andrzej_m@email.com", "Andrzej", "Malinowski", "andrzej_m", "$2a$11$gi0KZhxVgJDeMG32Iy/6M.DMz4FnmvwYyzDs/jENr4CjkkA6Mx8Rm", "679234374", "ProductionManager", "Active" },
+                    { 5, "edward_r@email.com", "Edward", "Rak", "edward_r", "$2a$11$Kdmc41EhlQvrxaTfQof29OmC0HS8IW8C3LbtxrPYw/v9b2lK/YWRe", "978345278", "Warehouseman", "Active" }
                 });
 
             migrationBuilder.InsertData(

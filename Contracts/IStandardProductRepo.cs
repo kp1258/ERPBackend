@@ -7,6 +7,7 @@ namespace ERPBackend.Contracts
     public interface IStandardProductRepository : IRepositoryBase<StandardProduct>
     {
         Task<IEnumerable<StandardProduct>> GetAllProductsAsync();
+        Task<IEnumerable<StandardProduct>> GetAllProducedProductsAsync();
         Task<StandardProduct> GetProductByIdAsync(int productId);
         void CreateProduct(StandardProduct product);
         void UpdateProduct(StandardProduct product);

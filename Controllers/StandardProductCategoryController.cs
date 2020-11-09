@@ -5,12 +5,14 @@ using AutoMapper;
 using ERPBackend.Contracts;
 using ERPBackend.Entities.Dtos;
 using ERPBackend.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("standard-products/categories")]
     public class StandardProductCategoryController : ControllerBase
     {

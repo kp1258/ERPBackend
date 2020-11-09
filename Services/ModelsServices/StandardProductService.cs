@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,13 +22,17 @@ namespace ERPBackend.Services.ModelsServices
         }
         public async Task CreateStandardProduct(StandardProduct productEntity, StandardProductCreateDto product)
         {
-            var blobName = _blobStorageService.GenerateFileName(product.ImageName);
-            var filePath = await _blobStorageService.UploadFileBlobAsync(product.ImageFile, blobName, "standardproducts");
-            productEntity.ImageName = product.ImageName;
-            productEntity.ImagePath = filePath;
-            productEntity.BlobName = blobName;
+            if (product.ImageFile != null)
+            {
+                var blobName = _blobStorageService.GenerateFileName(product.ImageName);
+                var filePath = await _blobStorageService.UploadFileBlobAsync(product.ImageFile, blobName, "standardproducts");
+                productEntity.ImageName = product.ImageName;
+                productEntity.ImagePath = filePath;
+                productEntity.BlobName = blobName;
+            }
 
-            productEntity.Status = StandardProductStatus.InProduction;
+
+            productEntity.Status = StandardProductStatus.Produced;
 
             _repository.StandardProduct.CreateProduct(productEntity);
             await _repository.SaveAsync();
@@ -70,9 +75,21 @@ namespace ERPBackend.Services.ModelsServices
             return missingProducts;
         }
 
-        public async Task UpdateStandardProduct(StandardProduct product)
+        public async Task UpdateStandardProduct(StandardProduct productEntity, StandardProductUpdateDto product)
         {
-            _repository.StandardProduct.UpdateProduct(product);
+            if (product.ImageFile != null)
+            {
+                var blobName = _blobStorageService.GenerateFileName(productEntity.ImageName);
+                var filePath = await _blobStorageService.UploadFileBlobAsync(product.ImageFile, blobName, "standardproducts");
+                productEntity.ImagePath = filePath;
+                productEntity.BlobName = blobName;
+            }
+            productEntity.StandardProductCategoryId = product.StandardProductCategoryId;
+
+            var category = await _repository.StandardProductCategory.GetCategoryByIdAsync(productEntity.StandardProductCategoryId);
+            productEntity.StandardProductCategory = category;
+
+            _repository.StandardProduct.UpdateProduct(productEntity);
             await _repository.SaveAsync();
         }
     }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBackend.Migrations
 {
     [DbContext(typeof(ERPContext))]
-    [Migration("20201106153436_InitialMigration")]
+    [Migration("20201108211216_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -398,6 +398,11 @@ namespace ERPBackend.Migrations
                         .HasColumnType("varchar(40)")
                         .HasMaxLength(40);
 
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20);
+
                     b.HasKey("MaterialId");
 
                     b.ToTable("Materials");
@@ -406,22 +411,26 @@ namespace ERPBackend.Migrations
                         new
                         {
                             MaterialId = 1,
-                            Name = "Materiał 1"
+                            Name = "Materiał 1",
+                            Unit = "kilogramy"
                         },
                         new
                         {
                             MaterialId = 2,
-                            Name = "Materiał 2"
+                            Name = "Materiał 2",
+                            Unit = "kilogramy"
                         },
                         new
                         {
                             MaterialId = 3,
-                            Name = "Materiał 3"
+                            Name = "Materiał 3",
+                            Unit = "kilogramy"
                         },
                         new
                         {
                             MaterialId = 4,
-                            Name = "Materiał 4"
+                            Name = "Materiał 4",
+                            Unit = "kilogramy"
                         });
                 });
 
@@ -854,7 +863,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Jan",
                             LastName = "Kowalski",
                             Login = "jan_k",
-                            Password = "$2a$11$lIRcDebWOVJ7dA/toLJehutX4Hre.za81COXHNxLYzz5nFMgTUdFS",
+                            Password = "$2a$11$7lfhYYnX2SW2JNKhMnjO9ObqUvWlilxA.xmw0wZyqS.bGdrqqRG5q",
                             PhoneNumber = "607934182",
                             Role = "Administrator",
                             Status = "Active"
@@ -866,7 +875,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Anna",
                             LastName = "Nowak",
                             Login = "anna_n",
-                            Password = "$2a$11$F2febxoL3lMGrKqreq13mOAoWaSXIpErVDdViOilJdjeaL.yT0JyC",
+                            Password = "$2a$11$tpRNnkfzErWzP/bwhGGy/.C.VdwoIBgCjpYz/WISWlTu0IC62SKo2",
                             PhoneNumber = "709856234",
                             Role = "Salesman",
                             Status = "Active"
@@ -878,7 +887,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Andrzej",
                             LastName = "Malinowski",
                             Login = "andrzej_m",
-                            Password = "$2a$11$EBcFy0o29ZtwUo6cAze2BOtKB6kOjThYkEcvk13yt0deq/iSjbMaK",
+                            Password = "$2a$11$gi0KZhxVgJDeMG32Iy/6M.DMz4FnmvwYyzDs/jENr4CjkkA6Mx8Rm",
                             PhoneNumber = "679234374",
                             Role = "ProductionManager",
                             Status = "Active"
@@ -890,7 +899,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Agata",
                             LastName = "Krzeszowska",
                             Login = "agata_k",
-                            Password = "$2a$11$W3Q84NtFSKNJ6SZETJV4aOt4ZK319T44dFb2u2XHAQVnqs2Cjw7BK",
+                            Password = "$2a$11$z0xh/Fl2EoL5OReqxoe0WuvOb4qJ90gTMSOlAfKr9w/JN8gruLSjq",
                             PhoneNumber = "685234054",
                             Role = "Technologist",
                             Status = "Active"
@@ -902,7 +911,7 @@ namespace ERPBackend.Migrations
                             FirstName = "Edward",
                             LastName = "Rak",
                             Login = "edward_r",
-                            Password = "$2a$11$mtMXaXrRiV.fKl.2TLISNO0/npFNIj4sYmsc897VbTYHdiyobEy56",
+                            Password = "$2a$11$Kdmc41EhlQvrxaTfQof29OmC0HS8IW8C3LbtxrPYw/v9b2lK/YWRe",
                             PhoneNumber = "978345278",
                             Role = "Warehouseman",
                             Status = "Active"

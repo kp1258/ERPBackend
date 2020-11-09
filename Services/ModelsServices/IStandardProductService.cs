@@ -9,7 +9,7 @@ namespace ERPBackend.Services.ModelsServices
     public interface IStandardProductService
     {
         Task CreateStandardProduct(StandardProduct productEntity, StandardProductCreateDto product);
-        Task UpdateStandardProduct(StandardProduct product);
+        Task UpdateStandardProduct(StandardProduct productEntity, StandardProductUpdateDto product);
         Task<IEnumerable<MissingProduct>> GetAllMissingProducts();
     }
 }

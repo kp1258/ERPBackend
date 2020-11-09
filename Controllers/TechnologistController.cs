@@ -8,6 +8,7 @@ using ERPBackend.Entities.Dtos.ProductDtos;
 using ERPBackend.Entities.Models;
 using ERPBackend.Services;
 using ERPBackend.Services.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Technologist")]
     [Route("technologists")]
     public class TechnologistController : ControllerBase
     {

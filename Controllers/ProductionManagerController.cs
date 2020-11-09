@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 namespace ERPBackend.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Production Manager")]
+    [Authorize(Roles = "ProductionManager")]
     [Route("production-managers")]
     public class ProductionManagerController : ControllerBase
     {
