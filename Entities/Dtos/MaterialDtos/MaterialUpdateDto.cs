@@ -6,5 +6,7 @@ namespace ERPBackend.Entities.Dtos.MaterialDtos
     {
         [Required]
         public string Name { get; set; }
+        [Required]
+        public string Unit { get; set; }
     }
 }

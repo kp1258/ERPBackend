@@ -59,10 +59,19 @@ namespace ERPBackend.Repositories
             Delete(client);
         }
 
-        public async Task<IEnumerable<Client>> GetClientsBySalesmanAsync(int id)
+        public async Task<IEnumerable<Client>> GetClientsBySalesmanAsync(int salesmanId)
         {
-            return await FindByCondition(a => a.SalesmanId.Equals(id))
+            return await FindByCondition(a => a.SalesmanId.Equals(salesmanId))
                             .Include(c => c.Address)
+                            .OrderBy(client => client.CompanyName)
+                            .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Client>> GetActiveClientsBySalesmanAsync(int salesmanId)
+        {
+            return await FindByCondition(c => c.SalesmanId.Equals(salesmanId) && c.Status == ClientStatus.Active)
+                            .Include(c => c.Address)
+                            .OrderBy(client => client.CompanyName)
                             .ToListAsync();
         }
     }
