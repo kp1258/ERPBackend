@@ -13,7 +13,6 @@ namespace ERPBackend.Entities.Models
     {
         public int StandardProductId { get; set; }
         [Required]
-        [StringLength(40)]
         public string Name { get; set; }
         public string Dimensions { get; set; }
         [Required]

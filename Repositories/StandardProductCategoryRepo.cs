@@ -17,7 +17,6 @@ namespace ERPBackend.Repositories
         public async Task<IEnumerable<StandardProductCategory>> GetAllCategoriesAsync()
         {
             return await FindAll()
-                            .OrderBy(category => category.Name)
                             .ToListAsync();
         }
 

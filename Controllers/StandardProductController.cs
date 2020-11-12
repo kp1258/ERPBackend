@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -89,7 +90,7 @@ namespace ERPBackend.Controllers
                 return BadRequest("Standard product object is null");
             }
             var productEntity = _mapper.Map<StandardProduct>(productDto);
-
+            Console.WriteLine("Jestem przed utworzeniem produktu");
             await _service.CreateStandardProduct(productEntity, productDto);
 
             return CreatedAtRoute("StandardProductById", new { id = productEntity.StandardProductId }, productEntity);

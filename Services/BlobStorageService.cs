@@ -52,11 +52,13 @@ namespace ERPBackend.Services
 
         public async Task<string> UploadFileBlobAsync(IFormFile file, string fileName, string containerName)
         {
+            Console.WriteLine("Jestem wewnątrz uploadowania pliku");
             var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
             var blobClient = containerClient.GetBlobClient(fileName);
             using (var fileStream = file.OpenReadStream())
             {
                 await blobClient.UploadAsync(fileStream);
+                Console.WriteLine("Jestem po uploadzie pliku");
             }
             var fileUri = blobClient.Uri.AbsoluteUri;
             return fileUri;
@@ -65,6 +67,7 @@ namespace ERPBackend.Services
 
         public string GenerateFileName(string fileName)
         {
+            Console.WriteLine("Jestem wewnątrz generowania nazwy pliku");
             string strFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + fileName;
             return strFileName;
         }
