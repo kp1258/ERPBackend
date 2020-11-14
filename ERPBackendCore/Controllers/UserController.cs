@@ -62,7 +62,7 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST /change-password/{id}
+        //POST /users/change-password/{id}
         [HttpPost("change-password/{id}")]
         public async Task<IActionResult> ChangePasswordUser(int id, [FromBody] ChangePasswordUserDto dto)
         {
@@ -83,7 +83,7 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST /change-password/admin/{id}
+        //POST /users/change-password/admin/{id}
         [Authorize(Roles = "Administrator")]
         [HttpPost("change-password/admin/{id}")]
         public async Task<IActionResult> ChangePasswordAdmin(int id, [FromBody] ChangePasswordAdminDto dto)
@@ -152,7 +152,7 @@ namespace ERPBackend.Controllers
             }
         }
 
-        //POST /user
+        //POST /users
         [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto user)
@@ -170,7 +170,7 @@ namespace ERPBackend.Controllers
             return CreatedAtRoute("UserById", new { id = createdUser.UserId }, createdUser);
         }
 
-        //PUT /user/{id}
+        //PUT /users/{id}
         [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto user)
