@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ERPBackend;
+using ERPBackend.Entities.Dtos.ClientDtos;
 using ERPBackend.Entities.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -85,6 +87,21 @@ namespace ERPBackendTests.Controllers
             var stringResponse = await clientsResponse.Content.ReadAsStringAsync();
             var clients = JsonConvert.DeserializeObject<IEnumerable<Client>>(stringResponse);
             clients.Should().Contain(x => x.ClientId == 4 && x.CompanyName == "Nowa nazwa firmy");
+        }
+
+        [Fact]
+        public async Task CanPatchClient()
+        {
+            var jsonPatch = new JsonPatchDocument<ClientPatchDto>();
+            jsonPatch.Replace(u => u.Status, "Nieaktywny");
+            var content = new StringContent(JsonConvert.SerializeObject(jsonPatch), System.Text.Encoding.UTF8, "application/json");
+            var response = await _client.PatchAsync("/clients/3", content);
+            response.EnsureSuccessStatusCode();
+
+            var clientsResponse = await _client.GetAsync("/clients");
+            var stringResponse = await clientsResponse.Content.ReadAsStringAsync();
+            var clients = JsonConvert.DeserializeObject<IEnumerable<Client>>(stringResponse);
+            clients.Should().Contain(x => x.ClientId == 3 && x.Status == ClientStatus.Inactive);
         }
 
     }
