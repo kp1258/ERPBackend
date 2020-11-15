@@ -44,13 +44,13 @@ namespace ERPBackend.Entities.Models.Configuration
                         StandardOrderItemId=6,
                         OrderId=5,
                         StandardProductId=1,
-                        Quantity=10
+                        Quantity=50
                     },
                     new StandardOrderItem{
                         StandardOrderItemId=7,
                         OrderId=5,
                         StandardProductId=2,
-                        Quantity=10
+                        Quantity=50
                     },
                 }
             );

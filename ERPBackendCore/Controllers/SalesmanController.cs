@@ -60,6 +60,7 @@ namespace ERPBackend.Controllers
             return Ok(clientsResult);
         }
 
+        //unused
         //GET /salesmen/{id}/orders
         [HttpGet("{id}/orders")]
         public async Task<IActionResult> GetAllOrdersBySalesman(int id)
@@ -75,6 +76,7 @@ namespace ERPBackend.Controllers
             return Ok(orders);
         }
 
+        //unused
         //GET /salesmen/{id}/custom-order-items
         [HttpGet("{id}/custom-order-items")]
         public async Task<IActionResult> GetAllCustomOrderItemsBySalesman(int id)

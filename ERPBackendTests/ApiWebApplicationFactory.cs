@@ -45,7 +45,7 @@ namespace ERPBackendTests
 
                     try
                     {
-                        SeedData.InsertTestData(erpDb);
+                        //SeedData.InsertTestData(erpDb);
                     }
                     catch (Exception ex)
                     {

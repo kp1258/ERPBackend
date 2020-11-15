@@ -12,12 +12,12 @@ namespace ERPBackend.Entities.Models.Configuration
                 new ProductWarehouseItem
                 {
                     ProductWarehouseItemId=1,
-                    Quantity=40,
+                    Quantity=20,
                     StandardProductId=1,
                 },
                 new ProductWarehouseItem{
                     ProductWarehouseItemId=2,
-                    Quantity=50,
+                    Quantity=30,
                     StandardProductId=2,
                 },
                 new ProductWarehouseItem{

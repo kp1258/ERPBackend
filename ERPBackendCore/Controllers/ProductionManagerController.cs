@@ -93,7 +93,7 @@ namespace ERPBackend.Controllers
 
         //PATCH /production-mamangers/{pmId}/custom-order-items/{itemId}
         [HttpPatch("{pmId}/custom-order-items/{itemId}")]
-        public async Task<IActionResult> AcceptToProduction(int pmId, int itemId, JsonPatchDocument<CustomOrderItemPatchDto> patchDoc)
+        public async Task<IActionResult> AcceptCustomOrderItemToProduction(int pmId, int itemId, JsonPatchDocument<CustomOrderItemPatchDto> patchDoc)
         {
             var itemModelFromRepo = await _repository.CustomOrderItem.GetItemByIdAsync(itemId);
             if (itemModelFromRepo == null)

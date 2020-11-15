@@ -13,8 +13,8 @@ namespace ERPBackend.Entities.Models
         public int OrderId { get; set; }
         [Required]
         public DateTime PlacingDate { get; set; }
-        public DateTime? RealizationStartDate { get; set; }
-        public DateTime? CompletionDate { get; set; }
+        public DateTime RealizationStartDate { get; set; }
+        public DateTime CompletionDate { get; set; }
         [Required]
         public OrderStatus Status { get; set; }
         [Required]

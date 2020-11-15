@@ -53,8 +53,8 @@ namespace ERPBackend.Entities.Models
         public CustomProductStatus Status { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
-        public DateTime? PreparationStartDate { get; set; }
-        public DateTime? PreparationCompletionDate { get; set; }
+        public DateTime PreparationStartDate { get; set; }
+        public DateTime PreparationCompletionDate { get; set; }
 
         public int? TechnologistId { get; set; }
         public User Technologist { get; set; }

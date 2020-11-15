@@ -8,7 +8,6 @@ namespace ERPBackend.Entities.Dtos.ProductDtos
     {
         [Required]
         public string SolutionDescription { get; set; }
-        [Required]
         public IFormFileCollection Files { get; set; }
     }
 }

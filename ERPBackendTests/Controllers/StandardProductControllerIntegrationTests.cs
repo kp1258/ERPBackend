@@ -28,7 +28,7 @@ namespace ERPBackendTests.Controllers
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             var users = JsonConvert.DeserializeObject<IEnumerable<StandardProduct>>(stringResponse);
-            users.Should().HaveCount(1);
+            users.Should().HaveCount(4);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace ERPBackendTests.Controllers
             var productsResponse = await _client.GetAsync("/standard-products");
             var stringResponse = await productsResponse.Content.ReadAsStringAsync();
             var products = JsonConvert.DeserializeObject<IEnumerable<StandardProduct>>(stringResponse);
-            products.Should().HaveCount(3);
+            products.Should().HaveCount(5);
 
         }
 

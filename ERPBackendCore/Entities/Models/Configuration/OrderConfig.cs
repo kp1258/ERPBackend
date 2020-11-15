@@ -25,8 +25,6 @@ namespace ERPBackend.Entities.Models.Configuration
                 new Order{
                     OrderId=2,
                     PlacingDate=new DateTime(year:2020, month:10, day:20),
-                    RealizationStartDate=null,
-                    CompletionDate=null,
                     Status=OrderStatus.Placed,
                     Type=OrderType.Standard,
                     ClientId=2,
@@ -36,8 +34,6 @@ namespace ERPBackend.Entities.Models.Configuration
                 new Order{
                     OrderId=3,
                     PlacingDate=new DateTime(year:2020, month:10, day:20),
-                    RealizationStartDate=null,
-                    CompletionDate=null,
                     Status=OrderStatus.Placed,
                     Type=OrderType.Custom,
                     ClientId=3,
@@ -59,9 +55,18 @@ namespace ERPBackend.Entities.Models.Configuration
                     OrderId=5,
                     PlacingDate=new DateTime(year:2020, month:10, day:20),
                     RealizationStartDate=new DateTime(year:2020, month:10, day:21),
-                    CompletionDate=null,
                     Status=OrderStatus.InRealization,
                     Type=OrderType.Standard,
+                    ClientId=2,
+                    SalesmanId=2,
+                    WarehousemanId=5
+                },
+                new Order{
+                    OrderId=6,
+                    PlacingDate=new DateTime(year:2020, month:10, day:20),
+                    RealizationStartDate=new DateTime(year:2020, month:10, day:21),
+                    Status=OrderStatus.InRealization,
+                    Type=OrderType.Custom,
                     ClientId=2,
                     SalesmanId=2,
                     WarehousemanId=5

@@ -90,7 +90,7 @@ namespace ERPBackend.Controllers
 
         //GET /technologists/{id}/custom-products/prepared
         [HttpGet("{technologistId}/custom-products/prepared")]
-        public async Task<IActionResult> GetAllCompletedCustomProductsByTechnologist(int technologistId)
+        public async Task<IActionResult> GetAllPreparedCustomProductsByTechnologist(int technologistId)
         {
             var products = await _repository.CustomProduct.GetAllProductsByTechnologistAndStatus(technologistId, CustomProductStatus.Prepared);
             if (!products.Any())

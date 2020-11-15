@@ -30,7 +30,7 @@ namespace ERPBackendTests.Controllers
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             var users = JsonConvert.DeserializeObject<IEnumerable<User>>(stringResponse);
-            users.Should().HaveCount(6);
+            users.Should().HaveCount(5);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace ERPBackendTests.Controllers
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             var users = JsonConvert.DeserializeObject<IEnumerable<User>>(stringResponse);
-            users.Should().HaveCount(5);
+            users.Should().HaveCount(4);
             users.Should().NotContain(x => x.UserId == 2);
         }
 
@@ -92,13 +92,13 @@ namespace ERPBackendTests.Controllers
             var usersResponse = await _client.GetAsync("/users");
             var stringResponse = await usersResponse.Content.ReadAsStringAsync();
             var users = JsonConvert.DeserializeObject<IEnumerable<User>>(stringResponse);
-            users.Should().HaveCount(7);
+            users.Should().HaveCount(6);
         }
 
         [Fact]
         public async Task CanUpdateUser()
         {
-            var user = new User { Login = "andrzej_f", Password = "password", FirstName = "Andrzej", LastName = "Frankowski", PhoneNumber = "123456789", Email = "eryk_f@mail.com", Role = UserRole.Administrator };
+            var user = new User { Login = "andrzej_f", FirstName = "Andrzej", LastName = "Frankowski", PhoneNumber = "123456789", Email = "eryk_f@mail.com", Role = UserRole.Administrator };
             var content = new StringContent(JsonConvert.SerializeObject(user), System.Text.Encoding.UTF8, "application/json");
             var response = await _client.PutAsync("/users/5", content);
             response.EnsureSuccessStatusCode();

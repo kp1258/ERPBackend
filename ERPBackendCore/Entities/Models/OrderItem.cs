@@ -23,8 +23,8 @@ namespace ERPBackend.Entities.Models
         public int Quantity { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
-        public DateTime? ProductionStartDate { get; set; }
-        public DateTime? CompletionDate { get; set; }
+        public DateTime ProductionStartDate { get; set; }
+        public DateTime CompletionDate { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

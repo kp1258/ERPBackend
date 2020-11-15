@@ -29,7 +29,7 @@ namespace ERPBackendTests.Controllers
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             var warehouseItems = JsonConvert.DeserializeObject<IEnumerable<ProductWarehouseItem>>(stringResponse);
-            warehouseItems.Should().HaveCount(2);
+            warehouseItems.Should().HaveCount(4);
         }
 
         [Fact]

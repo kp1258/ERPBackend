@@ -38,18 +38,18 @@ namespace ERPBackend.Entities
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
             modelBuilder.ApplyConfiguration(new ClientConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new CustomOrderItemConfiguration());
-            //modelBuilder.ApplyConfiguration(new CustomProductConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomOrderItemConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomProductConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new MaterialConfiguration());
-            //modelBuilder.ApplyConfiguration(new MaterialItemConfiguration());
+            modelBuilder.ApplyConfiguration(new MaterialConfiguration());
+            modelBuilder.ApplyConfiguration(new MaterialItemConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new OrderConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new StandardProductConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardProductConfiguration());
             modelBuilder.ApplyConfiguration(new StandardProductCategoryConfiguration());
-            //modelBuilder.ApplyConfiguration(new StandardOrderItemConfiguration());
-            //modelBuilder.ApplyConfiguration(new StandardProductItemConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardOrderItemConfiguration());
+            modelBuilder.ApplyConfiguration(new StandardProductItemConfiguration());
 
             modelBuilder
                 .Entity<User>()
