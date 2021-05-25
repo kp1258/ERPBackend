@@ -31,7 +31,7 @@ namespace ERPBackend.Repositories
             Create(material);
         }
 
-        public void DelteMaterial(Material material)
+        public void DeleteMaterial(Material material)
         {
             Delete(material);
         }

@@ -106,6 +106,7 @@ namespace ERPBackend.Controllers
         }
 
         //GET /users
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -218,28 +219,6 @@ namespace ERPBackend.Controllers
 
             return NoContent();
         }
-
-        //DELETE /user/{id}
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeleteUser(int id)
-        // {
-        //     var user = await _repository.User.GetUserByIdAsync(id);
-        //     if (user == null)
-        //     {
-        //         _logger.LogError($"User with id: {id} does not exist");
-        //         return NotFound();
-        //     }
-        //     var clients = await _repository.Client.GetClientsBySalesmanAsync(id);
-        //     if (clients.Any())
-        //     {
-        //         _logger.LogError($"Cannot delete user with id: {id}. It has related clients.");
-        //         return BadRequest("Cannot delete user. It has related clients. Delete those first");
-        //     }
-        //     _repository.User.DeleteUser(user);
-        //     await _repository.SaveAsync();
-        //     return NoContent();
-        // }
-
 
     }
 }

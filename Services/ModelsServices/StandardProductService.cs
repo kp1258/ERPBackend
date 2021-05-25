@@ -22,11 +22,9 @@ namespace ERPBackend.Services.ModelsServices
         }
         public async Task CreateStandardProduct(StandardProduct productEntity, StandardProductCreateDto product)
         {
-            Console.WriteLine("Jestem przed załadowaniem pliku");
             if (product.ImageFile != null)
             {
                 var blobName = _blobStorageService.GenerateFileName(product.ImageName);
-                Console.WriteLine("Jestem przed uploadem pliku");
                 var filePath = await _blobStorageService.UploadFileBlobAsync(product.ImageFile, blobName, "standardproducts");
                 productEntity.ImageName = product.ImageName;
                 productEntity.ImagePath = filePath;

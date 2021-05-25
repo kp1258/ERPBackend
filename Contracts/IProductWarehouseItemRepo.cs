@@ -12,6 +12,6 @@ namespace ERPBackend.Contracts
         Task<ProductWarehouseItem> GetItemByProductIdAsync(int productId);
         void CreateItem(ProductWarehouseItem item);
         void UpdateItem(ProductWarehouseItem item);
-        void DelteItem(ProductWarehouseItem item);
+        void DeleteItem(ProductWarehouseItem item);
     }
 }

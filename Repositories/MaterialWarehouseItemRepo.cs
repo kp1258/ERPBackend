@@ -20,7 +20,7 @@ namespace ERPBackend.Repositories
             Create(item);
         }
 
-        public void DelteItem(MaterialWarehouseItem item)
+        public void DeleteItem(MaterialWarehouseItem item)
         {
             Delete(item);
         }

@@ -42,7 +42,7 @@ namespace ERPBackend.Controllers
             return Ok(itemsResult);
         }
 
-        //PATCH /product-warehouse/{id}
+        //PATCH /material-warehouse/{id}
         [Authorize(Roles = "Warehouseman")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> ChangeMaterialWarehouseStock(int id, JsonPatchDocument<MaterialWarehouseItemUpdateDto> patchDoc)
