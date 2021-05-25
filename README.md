@@ -1,11 +1,10 @@
 # ERPBackend
-This project is a part of the ERP system supporting management of production and trade company. Server side application exposing web API.
+This project is a part of the ERP system supporting management of production and trade company. The purpose of this system is to standarize order processing and support resource management. This project is server side application exposing web API.
 
 ## Technologies
 Project is created with:
 * ASP.Net Core 3.1
 * ASP.NET Core Web API
-* C#
 
 ## Features
 * Placing and processing orders
